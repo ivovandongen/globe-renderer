@@ -50,5 +50,8 @@ include_directories(PUBLIC include)
 # Sources
 add_subdirectory(src)
 
+# Platforms
+add_subdirectory(platform)
+
 # Sandbox
 add_subdirectory(sandbox)
