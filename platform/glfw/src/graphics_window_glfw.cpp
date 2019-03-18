@@ -6,10 +6,9 @@
 
 #include <iostream>
 
-namespace renderer {
-namespace glfw {
+namespace {
 
-static bool init() {
+bool init() {
     if (!glfwInit()) {
         // Initialization failed
         std::cout << "Failed to initialize GLFW" << std::endl;
@@ -18,7 +17,13 @@ static bool init() {
     return true;
 }
 
-static bool glfwInitialized = false;
+bool glfwInitialized = false;
+
+} // namespace
+
+namespace renderer {
+namespace glfw {
+
 
 GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, bool vsync)
         : _context(std::make_unique<opengl3::ContextOpenGL3>(*this)) {
@@ -73,7 +78,7 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
     }
 
     // Make the context current for this thread
-    makeContextCurrent();
+    _context->makeCurrent();
 
     // Load glad
     if (!gladLoadGL()) {
