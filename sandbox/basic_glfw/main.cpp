@@ -1,14 +1,15 @@
-#include <renderer/glfw/graphics_window_glfw.hpp>
-#include <renderer/opengl3/device_opengl3.hpp>
+#include <glbr/renderer/glfw/graphics_window_glfw.hpp>
+#include <glbr/renderer/opengl3/device_opengl3.hpp>
 
-#include <io/file.hpp>
+#include <glbr/io/file.hpp>
 
 #include <array>
 
 int main() {
     int width = 640, height = 480;
 
-    using namespace renderer;
+    using namespace glbr;
+    using namespace glbr::renderer;
 
     // Create the window
     glfw::GlfwGraphicsWindow window{width, height};

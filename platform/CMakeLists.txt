@@ -1,2 +1,3 @@
-add_subdirectory(glfw)
-add_subdirectory(opengl3)
+if (ENABLE_OPENGL)
+    add_subdirectory(glfw_opengl3)
+endif ()

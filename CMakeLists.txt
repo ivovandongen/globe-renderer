@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 # Options
 option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" ON)
+option(ENABLE_OPENGL "Enable OpenGl" ON)
 
 # Update submodules as needed
 option(GIT_SUBMODULE "Check submodules during build" ON)
