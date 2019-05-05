@@ -6,11 +6,19 @@ add_executable(${EXECUTABLE}
         )
 
 target_link_libraries(${EXECUTABLE} PRIVATE
+        core
+        io
         renderer
         renderer_opengl3
         renderer_glfw
         glfw
         )
+
+file(GLOB files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "resources/*.*" "resources/**/*.*")
+foreach (file ${files})
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${file} ${CMAKE_CURRENT_BINARY_DIR}/${file} COPYONLY)
+endforeach ()
+
 
 if (DO_CLANG_TIDY)
     set_target_properties(${EXECUTABLE} PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")

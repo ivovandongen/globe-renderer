@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 
 #include <memory>
+#include <functional>
 
 namespace renderer {
 namespace glfw {
@@ -18,9 +19,16 @@ public:
 
     ~GlfwGraphicsWindow() override;
 
+    Context &context() const override;
+
     void makeContextCurrent() const override;
 
-    void run() override;
+    void run(const std::function<void(Context &)> &_onRenderFrame) override;
+
+    void run(const std::function<void(Context &)> &onRenderFrame,
+             const std::function<void()> &onUpdateFrame,
+             double updateRate) override;
+
 
 private:
     GLFWwindow *_window;

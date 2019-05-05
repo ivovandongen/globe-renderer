@@ -3,6 +3,9 @@ project(GLOBE_RENDERER)
 
 set(CMAKE_CXX_STANDARD 14)
 
+# Options
+option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" ON)
+
 # Update submodules as needed
 option(GIT_SUBMODULE "Check submodules during build" ON)
 
@@ -13,6 +16,19 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 include(${CMAKE_MODULE_PATH}/git.cmake)
 include(${CMAKE_MODULE_PATH}/include_vendor_pkg.cmake)
 include(${CMAKE_MODULE_PATH}/include_guard.cmake)
+include(${CMAKE_MODULE_PATH}/module.cmake)
+
+# CCache
+
+if(ENABLE_CCACHE AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
+    find_program(CCACHE_FOUND ccache)
+    if(CCACHE_FOUND)
+        message(STATUS "Using ccache to speed up incremental builds")
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+        set(ENV{CCACHE_CPP2} "true")
+    endif()
+endif()
 
 # Clang format
 
@@ -44,11 +60,8 @@ else ()
     set(DO_CLANG_TIDY "${CLANG_TIDY}" "-fix;-fix-errors")
 endif ()
 
-# Public interfaces
-include_directories(PUBLIC include)
-
-# Sources
-add_subdirectory(src)
+# Modules
+add_subdirectory(modules)
 
 # Platforms
 add_subdirectory(platform)

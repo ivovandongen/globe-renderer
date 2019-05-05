@@ -19,15 +19,17 @@ bool init() {
 
 bool glfwInitialized = false;
 
-} // namespace
+}  // namespace
 
 namespace renderer {
 namespace glfw {
 
+static GlfwGraphicsWindow *getGlfwGraphicsWindow(GLFWwindow *window) {
+    return static_cast<GlfwGraphicsWindow *>(glfwGetWindowUserPointer(window));
+}
 
 GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, bool vsync)
-        : _context(std::make_unique<opengl3::ContextOpenGL3>(*this)) {
-
+    : _context(std::make_unique<opengl3::ContextOpenGL3>(*this)) {
     if (!glfwInitialized) {
         init();
         glfwInitialized = true;
@@ -57,12 +59,13 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
         return;
     }
 
-    // Resize gl viewport on window resize
-    glfwSetFramebufferSizeCallback(_window, [](GLFWwindow *, int width, int height) {
-        // TODO: call into context
-        glViewport(0, 0, width, height);
-    });
+    // Set the user pointer for use in callbacks
+    glfwSetWindowUserPointer(_window, this);
 
+    // Resize gl viewport on window resize
+    glfwSetFramebufferSizeCallback(_window, [](GLFWwindow *window, int width, int height) {
+        getGlfwGraphicsWindow(window)->_context->resize(width, height);
+    });
 
     // Handle some input
     glfwSetKeyCallback(_window, [](GLFWwindow *window, int key, int, int action, int) {
@@ -71,7 +74,7 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
         }
     });
 
-    if (type == WindowType::FullScreen) {
+    if (type != WindowType::FullScreen) {
         // Position window in the center
         const GLFWvidmode *videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         glfwSetWindowPos(_window, (videoMode->width - width) / 2, (videoMode->height - height) / 2);
@@ -104,22 +107,41 @@ void GlfwGraphicsWindow::makeContextCurrent() const {
     glfwMakeContextCurrent(_window);
 }
 
-void GlfwGraphicsWindow::run() {
+void GlfwGraphicsWindow::run(const std::function<void(Context &)> &_onRenderFrame) {
     // Keep running
     while (!glfwWindowShouldClose(_window)) {
         glfwPollEvents();
 
-        // TODO: update freq + callback
-
-        // TODO: onRenderFrame callback
-
-        _context->clear();
-
-        _context->draw();
+        _onRenderFrame(*_context);
 
         glfwSwapBuffers(_window);
     }
 }
 
-} // namespace glfw
-} // namespace renderer
+void GlfwGraphicsWindow::run(const std::function<void(Context &)> &onRenderFrame,
+                             const std::function<void()> &onUpdateFrame, double updateRate) {
+    auto updateIntervalNS = 1 / updateRate * 1000 * 1000 * 1000;
+    auto lastUpdate = std::chrono::high_resolution_clock::now();
+
+    // Keep running
+    while (!glfwWindowShouldClose(_window)) {
+        glfwPollEvents();
+
+        auto now = std::chrono::high_resolution_clock::now();
+        if (std::chrono::duration_cast<std::chrono::nanoseconds>(now - lastUpdate).count() > updateIntervalNS) {
+            lastUpdate = now;
+            onUpdateFrame();
+        }
+
+        onRenderFrame(*_context);
+
+        glfwSwapBuffers(_window);
+    }
+}
+
+Context &GlfwGraphicsWindow::context() const {
+    return *_context;
+}
+
+}  // namespace glfw
+}  // namespace renderer

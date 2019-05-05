@@ -4,3 +4,6 @@
 [submodule "deps/glm"]
 	path = deps/glm
 	url = git@github.com:g-truc/glm.git
+[submodule "deps/tl-optional"]
+	path = deps/tl-optional
+	url = git@github.com:TartanLlama/optional.git

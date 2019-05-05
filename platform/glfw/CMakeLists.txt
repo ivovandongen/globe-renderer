@@ -1,8 +1,14 @@
 include_vendor_pkg(glfw)
 
+file(GLOB_RECURSE HEADER_FILES
+        RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
+
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_library(renderer_glfw
+        ${HEADER_FILES}
+
         ${SRC_DIR}/graphics_window_glfw.cpp
         )
 
