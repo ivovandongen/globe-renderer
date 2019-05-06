@@ -60,6 +60,8 @@ PipelineOpenGL3::PipelineOpenGL3(const std::string &vert, const std::string &fra
     GL_VERIFY(glValidateProgram(_id));
     GL_VERIFY(glDeleteShader(vertexShader));
     GL_VERIFY(glDeleteShader(fragmentShader));
+
+    loadVertexAttributes();
 }
 
 PipelineOpenGL3::~PipelineOpenGL3() {
@@ -113,6 +115,28 @@ void PipelineOpenGL3::setUniform(const std::string &name, glm::vec4 value) const
 
 void PipelineOpenGL3::setUniform(const std::string &name, glm::mat4 value) const {
     GL_VERIFY(glUniformMatrix4fv(glGetUniformLocation(_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value)));
+}
+
+void PipelineOpenGL3::loadVertexAttributes() {
+    // Get number of active attributes
+    int numberOfAttributes;
+    GL_VERIFY(glGetProgramiv(_id, GL_ACTIVE_ATTRIBUTES, &numberOfAttributes));
+
+    // The the max name length of those attributes
+    int nameMaxLength;
+    GL_VERIFY(glGetProgramiv(_id, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &nameMaxLength));
+
+    // For each attribute, create a record
+    std::vector<GLchar> name;
+    name.reserve(nameMaxLength);
+    for (int i = 0; i < numberOfAttributes; i++) {
+        int nameLength;
+        int length;
+        GLenum type;
+        GL_VERIFY(glGetActiveAttrib(_id, i, nameMaxLength, &nameLength, &length, &type, name.data()));
+        // TODO: type
+        _vertexAttributeBindings.emplace_back(std::string{name.data()}, i);
+    }
 }
 
 }  // namespace opengl3

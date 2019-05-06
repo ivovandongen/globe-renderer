@@ -18,7 +18,7 @@ public:
 
     virtual void indexBuffer(std::unique_ptr<IndexBuffer>) = 0;
 
-    virtual void add(VertexAttribute) = 0;
+    virtual void add(const std::string &key, VertexAttribute) = 0;
 
 protected:
     VertexArray() = default;

@@ -45,7 +45,7 @@ int main() {
     vertexBuffer->upload(vertices.data());
 
     // Set up the VertexAttributes
-    vertexArray->add({VertexAttribute::Type::Float, 3, false, 3 * sizeof(float), 0});
+    vertexArray->add("aPos", {VertexAttribute::Type::Float, 3, false, 3 * sizeof(float), 0});
 
     // Add the indices to the IndexBuffer
     auto indexBuffer = window.context().createIndexBuffer(BufferHint::StaticDraw, indices.size() * sizeof(float));

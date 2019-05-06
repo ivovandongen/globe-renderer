@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 
 #include <string>
+#include <vector>
 
 namespace glbr {
 namespace renderer {
@@ -14,9 +15,15 @@ class PipelineOpenGL3 : public Pipeline {
 public:
     PipelineOpenGL3(const std::string &vert, const std::string &frag);
 
+    // TODO: specify bindings up front PipelineOpenGL3(const std::string &vert, const std::string &frag);
+
     ~PipelineOpenGL3() override;
 
     void bind() override;
+
+    const std::vector<ShaderVertexAttribute> &vertexAttributeBindings() const override {
+        return _vertexAttributeBindings;
+    }
 
     void setUniform(const std::string &name, bool value) const override;
 
@@ -41,7 +48,11 @@ public:
     void setUniform(const std::string &name, glm::mat4 value) const override;
 
 private:
+    void loadVertexAttributes();
+
+private:
     GLuint _id;
+    std::vector<ShaderVertexAttribute> _vertexAttributeBindings;
 };
 
 }  // namespace opengl3

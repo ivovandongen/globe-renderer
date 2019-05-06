@@ -4,6 +4,9 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include <glbr/renderer/shaders/shader_vertex_attribute.hpp>
+#include <glbr/renderer/vertex_attributes/vertex_attribute_bindings.hpp>
+
 #include <string>
 
 namespace glbr {
@@ -14,6 +17,8 @@ public:
     virtual ~Pipeline() = default;
 
     virtual void bind() = 0;
+
+    virtual const std::vector<ShaderVertexAttribute> &vertexAttributeBindings() const = 0;
 
     virtual void inline setUniform(const std::string &name, bool value) const = 0;
 

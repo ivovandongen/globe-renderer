@@ -23,9 +23,11 @@ void ContextOpenGL3::draw(const DrawState &state) {
     // TODO: dirty checking
     state.pipeline.bind();
     state.vertexArray.bind();
+    dynamic_cast<VertexArrayOpenGL3 &>(state.vertexArray).clean(state.pipeline);
 
     // TODO
     if (state.vertexArray.indexBuffer()) {
+        // TODO support other index types than uint
         GL_VERIFY(glDrawElements(GL_TRIANGLES, state.vertexArray.indexBuffer()->size(), GL_UNSIGNED_INT, nullptr););
     } else {
         // TODO GL_VERIFY(glDrawArrays(GL_TRIANGLES, 0, state.vertexBu));

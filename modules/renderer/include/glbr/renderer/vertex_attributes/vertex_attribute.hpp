@@ -9,16 +9,18 @@ class VertexAttribute {
 public:
     enum class Type { Float };
 
+    VertexAttribute() = default;
+
     VertexAttribute(Type type, unsigned int components, bool normalize, unsigned int stride, unsigned int offset)
         : _components(components), _type(type), _normalize(normalize), _stride(stride), _offset(offset) {}
 
-    virtual ~VertexAttribute() = default;
+    ~VertexAttribute() = default;
 
-    Type type() { return _type; };
-    unsigned int components() { return _components; }
-    bool normalize() { return _normalize; }
-    unsigned int stride() { return _stride; }
-    unsigned int offset() { return _offset; }
+    Type type() const { return _type; };
+    unsigned int components() const { return _components; }
+    bool normalize() const { return _normalize; }
+    unsigned int stride() const { return _stride; }
+    unsigned int offset() const { return _offset; }
 
 private:
     Type _type;
