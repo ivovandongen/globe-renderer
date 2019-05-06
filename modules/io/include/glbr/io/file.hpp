@@ -19,7 +19,7 @@ std::string readFile(const std::string &fileName) {
 
         result.assign((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
     } else {
-        std::cerr << "Could not open file: " << fileName << std::endl;
+        throw std::runtime_error{std::string{"Could not open file: "} + fileName};
     }
 
     return result;

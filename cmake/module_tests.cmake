@@ -25,6 +25,11 @@ macro(ADD_TEST_MODULE MODULE_ON_TEST)
 
     target_link_libraries(${MODULE_NAME} PUBLIC gtest ${MODULE_ON_TEST})
 
+    file(GLOB files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.glsl" "resources/*.*" "resources/**/*.*")
+    foreach (file ${files})
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${file} ${CMAKE_CURRENT_BINARY_DIR}/${file} COPYONLY)
+    endforeach ()
+
     if (DO_CLANG_TIDY)
         set_target_properties(${MODULE_NAME} PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
     endif ()
