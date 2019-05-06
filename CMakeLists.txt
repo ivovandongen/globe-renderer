@@ -18,6 +18,7 @@ include(${CMAKE_MODULE_PATH}/git.cmake)
 include(${CMAKE_MODULE_PATH}/include_vendor_pkg.cmake)
 include(${CMAKE_MODULE_PATH}/include_guard.cmake)
 include(${CMAKE_MODULE_PATH}/module.cmake)
+include(${CMAKE_MODULE_PATH}/module_tests.cmake)
 
 # CCache
 
@@ -69,3 +70,6 @@ add_subdirectory(platform)
 
 # Sandbox
 add_subdirectory(sandbox)
+
+# Tests
+add_subdirectory(test)
