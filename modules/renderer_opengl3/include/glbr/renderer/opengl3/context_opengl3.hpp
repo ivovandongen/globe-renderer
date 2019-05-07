@@ -28,7 +28,7 @@ public:
 
     void clear(const ClearState &) override;
 
-    void draw(const DrawState &) override;
+    void draw(const DrawState &, const SceneState &) override;
 
 private:
     const GraphicsWindow &_window;

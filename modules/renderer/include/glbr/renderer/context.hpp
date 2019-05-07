@@ -4,6 +4,7 @@
 #include <glbr/renderer/buffers/vertex_buffer.hpp>
 #include <glbr/renderer/clear_state.hpp>
 #include <glbr/renderer/draw_state.hpp>
+#include <glbr/renderer/scene/scene_state.hpp>
 #include <glbr/renderer/vertex_array/vertex_array.hpp>
 
 namespace glbr {
@@ -25,7 +26,7 @@ public:
 
     virtual void clear(const ClearState &) = 0;
 
-    virtual void draw(const DrawState &) = 0;
+    virtual void draw(/* TODO: PrimitiveType */ const DrawState &, const SceneState &) = 0;
 };
 
 }  // namespace renderer

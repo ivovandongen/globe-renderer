@@ -19,7 +19,7 @@ void ContextOpenGL3::makeCurrent() const {
     _window.makeContextCurrent();
 }
 
-void ContextOpenGL3::draw(const DrawState &state) {
+void ContextOpenGL3::draw(const DrawState &state, const SceneState &) {
     // TODO: dirty checking
     state.pipeline.bind();
     state.vertexArray.bind();

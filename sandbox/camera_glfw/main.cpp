@@ -1,7 +1,8 @@
+#include <glbr/io/file.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
 #include <glbr/renderer/opengl3/device_opengl3.hpp>
 
-#include <glbr/io/file.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <array>
 
@@ -11,17 +12,18 @@ int main() {
     using namespace glbr;
     using namespace glbr::renderer;
 
-    SceneState sceneState(width, height);
-
     // Create the window
     glfw::GlfwGraphicsWindow window{width, height};
 
     // Set up the graphics device
     auto &device = opengl3::DeviceOpenGL3::instance();
 
+    SceneState sceneState(width, height);
+    sceneState.camera().position({0, 0, 3});
+
     // Create the pipeline
-    auto pipeline = device.createPipeline(io::readFile("resources/triangle.vertex.glsl"),
-                                          io::readFile("resources/triangle.fragment.glsl"));
+    auto pipeline =
+        device.createPipeline(io::readFile("resources/vertex.glsl"), io::readFile("resources/fragment.glsl"));
 
     pipeline->bind();
 
@@ -57,31 +59,28 @@ int main() {
 
     renderer::ClearState clearState{{0, 1, 1, 1}};
 
-    // Add the color as a uniform
-    pipeline->setUniform("u_color", glm::vec4{1, 0, 0, 1});
+    // Add the static matrices as uniforms
+    pipeline->setUniform("bltin_view", sceneState.camera().viewMatrix());
+    pipeline->setUniform("bltin_projection", sceneState.projectionMatrix());
 
-    int counter = 1;
-    int step = 1;
+    // Basic model matrix around the origin
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));
 
     // Render function
     auto renderFn = [&](renderer::Context &context) {
         // Clear the scene
-        clearState.color = {1. - (counter / 100.), 0, 1. - (counter / 100.), 1};
+        clearState.color = {1., 0, 1., 1};
         context.clear(clearState);
+
+        // Update the model uniform
+        pipeline->setUniform("bltin_model", model);
 
         // Draw the rectangle
         context.draw({{}, *pipeline, *vertexArray}, sceneState);
     };
 
     // Update function
-    auto updateFn = [&]() {
-        if (counter >= 100) {
-            step = -1;
-        } else if (counter <= 0) {
-            step = 1;
-        }
-        counter += step;
-    };
+    auto updateFn = [&]() { model = glm::rotate(model, float(M_2_PI) / 10.f, glm::vec3(1.0f, 0.3f, 0.5f)); };
 
     // Runloop
     window.run(renderFn, updateFn, 60);
