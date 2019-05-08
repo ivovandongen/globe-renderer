@@ -2,8 +2,10 @@ add_module(core)
 
 include_vendor_pkg(glm)
 include_vendor_pkg(tl-optional)
+include_vendor_pkg(variant)
 
 target_link_libraries(core INTERFACE
         glm
         tl-optional
+        variant
         )

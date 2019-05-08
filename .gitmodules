@@ -10,3 +10,6 @@
 [submodule "deps/googletest"]
 	path = deps/googletest
 	url = git@github.com:google/googletest.git
+[submodule "deps/variant"]
+	path = deps/variant
+	url = git@github.com:mapbox/variant.git
