@@ -127,15 +127,16 @@ void PipelineOpenGL3::loadVertexAttributes() {
     GL_VERIFY(glGetProgramiv(_id, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &nameMaxLength));
 
     // For each attribute, create a record
-    std::vector<GLchar> name;
-    name.reserve(nameMaxLength);
+    std::vector<GLchar> nameBuffer;
+    nameBuffer.reserve(nameMaxLength);
     for (int i = 0; i < numberOfAttributes; i++) {
         int nameLength;
         int length;
         GLenum type;
-        GL_VERIFY(glGetActiveAttrib(_id, i, nameMaxLength, &nameLength, &length, &type, name.data()));
+        GL_VERIFY(glGetActiveAttrib(_id, i, nameMaxLength, &nameLength, &length, &type, nameBuffer.data()));
+        int location = GL_VERIFY(glGetAttribLocation(_id, nameBuffer.data()));
+        _vertexAttributeBindings.emplace_back(std::string{nameBuffer.data()}, location);
         // TODO: type
-        _vertexAttributeBindings.emplace_back(std::string{name.data()}, i);
     }
 }
 
