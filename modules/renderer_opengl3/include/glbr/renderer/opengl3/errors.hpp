@@ -24,7 +24,7 @@ namespace opengl3 {
 
 inline void glCheckError(const char *cmd, const char *file, int line) {
     if (GLenum err = glGetError()) {
-        std::cout << "GL ERROR: " << err << " operation: " << cmd << " at: " << file << ":" << line;
+        std::cerr << "GL ERROR: " << err << " operation: " << cmd << " at: " << file << ":" << line << std::endl;
     }
 }
 
