@@ -23,7 +23,9 @@ void ContextOpenGL3::draw(const DrawState &state, const SceneState &) {
     // TODO: dirty checking
     state.pipeline.bind();
     state.vertexArray.bind();
+
     dynamic_cast<VertexArrayOpenGL3 &>(state.vertexArray).clean(state.pipeline);
+    state.pipeline.uniforms().apply();
 
     // TODO
     if (state.vertexArray.indexBuffer()) {

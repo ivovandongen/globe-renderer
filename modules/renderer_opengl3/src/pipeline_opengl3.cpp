@@ -1,8 +1,7 @@
-#include <glbr/renderer/opengl3/pipeline_opengl3.hpp>
-
-#include <glm/gtc/type_ptr.hpp>
-
 #include <glbr/renderer/opengl3/errors.hpp>
+#include <glbr/renderer/opengl3/pipeline_opengl3.hpp>
+#include <glbr/renderer/opengl3/shaders/uniform_opengl3.hpp>
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -62,6 +61,7 @@ PipelineOpenGL3::PipelineOpenGL3(const std::string &vert, const std::string &fra
     GL_VERIFY(glDeleteShader(fragmentShader));
 
     loadVertexAttributes();
+    loadUniforms();
 }
 
 PipelineOpenGL3::~PipelineOpenGL3() {
@@ -70,51 +70,6 @@ PipelineOpenGL3::~PipelineOpenGL3() {
 
 void PipelineOpenGL3::bind() {
     GL_VERIFY(glUseProgram(_id));
-}
-
-void PipelineOpenGL3::setUniform(const std::string &name, bool value) const {
-    // TODO: cache uniform locations
-    GL_VERIFY(glUniform1i(glGetUniformLocation(_id, name.c_str()), (int)value));
-}
-
-void PipelineOpenGL3::setUniform(const std::string &name, unsigned int value) const {
-    GL_VERIFY(glUniform1i(glGetUniformLocation(_id, name.c_str()), value));
-}
-
-void PipelineOpenGL3::setUniform(const std::string &name, int value) const {
-    GL_VERIFY(glUniform1i(glGetUniformLocation(_id, name.c_str()), value));
-}
-
-void PipelineOpenGL3::setUniform(const std::string &name, float value) const {
-    GL_VERIFY(glUniform1f(glGetUniformLocation(_id, name.c_str()), value));
-}
-
-void PipelineOpenGL3::setUniform(const std::string &name, float x, float y) const {
-    GL_VERIFY(glUniform2f(glGetUniformLocation(_id, name.c_str()), x, y));
-}
-
-void PipelineOpenGL3::setUniform(const std::string &name, float x, float y, float z) const {
-    GL_VERIFY(glUniform3f(glGetUniformLocation(_id, name.c_str()), x, y, z));
-}
-
-void PipelineOpenGL3::setUniform(const std::string &name, float x, float y, float z, float w) const {
-    GL_VERIFY(glUniform4f(glGetUniformLocation(_id, name.c_str()), x, y, z, w));
-}
-
-void PipelineOpenGL3::setUniform(const std::string &name, glm::vec2 value) const {
-    GL_VERIFY(glUniform2f(glGetUniformLocation(_id, name.c_str()), value.x, value.y));
-}
-
-void PipelineOpenGL3::setUniform(const std::string &name, glm::vec3 value) const {
-    GL_VERIFY(glUniform3f(glGetUniformLocation(_id, name.c_str()), value.x, value.y, value.z));
-}
-
-void PipelineOpenGL3::setUniform(const std::string &name, glm::vec4 value) const {
-    GL_VERIFY(glUniform4f(glGetUniformLocation(_id, name.c_str()), value.x, value.y, value.z, value.w));
-}
-
-void PipelineOpenGL3::setUniform(const std::string &name, glm::mat4 value) const {
-    GL_VERIFY(glUniformMatrix4fv(glGetUniformLocation(_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value)));
 }
 
 void PipelineOpenGL3::loadVertexAttributes() {
@@ -134,9 +89,31 @@ void PipelineOpenGL3::loadVertexAttributes() {
         int length;
         GLenum type;
         GL_VERIFY(glGetActiveAttrib(_id, i, nameMaxLength, &nameLength, &length, &type, nameBuffer.data()));
+        // TODO: type
         int location = GL_VERIFY(glGetAttribLocation(_id, nameBuffer.data()));
         _vertexAttributeBindings.emplace_back(std::string{nameBuffer.data()}, location);
+    }
+}
+void PipelineOpenGL3::loadUniforms() {
+    int numUniforms;
+    GL_VERIFY(glGetProgramiv(_id, GL_ACTIVE_UNIFORMS, &numUniforms));
+
+    int nameMaxLength;
+    GL_VERIFY(glGetProgramiv(_id, GL_ACTIVE_UNIFORM_MAX_LENGTH, &nameMaxLength));
+
+    // For each attribute, create a record
+    std::vector<GLchar> nameBuffer;
+    nameBuffer.reserve(nameMaxLength);
+
+    for (int i = 0; i < numUniforms; ++i) {
+        int nameLength;
+        int length;
+        GLenum type;
+        GL_VERIFY(glGetActiveUniform(_id, i, nameMaxLength, &nameLength, &length, &type, nameBuffer.data()));
         // TODO: type
+        std::string name(nameBuffer.data(), nameLength);
+        int location = GL_VERIFY(glGetUniformLocation(_id, name.c_str()));
+        _uniforms.add(name, std::make_unique<UniformOpenGL3>(location, name));
     }
 }
 

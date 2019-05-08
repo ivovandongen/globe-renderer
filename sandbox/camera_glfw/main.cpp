@@ -60,8 +60,8 @@ int main() {
     renderer::ClearState clearState{{0, 1, 1, 1}};
 
     // Add the static matrices as uniforms
-    pipeline->setUniform("bltin_view", sceneState.camera().viewMatrix());
-    pipeline->setUniform("bltin_projection", sceneState.projectionMatrix());
+    pipeline->uniforms()["bltin_view"] = sceneState.camera().viewMatrix();
+    pipeline->uniforms()["bltin_projection"] = sceneState.projectionMatrix();
 
     // Basic model matrix around the origin
     glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));
@@ -73,7 +73,7 @@ int main() {
         context.clear(clearState);
 
         // Update the model uniform
-        pipeline->setUniform("bltin_model", model);
+        pipeline->uniforms()["bltin_model"] = model;
 
         // Draw the rectangle
         context.draw({{}, *pipeline, *vertexArray}, sceneState);

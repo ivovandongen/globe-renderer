@@ -21,38 +21,20 @@ public:
 
     void bind() override;
 
-    const std::vector<ShaderVertexAttribute> &vertexAttributeBindings() const override {
-        return _vertexAttributeBindings;
-    }
+    const VertexAttributeBindings &vertexAttributeBindings() const override { return _vertexAttributeBindings; }
 
-    void setUniform(const std::string &name, bool value) const override;
+    const Uniforms &uniforms() const override { return _uniforms; }
 
-    void setUniform(const std::string &name, unsigned int value) const override;
-
-    void setUniform(const std::string &name, int value) const override;
-
-    void setUniform(const std::string &name, float value) const override;
-
-    void setUniform(const std::string &name, float x, float y) const override;
-
-    void setUniform(const std::string &name, float x, float y, float z) const override;
-
-    void setUniform(const std::string &name, float x, float y, float z, float w) const override;
-
-    void setUniform(const std::string &name, glm::vec2 value) const override;
-
-    void setUniform(const std::string &name, glm::vec3 value) const override;
-
-    void setUniform(const std::string &name, glm::vec4 value) const override;
-
-    void setUniform(const std::string &name, glm::mat4 value) const override;
+    Uniforms &uniforms() override { return _uniforms; }
 
 private:
     void loadVertexAttributes();
+    void loadUniforms();
 
 private:
     GLuint _id;
-    std::vector<ShaderVertexAttribute> _vertexAttributeBindings;
+    VertexAttributeBindings _vertexAttributeBindings;
+    Uniforms _uniforms;
 };
 
 }  // namespace opengl3

@@ -58,7 +58,7 @@ int main() {
     renderer::ClearState clearState{{0, 1, 1, 1}};
 
     // Add the color as a uniform
-    pipeline->setUniform("u_color", glm::vec4{1, 0, 0, 1});
+    pipeline->uniforms()["u_color"] = glm::vec4{1, 0, 0, 1};
 
     int counter = 1;
     int step = 1;
