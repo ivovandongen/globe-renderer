@@ -1,6 +1,8 @@
 #include <glbr/renderer/opengl3/buffers/buffer_opengl3.hpp>
 #include <glbr/renderer/opengl3/errors.hpp>
 
+#include <cassert>
+
 namespace {
 
 constexpr GLenum convert(const glbr::renderer::opengl3::BufferTarget& target) {

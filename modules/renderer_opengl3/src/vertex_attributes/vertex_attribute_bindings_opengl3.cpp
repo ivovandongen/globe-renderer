@@ -3,6 +3,8 @@
 #include <glad/glad.h>
 #include <glbr/renderer/opengl3/errors.hpp>
 
+#include <algorithm>
+
 namespace {
 
 GLenum convert(glbr::renderer::VertexAttribute::Type type) {

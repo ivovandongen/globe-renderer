@@ -5,6 +5,7 @@
 
 #include <glad/glad.h>
 
+#include <chrono>
 #include <iostream>
 
 namespace glbr {
