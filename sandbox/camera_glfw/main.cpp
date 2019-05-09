@@ -84,6 +84,4 @@ int main() {
 
     // Runloop
     window.run(renderFn, updateFn, 60);
-
-    glfwTerminate();
 }

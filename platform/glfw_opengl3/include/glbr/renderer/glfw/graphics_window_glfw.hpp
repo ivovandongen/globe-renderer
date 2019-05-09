@@ -3,12 +3,11 @@
 #include <glbr/renderer/context.hpp>
 #include <glbr/renderer/graphics_window.hpp>
 
-#define GLFW_INCLUDE_NONE
-
-#include <GLFW/glfw3.h>
-
 #include <functional>
 #include <memory>
+
+class GLFWSystem;
+class GLFWwindow;
 
 namespace glbr {
 namespace renderer {
@@ -30,6 +29,7 @@ public:
              double updateRate) override;
 
 private:
+    std::shared_ptr<GLFWSystem> _system;
     GLFWwindow *_window;
     std::unique_ptr<Context> _context;
 };

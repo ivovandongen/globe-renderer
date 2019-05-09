@@ -1,25 +1,11 @@
+#include "glfw_system.hpp"
+
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
 #include <glbr/renderer/opengl3/context_opengl3.hpp>
 
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
 #include <iostream>
-
-namespace {
-
-bool init() {
-    if (!glfwInit()) {
-        // Initialization failed
-        std::cout << "Failed to initialize GLFW" << std::endl;
-        return false;
-    }
-    return true;
-}
-
-bool glfwInitialized = false;
-
-}  // namespace
 
 namespace glbr {
 namespace renderer {
@@ -30,11 +16,7 @@ static GlfwGraphicsWindow *getGlfwGraphicsWindow(GLFWwindow *window) {
 }
 
 GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, bool vsync)
-    : _context(std::make_unique<opengl3::ContextOpenGL3>(*this)) {
-    if (!glfwInitialized) {
-        init();
-        glfwInitialized = true;
-    }
+    : _system(GLFWSystem::init()), _context(std::make_unique<opengl3::ContextOpenGL3>(*this)) {
 
     // TODO Move OpenGL specifics
 

@@ -12,11 +12,13 @@ add_library(renderer_glfw
         ${SRC_DIR}/graphics_window_glfw.cpp
         )
 
-target_link_libraries(renderer_glfw PUBLIC
-        renderer
-        renderer_opengl3
-        glfw
-        glad
+target_link_libraries(renderer_glfw
+        PUBLIC
+            renderer
+            renderer_opengl3
+        PRIVATE
+            glfw
+            glad
         )
 
 target_include_directories(renderer_glfw PUBLIC include)
