@@ -13,3 +13,6 @@
 [submodule "deps/variant"]
 	path = deps/variant
 	url = git@github.com:mapbox/variant.git
+[submodule "deps/spdlog"]
+	path = deps/spdlog
+	url = git@github.com:gabime/spdlog.git
