@@ -1,10 +1,10 @@
 #pragma once
 
-#define GLFW_INCLUDE_NONE
+#include <glbr/logging/logging.hpp>
 
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include <iostream>
 #include <memory>
 
 namespace glbr {
@@ -24,13 +24,17 @@ public:
     }
 
     GLFWSystem() {
+        logging::debug("Initializing GLFW");
         if (!glfwInit()) {
             // Initialization failed
-            std::cout << "Failed to initialize GLFW" << std::endl;
+            logging::error("Failed to initialize GLFW");
             throw std::runtime_error("Failed to initialize GLFW");
         }
     };
-    ~GLFWSystem() { glfwTerminate(); };
+    ~GLFWSystem() {
+        logging::debug("Terminating GLFW");
+        glfwTerminate();
+    };
 };
 
 }  // namespace glfw

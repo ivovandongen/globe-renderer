@@ -1,12 +1,12 @@
 #include "glfw_system.hpp"
 
+#include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
 #include <glbr/renderer/opengl3/context_opengl3.hpp>
 
 #include <glad/glad.h>
 
 #include <chrono>
-#include <iostream>
 
 namespace glbr {
 namespace renderer {
@@ -18,7 +18,6 @@ static GlfwGraphicsWindow *getGlfwGraphicsWindow(GLFWwindow *window) {
 
 GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, bool vsync)
     : _system(GLFWSystem::init()), _context(std::make_unique<opengl3::ContextOpenGL3>(*this)) {
-
     // TODO Move OpenGL specifics
 
     // Specify OpenGL version to use
@@ -39,7 +38,7 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
 
     if (!_window) {
         // Window or OpenGL context creation failed
-        std::cerr << "Failed to create GLFW window" << std::endl;
+        logging::error("Failed to create GLFW window");
         return;
     }
 
@@ -69,7 +68,7 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
 
     // Load glad
     if (!gladLoadGL()) {
-        std::cerr << "Could not initialize GLAD" << std::endl;
+        logging::error("Could not initialize GLAD");
         return;
     }
 
@@ -80,7 +79,7 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
 
     // Print gl version
     auto version = glGetString(GL_VERSION);
-    std::cout << "Using OpenGL version: " << version << std::endl;
+    logging::info("Using OpenGL version: {}", version);
 };
 
 GlfwGraphicsWindow::~GlfwGraphicsWindow() {

@@ -1,3 +1,4 @@
+#include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
 #include <glbr/renderer/opengl3/device_opengl3.hpp>
 
@@ -10,6 +11,8 @@ int main() {
 
     using namespace glbr;
     using namespace glbr::renderer;
+
+    logging::setLevel(logging::Level::DEBUG);
 
     SceneState sceneState(width, height);
 

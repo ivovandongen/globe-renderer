@@ -1,3 +1,4 @@
+#include <glbr/logging/logging.hpp>
 #include <glbr/renderer/opengl3/errors.hpp>
 #include <glbr/renderer/opengl3/pipeline_opengl3.hpp>
 #include <glbr/renderer/opengl3/shaders/uniform_opengl3.hpp>
@@ -36,8 +37,7 @@ GLuint loadShader(GLuint program, const std::string &shaderSource, GLuint type) 
         // The maxLength includes the NULL character
         std::vector<GLchar> errorLog(maxLength);
         GL_VERIFY(glGetShaderInfoLog(shaderId, maxLength, &maxLength, &errorLog[0]));
-        std::string message = std::string("Could not compile ") + shaderType(type) + " shader\n" + errorLog.data();
-        std::cout << message << std::endl;
+        glbr::logging::error("Could not compile {} shader: {}", shaderType(type), errorLog.data());
     }
     GL_VERIFY(glAttachShader(program, shaderId));
 

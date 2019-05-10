@@ -8,6 +8,7 @@ add_executable(${EXECUTABLE}
 target_link_libraries(${EXECUTABLE} PRIVATE
         core
         io
+        logging
         renderer
         renderer_opengl3
         renderer_glfw
