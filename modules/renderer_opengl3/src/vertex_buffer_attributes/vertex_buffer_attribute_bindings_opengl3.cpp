@@ -1,4 +1,4 @@
-#include <glbr/renderer/opengl3/vertex_attributes/vertex_attribute_bindings_opengl3.hpp>
+#include <glbr/renderer/opengl3/vertex_buffer_attributes/vertex_buffer_attribute_bindings_opengl3.hpp>
 
 #include <glad/glad.h>
 #include <glbr/renderer/opengl3/errors.hpp>
@@ -7,10 +7,10 @@
 
 namespace {
 
-GLenum convert(glbr::renderer::VertexAttribute::Type type) {
+GLenum convert(glbr::renderer::VertexBufferAttribute::Type type) {
     using namespace glbr::renderer;
     switch (type) {
-        case VertexAttribute::Type::Float:
+        case VertexBufferAttribute::Type::Float:
             return GL_FLOAT;
     }
 }
@@ -21,7 +21,7 @@ namespace glbr {
 namespace renderer {
 namespace opengl3 {
 
-void VertexAttributeBindingsOpenGL3::clean(const std::vector<ShaderVertexAttribute>& shaderAttributes) {
+void VertexBufferAttributeBindingsOpenGL3::clean(const std::vector<ShaderVertexAttribute>& shaderAttributes) {
     if (_dirty) {
         for (auto& binding : _attributes) {
             auto& attrib = binding.second;

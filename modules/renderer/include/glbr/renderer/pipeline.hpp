@@ -2,7 +2,7 @@
 
 #include <glbr/renderer/shaders/shader_vertex_attribute.hpp>
 #include <glbr/renderer/shaders/uniforms.hpp>
-#include <glbr/renderer/vertex_attributes/vertex_attribute_bindings.hpp>
+#include <glbr/renderer/vertex_buffer_attributes/vertex_buffer_attribute_bindings.hpp>
 
 #include <vector>
 

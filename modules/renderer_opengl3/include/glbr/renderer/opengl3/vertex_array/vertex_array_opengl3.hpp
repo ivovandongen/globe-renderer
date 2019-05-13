@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 #include <glbr/renderer/opengl3/buffers/index_buffer_opengl3.hpp>
-#include <glbr/renderer/opengl3/vertex_attributes/vertex_attribute_bindings_opengl3.hpp>
+#include <glbr/renderer/opengl3/vertex_buffer_attributes/vertex_buffer_attribute_bindings_opengl3.hpp>
 #include <glbr/renderer/pipeline.hpp>
 #include <glbr/renderer/vertex_array/vertex_array.hpp>
 
@@ -30,12 +30,12 @@ public:
 
     void unbind();
 
-    void add(const std::string &key, VertexAttribute attribute) override;
+    void add(const std::string &key, VertexBufferAttribute attribute) override;
 
 private:
     GLuint _id{0};
     std::unique_ptr<IndexBufferOpenGL3> _indexBuffer;
-    VertexAttributeBindingsOpenGL3 _attributes;
+    VertexBufferAttributeBindingsOpenGL3 _attributes;
 };
 
 }  // namespace opengl3

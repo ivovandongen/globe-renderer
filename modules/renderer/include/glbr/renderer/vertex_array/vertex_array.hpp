@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glbr/renderer/buffers/index_buffer.hpp>
-#include <glbr/renderer/vertex_attributes/vertex_attribute.hpp>
+#include <glbr/renderer/vertex_buffer_attributes/vertex_buffer_attribute.hpp>
 
 #include <memory>
 
@@ -18,7 +18,7 @@ public:
 
     virtual void indexBuffer(std::unique_ptr<IndexBuffer>) = 0;
 
-    virtual void add(const std::string &key, VertexAttribute) = 0;
+    virtual void add(const std::string &key, VertexBufferAttribute) = 0;
 
 protected:
     VertexArray() = default;

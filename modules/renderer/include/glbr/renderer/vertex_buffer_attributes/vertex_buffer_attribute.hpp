@@ -5,16 +5,16 @@
 namespace glbr {
 namespace renderer {
 
-class VertexAttribute {
+class VertexBufferAttribute {
 public:
     enum class Type { Float };
 
-    VertexAttribute() = default;
+    VertexBufferAttribute() = default;
 
-    VertexAttribute(Type type, unsigned int components, bool normalize, unsigned int stride, unsigned int offset)
+    VertexBufferAttribute(Type type, unsigned int components, bool normalize, unsigned int stride, unsigned int offset)
         : _components(components), _type(type), _normalize(normalize), _stride(stride), _offset(offset) {}
 
-    ~VertexAttribute() = default;
+    ~VertexBufferAttribute() = default;
 
     Type type() const { return _type; };
     unsigned int components() const { return _components; }
