@@ -6,13 +6,15 @@ TEST(VertexAttributeBindingsOpenGL3, DirtyChecking) {
     using namespace glbr::renderer;
     using namespace glbr::renderer::opengl3;
 
+    std::shared_ptr<VertexBuffer> buffer;
+
     VertexBufferAttributeBindingsOpenGL3 bindings{
-        {"my_attribute", {VertexBufferAttribute::Type::Float, 1, false, 1, 1}}};
+        {"my_attribute", {buffer, VertexBufferAttribute::Type::Float, 1, false, 1, 1}}};
     ASSERT_TRUE(bindings.dirty());
 
     bindings = {};
     ASSERT_FALSE(bindings.dirty());
 
-    bindings["my_attribute"] = {VertexBufferAttribute::Type::Float, 1, false, 1, 1};
+    bindings["my_attribute"] = {buffer, VertexBufferAttribute::Type::Float, 1, false, 1, 1};
     ASSERT_TRUE(bindings.dirty());
 }

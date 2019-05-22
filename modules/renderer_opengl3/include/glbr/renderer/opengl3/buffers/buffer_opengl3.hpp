@@ -19,7 +19,7 @@ public:
 
     inline void bind() { GL_VERIFY(glBindBuffer(_target, _id)); }
 
-    inline void upload(void* data) { GL_VERIFY(glBufferData(_target, _size, data, _usage)); }
+    inline void upload(const void* data) { GL_VERIFY(glBufferData(_target, _size, data, _usage)); }
 
     inline unsigned int size() { return _size; }
 

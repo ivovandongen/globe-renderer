@@ -1,3 +1,4 @@
+#include <glbr/core/geometry/mesh.hpp>
 #include <glbr/io/file.hpp>
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
@@ -6,12 +7,44 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <array>
+#include <memory>
+
+using namespace glbr;
+using namespace glbr::core::geometry;
+using namespace glbr::renderer;
+
+static std::unique_ptr<Mesh> createMesh() {
+    struct Vertex {
+        glm::vec3 position;
+        glm::vec3 color;
+    };
+    using Index = std::array<int, 3>;
+
+    auto mesh = Mesh::Create<Vertex, Index>({
+        {"position", VertexAttributeType::Float, 3},                       // Vertex position
+        {"color", VertexAttributeType::Float, 3, offsetof(Vertex, color)}  // Vertex color
+    });
+
+    mesh->data({
+        {{0.5f, 0.5f, 0.0f}, {1.f, 0.f, 0.f}},    // top right
+        {{0.5f, -0.5f, 0.0f}, {0.f, 1.f, 0.f}},   // bottom right
+        {{-0.5f, -0.5f, 0.0f}, {0.f, 0.f, 1.f}},  // bottom left
+        {{-0.5f, 0.5f, 0.0f}, {0.f, 0.f, 0.f}}    // top left
+    });
+
+    mesh->indices({
+        {0, 1, 3},  // first triangle
+        {1, 2, 3}   // second triangle
+    });
+
+    return mesh;
+}
 
 int main() {
     int width = 640, height = 480;
 
-    using namespace glbr;
-    using namespace glbr::renderer;
+    // Mesh can be created without a current context
+    auto mesh = createMesh();
 
     logging::setLevel(logging::Level::DEBUG);
     logging::info("Starting app");
@@ -31,35 +64,9 @@ int main() {
 
     pipeline->bind();
 
-    // Create a vertex array
-    auto vertexArray = window.context().createVertexArray();
+    // Create a vertex array from the mesh
+    auto vertexArray = window.context().createVertexArray(*mesh);
     vertexArray->bind();
-
-    std::array<float, 12> vertices{
-        0.5f,  0.5f,  0.0f,  // top right
-        0.5f,  -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f, 0.5f,  0.0f   // top left
-    };
-    std::array<unsigned int, 6> indices{
-        // note that we start from 0!
-        0, 1, 3,  // first triangle
-        1, 2, 3   // second triangle
-    };
-
-    // Add the vertices to the VertexBuffer
-    auto vertexBuffer = window.context().createVertexBuffer(BufferHint::StaticDraw, vertices.size() * sizeof(float));
-    vertexBuffer->bind();
-    vertexBuffer->upload(vertices.data());
-
-    // Set up the VertexAttributes
-    vertexArray->add("aPos", {VertexBufferAttribute::Type::Float, 3, false, 3 * sizeof(float), 0});
-
-    // Add the indices to the IndexBuffer
-    auto indexBuffer = window.context().createIndexBuffer(BufferHint::StaticDraw, indices.size() * sizeof(float));
-    indexBuffer->bind();
-    indexBuffer->upload(indices.data());
-    vertexArray->indexBuffer(std::move(indexBuffer));
 
     renderer::ClearState clearState{{0, 1, 1, 1}};
 

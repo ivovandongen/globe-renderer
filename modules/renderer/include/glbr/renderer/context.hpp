@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glbr/core/geometry/mesh.hpp>
 #include <glbr/renderer/buffers/buffer_hint.hpp>
 #include <glbr/renderer/buffers/vertex_buffer.hpp>
 #include <glbr/renderer/clear_state.hpp>
@@ -19,6 +20,8 @@ public:
     virtual void makeCurrent() const = 0;
 
     virtual std::unique_ptr<VertexArray> createVertexArray() = 0;
+
+    std::unique_ptr<VertexArray> createVertexArray(const core::geometry::Mesh &);
 
     virtual std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint, int sizeInBytes) = 0;
 

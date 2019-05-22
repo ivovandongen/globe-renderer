@@ -16,8 +16,10 @@ public:
 TEST(VertexAttributeBindings, ConstIterable) {
     using namespace glbr::renderer;
 
+    std::shared_ptr<VertexBuffer> buffer;
+
     VertexBufferAttributeBindings bindings{
-        {"my_attribute", VertexBufferAttribute{VertexBufferAttribute::Type::Float, 1, false, 1, 1}}};
+        {"my_attribute", VertexBufferAttribute{buffer, VertexBufferAttribute::Type::Float, 1, false, 1, 1}}};
 
     ConstTest<VertexBufferAttribute> constTest;
     bool iterated = false;
@@ -32,8 +34,10 @@ TEST(VertexAttributeBindings, ConstIterable) {
 TEST(VertexAttributeBindings, ConstAt) {
     using namespace glbr::renderer;
 
+    std::shared_ptr<VertexBuffer> buffer;
+
     VertexBufferAttributeBindings bindings{
-        {"my_attribute", VertexBufferAttribute{VertexBufferAttribute::Type::Float, 1, false, 1, 1}}};
+        {"my_attribute", VertexBufferAttribute{buffer, VertexBufferAttribute::Type::Float, 1, false, 1, 1}}};
 
     ConstTest<VertexBufferAttribute> constTest;
     constTest(bindings.at("my_attribute"));
@@ -43,17 +47,21 @@ TEST(VertexAttributeBindings, ConstAt) {
 TEST(VertexAttributeBindings, SubscriptOperator) {
     using namespace glbr::renderer;
 
+    std::shared_ptr<VertexBuffer> buffer;
+
     VertexBufferAttributeBindings bindings;
 
-    bindings["my_attribute"] = VertexBufferAttribute{VertexBufferAttribute::Type::Float, 2, false, 1, 1};
+    bindings["my_attribute"] = VertexBufferAttribute{buffer, VertexBufferAttribute::Type::Float, 2, false, 1, 1};
     ASSERT_EQ(bindings["my_attribute"].components(), 2);
 }
 
 TEST(VertexAttributeBindings, ConstSubscriptOperator) {
     using namespace glbr::renderer;
 
+    std::shared_ptr<VertexBuffer> buffer;
+
     VertexBufferAttributeBindings bindings{
-        {"my_attribute", VertexBufferAttribute{VertexBufferAttribute::Type::Float, 1, false, 1, 1}}};
+        {"my_attribute", VertexBufferAttribute{buffer, VertexBufferAttribute::Type::Float, 1, false, 1, 1}}};
 
     ConstTest<VertexBufferAttribute> constTest;
     const auto& attr = bindings["my_attribute"];

@@ -22,7 +22,7 @@ public:
 
     IndexBufferOpenGL3 *indexBuffer() override;
 
-    void indexBuffer(std::unique_ptr<IndexBuffer>) override;
+    void indexBuffer(std::shared_ptr<IndexBuffer>) override;
 
     void bind() override;
 
@@ -34,7 +34,7 @@ public:
 
 private:
     GLuint _id{0};
-    std::unique_ptr<IndexBufferOpenGL3> _indexBuffer;
+    std::shared_ptr<IndexBufferOpenGL3> _indexBuffer;
     VertexBufferAttributeBindingsOpenGL3 _attributes;
 };
 

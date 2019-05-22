@@ -45,12 +45,13 @@ int main() {
     };
 
     // Add the vertices to the VertexBuffer
-    auto vertexBuffer = window.context().createVertexBuffer(BufferHint::StaticDraw, vertices.size() * sizeof(float));
+    std::shared_ptr<VertexBuffer> vertexBuffer =
+        window.context().createVertexBuffer(BufferHint::StaticDraw, vertices.size() * sizeof(float));
     vertexBuffer->bind();
     vertexBuffer->upload(vertices.data());
 
     // Set up the VertexAttributes
-    vertexArray->add("aPos", {VertexBufferAttribute::Type::Float, 3, false, 3 * sizeof(float), 0});
+    vertexArray->add("aPos", {vertexBuffer, VertexBufferAttribute::Type::Float, 3, false, 3 * sizeof(float), 0});
 
     // Add the indices to the IndexBuffer
     auto indexBuffer = window.context().createIndexBuffer(BufferHint::StaticDraw, indices.size() * sizeof(float));

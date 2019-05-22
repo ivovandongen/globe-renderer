@@ -16,7 +16,7 @@ public:
 
     virtual IndexBuffer *indexBuffer() = 0;
 
-    virtual void indexBuffer(std::unique_ptr<IndexBuffer>) = 0;
+    virtual void indexBuffer(std::shared_ptr<IndexBuffer>) = 0;
 
     virtual void add(const std::string &key, VertexBufferAttribute) = 0;
 

@@ -9,7 +9,7 @@ public:
 
     virtual void bind() = 0;
 
-    virtual void upload(void* data) = 0;
+    virtual void upload(const void* data) = 0;
 
     virtual unsigned int size() = 0;
 };

@@ -33,8 +33,8 @@ IndexBufferOpenGL3 *VertexArrayOpenGL3::indexBuffer() {
     return _indexBuffer.get();
 }
 
-void VertexArrayOpenGL3::indexBuffer(std::unique_ptr<IndexBuffer> buffer) {
-    _indexBuffer.reset(dynamic_cast<IndexBufferOpenGL3 *>(buffer.release()));
+void VertexArrayOpenGL3::indexBuffer(std::shared_ptr<IndexBuffer> buffer) {
+    _indexBuffer = std::dynamic_pointer_cast<IndexBufferOpenGL3>(buffer);
 }
 
 void VertexArrayOpenGL3::add(const std::string &key, VertexBufferAttribute attribute) {

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <glbr/renderer/buffers/vertex_buffer.hpp>
+
+#include <memory>
 #include <string>
 
 namespace glbr {
@@ -11,8 +14,14 @@ public:
 
     VertexBufferAttribute() = default;
 
-    VertexBufferAttribute(Type type, unsigned int components, bool normalize, unsigned int stride, unsigned int offset)
-        : _components(components), _type(type), _normalize(normalize), _stride(stride), _offset(offset) {}
+    VertexBufferAttribute(std::shared_ptr<VertexBuffer> buffer, Type type, unsigned int components, bool normalize,
+                          unsigned int stride, unsigned int offset)
+        : _buffer(std::move(buffer)),
+          _type(type),
+          _components(components),
+          _normalize(normalize),
+          _stride(stride),
+          _offset(offset) {}
 
     ~VertexBufferAttribute() = default;
 
@@ -23,11 +32,12 @@ public:
     unsigned int offset() const { return _offset; }
 
 private:
+    std::shared_ptr<VertexBuffer> _buffer;
     Type _type;
-    unsigned int _components;
-    bool _normalize;
-    unsigned int _stride;
-    unsigned int _offset;
+    unsigned int _components{};
+    bool _normalize{};
+    unsigned int _stride{};
+    unsigned int _offset{};
 };
 
 }  // namespace renderer

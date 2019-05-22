@@ -15,7 +15,7 @@ public:
 
     void bind() override { BufferOpenGL3::bind(); }
 
-    void upload(void* data) override { BufferOpenGL3::upload(data); }
+    void upload(const void* data) override { BufferOpenGL3::upload(data); }
 
     uint size() override { return BufferOpenGL3::size(); }
 };
