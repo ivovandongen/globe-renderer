@@ -23,10 +23,9 @@ public:
 
     void makeContextCurrent() const override;
 
-    void run(const std::function<void(Context &)> &_onRenderFrame) override;
+    void run(const RenderFN &_onRenderFrame) override;
 
-    void run(const std::function<void(Context &)> &onRenderFrame, const std::function<void()> &onUpdateFrame,
-             double updateRate) override;
+    void run(const RenderFN &onRenderFrame, const UpdateFN &onUpdateFrame, double updateRate) override;
 
 private:
     std::shared_ptr<GLFWSystem> _system;
