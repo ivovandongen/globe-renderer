@@ -33,6 +33,7 @@ public:
 private:
     const GraphicsWindow &_window;
     ClearState _clearState;
+    RenderState _renderState;
 };
 
 }  // namespace opengl3

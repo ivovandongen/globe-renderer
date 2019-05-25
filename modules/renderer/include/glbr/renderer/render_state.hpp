@@ -3,7 +3,11 @@
 namespace glbr {
 namespace renderer {
 
-struct RenderState {};
+enum class RasterizationMode { Point, Line, Fill };
+
+struct RenderState {
+    RasterizationMode rasterizationMode{RasterizationMode::Fill};
+};
 
 }  // namespace renderer
 }  // namespace glbr

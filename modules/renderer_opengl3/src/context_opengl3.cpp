@@ -1,6 +1,7 @@
 #include <glbr/renderer/opengl3/buffers/vertex_buffer_opengl3.hpp>
 #include <glbr/renderer/opengl3/context_opengl3.hpp>
 #include <glbr/renderer/opengl3/errors.hpp>
+#include <glbr/renderer/opengl3/opengl_type_conversions.hpp>
 #include <glbr/renderer/opengl3/vertex_array/vertex_array_opengl3.hpp>
 
 #include <glad/glad.h>
@@ -11,7 +12,8 @@ namespace opengl3 {
 
 ContextOpenGL3::ContextOpenGL3(const GraphicsWindow &window)
     : _window(window),
-      _clearState(){
+      _clearState(),
+      _renderState(){
 
       };
 
@@ -20,6 +22,11 @@ void ContextOpenGL3::makeCurrent() const {
 }
 
 void ContextOpenGL3::draw(const DrawState &state, const SceneState &) {
+    // Apply render state
+    if (_renderState.rasterizationMode != state.renderState.rasterizationMode) {
+        GL_VERIFY(glPolygonMode(GL_FRONT_AND_BACK, toPolygonMode(state.renderState.rasterizationMode)));
+    }
+
     // TODO: dirty checking
     state.pipeline.bind();
     state.vertexArray.bind();
@@ -34,6 +41,9 @@ void ContextOpenGL3::draw(const DrawState &state, const SceneState &) {
     } else {
         // TODO GL_VERIFY(glDrawArrays(GL_TRIANGLES, 0, state.vertexBu));
     }
+
+    // Update render state
+    _renderState = state.renderState;
 }
 
 void ContextOpenGL3::clear(const ClearState &state) {
