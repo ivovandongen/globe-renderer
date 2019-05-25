@@ -49,8 +49,11 @@ void ContextOpenGL3::clear(const ClearState &state) {
     GL_VERIFY(glClear(GL_COLOR_BUFFER_BIT));
 }
 
-void ContextOpenGL3::resize(int width, int height) {
+void ContextOpenGL3::viewport(int width, int height) {
     GL_VERIFY(glViewport(0, 0, width, height));
+
+    // Make sure to call the superclass implementation
+    Context::viewport(width, height);
 }
 
 std::unique_ptr<VertexArray> ContextOpenGL3::createVertexArray() {

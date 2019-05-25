@@ -45,9 +45,9 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
     // Set the user pointer for use in callbacks
     glfwSetWindowUserPointer(_window, this);
 
-    // Resize gl viewport on window resize
+    // Resize gl viewport on window viewport
     glfwSetFramebufferSizeCallback(_window, [](GLFWwindow *window, int width, int height) {
-        getGlfwGraphicsWindow(window)->_context->resize(width, height);
+        getGlfwGraphicsWindow(window)->_context->viewport(width, height);
     });
 
     // Handle some input

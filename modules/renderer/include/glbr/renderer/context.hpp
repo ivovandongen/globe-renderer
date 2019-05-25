@@ -8,14 +8,19 @@
 #include <glbr/renderer/scene/scene_state.hpp>
 #include <glbr/renderer/vertex_array/vertex_array.hpp>
 
+#include <glbr/core/optional.hpp>
+
 namespace glbr {
 namespace renderer {
 
 class Context {
 public:
+    using ResizeFN = std::function<void(float, float)>;
+
     virtual ~Context() = default;
 
-    virtual void resize(int width, int height) = 0;
+    // Needs to be called from sub-classes
+    virtual void viewport(int width, int height);
 
     virtual void makeCurrent() const = 0;
 
@@ -30,6 +35,11 @@ public:
     virtual void clear(const ClearState &) = 0;
 
     virtual void draw(/* TODO: PrimitiveType */ const DrawState &, const SceneState &) = 0;
+
+    void setOnResizeListener(const ResizeFN &onResize) { _onResizeListener = onResize; };
+
+protected:
+    core::optional<ResizeFN> _onResizeListener;
 };
 
 }  // namespace renderer

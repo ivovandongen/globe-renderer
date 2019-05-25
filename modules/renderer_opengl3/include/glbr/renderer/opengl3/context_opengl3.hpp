@@ -16,7 +16,7 @@ public:
 
     ~ContextOpenGL3() override = default;
 
-    void resize(int width, int height) override;
+    void viewport(int width, int height) override;
 
     void makeCurrent() const override;
 

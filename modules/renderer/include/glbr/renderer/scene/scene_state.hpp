@@ -9,6 +9,8 @@ class SceneState {
 public:
     SceneState(float width, float height);
 
+    void viewport(float width, float height);
+
     Camera& camera() { return _camera; };
 
     glm::mat4 projectionMatrix() const;
