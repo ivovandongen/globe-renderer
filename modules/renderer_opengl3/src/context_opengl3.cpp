@@ -57,6 +57,9 @@ void ContextOpenGL3::clear(const ClearState &state) {
 
     // TODO: other bits
     GL_VERIFY(glClear(GL_COLOR_BUFFER_BIT));
+
+    // Update clear state
+    _clearState = state;
 }
 
 void ContextOpenGL3::viewport(int width, int height) {
