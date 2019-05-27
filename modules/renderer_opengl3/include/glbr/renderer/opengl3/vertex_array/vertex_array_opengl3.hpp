@@ -24,13 +24,15 @@ public:
 
     void indexBuffer(std::shared_ptr<IndexBuffer>) override;
 
-    void bind() override;
+    void bind() const override;
 
     void clean(const Pipeline &pipeline);
 
     void unbind();
 
     void add(const std::string &key, VertexBufferAttribute attribute) override;
+
+    GLuint id() const { return _id; }
 
 private:
     GLuint _id{0};

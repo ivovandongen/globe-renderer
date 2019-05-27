@@ -19,13 +19,15 @@ public:
 
     ~PipelineOpenGL3() override;
 
-    void bind() override;
+    void bind() const override;
 
     const VertexAttributeBindings &vertexAttributeBindings() const override { return _vertexAttributeBindings; }
 
     const Uniforms &uniforms() const override { return _uniforms; }
 
     Uniforms &uniforms() override { return _uniforms; }
+
+    GLuint id() const { return _id; }
 
 private:
     void loadVertexAttributes();

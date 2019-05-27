@@ -17,7 +17,7 @@ VertexArrayOpenGL3::~VertexArrayOpenGL3() {
     GL_VERIFY(glDeleteVertexArrays(1, &_id));
 }
 
-void VertexArrayOpenGL3::bind() {
+void VertexArrayOpenGL3::bind() const {
     GL_VERIFY(glBindVertexArray(_id));
 }
 

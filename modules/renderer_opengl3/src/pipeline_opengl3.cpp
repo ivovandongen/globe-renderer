@@ -68,7 +68,7 @@ PipelineOpenGL3::~PipelineOpenGL3() {
     GL_VERIFY(glDeleteProgram(_id));
 }
 
-void PipelineOpenGL3::bind() {
+void PipelineOpenGL3::bind() const {
     GL_VERIFY(glUseProgram(_id));
 }
 

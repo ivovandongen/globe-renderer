@@ -16,7 +16,7 @@ public:
 public:
     virtual ~Pipeline() = default;
 
-    virtual void bind() = 0;
+    virtual void bind() const = 0;
 
     virtual const VertexAttributeBindings &vertexAttributeBindings() const = 0;
 

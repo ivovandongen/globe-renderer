@@ -12,7 +12,7 @@ class VertexArray {
 public:
     virtual ~VertexArray() = default;
 
-    virtual void bind() = 0;
+    virtual void bind() const = 0;
 
     virtual IndexBuffer *indexBuffer() = 0;
 
