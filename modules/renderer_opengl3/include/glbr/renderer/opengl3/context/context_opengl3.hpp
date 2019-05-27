@@ -6,6 +6,8 @@
 #include <glbr/renderer/graphics_window.hpp>
 #include <glbr/renderer/vertex_array/vertex_array.hpp>
 
+#include <glbr/renderer/opengl3/context/render_state_opengl3.hpp>
+
 namespace glbr {
 namespace renderer {
 namespace opengl3 {
@@ -32,8 +34,9 @@ public:
 
 private:
     const GraphicsWindow &_window;
+
     ClearState _clearState;
-    RenderState _renderState;
+    RenderStateOpenGL3 _renderState;
 };
 
 }  // namespace opengl3

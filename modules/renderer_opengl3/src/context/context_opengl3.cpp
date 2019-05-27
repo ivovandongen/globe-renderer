@@ -1,7 +1,8 @@
+#include <glbr/renderer/opengl3/context/context_opengl3.hpp>
+
+#include <glbr/renderer/clear_state.hpp>
 #include <glbr/renderer/opengl3/buffers/vertex_buffer_opengl3.hpp>
-#include <glbr/renderer/opengl3/context_opengl3.hpp>
 #include <glbr/renderer/opengl3/errors.hpp>
-#include <glbr/renderer/opengl3/opengl_type_conversions.hpp>
 #include <glbr/renderer/opengl3/vertex_array/vertex_array_opengl3.hpp>
 
 #include <glad/glad.h>
@@ -23,9 +24,7 @@ void ContextOpenGL3::makeCurrent() const {
 
 void ContextOpenGL3::draw(const DrawState &state, const SceneState &) {
     // Apply render state
-    if (_renderState.rasterizationMode != state.renderState.rasterizationMode) {
-        GL_VERIFY(glPolygonMode(GL_FRONT_AND_BACK, toPolygonMode(state.renderState.rasterizationMode)));
-    }
+    _renderState = state.renderState;
 
     // TODO: dirty checking
     state.pipeline.bind();
@@ -41,25 +40,15 @@ void ContextOpenGL3::draw(const DrawState &state, const SceneState &) {
     } else {
         // TODO GL_VERIFY(glDrawArrays(GL_TRIANGLES, 0, state.vertexBu));
     }
-
-    // Update render state
-    _renderState = state.renderState;
 }
 
 void ContextOpenGL3::clear(const ClearState &state) {
-    // TODO: dirty state
-
-    // Clear color
-    if (state.color != _clearState.color) {
-        GL_VERIFY(glClearColor(state.color[0], state.color[1], state.color[2], state.color[3]));
-        _clearState.color = state.color;
-    }
-
-    // TODO: other bits
-    GL_VERIFY(glClear(GL_COLOR_BUFFER_BIT));
-
     // Update clear state
     _clearState = state;
+
+    // Clear
+    // TODO: other bits
+    GL_VERIFY(glClear(GL_COLOR_BUFFER_BIT));
 }
 
 void ContextOpenGL3::viewport(int width, int height) {

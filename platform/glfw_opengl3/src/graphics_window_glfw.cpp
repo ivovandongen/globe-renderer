@@ -2,7 +2,7 @@
 
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
-#include <glbr/renderer/opengl3/context_opengl3.hpp>
+#include <glbr/renderer/opengl3/context/context_opengl3.hpp>
 
 #include <glad/glad.h>
 
