@@ -34,11 +34,11 @@ int main() {
     sceneState.camera().position({0, 0, 3});
 
     // Create the pipeline
-    auto pipeline =
+    std::shared_ptr<Pipeline> pipeline =
         device.createPipeline(io::readFile("resources/vertex.glsl"), io::readFile("resources/fragment.glsl"));
 
     // Create a vertex array from the mesh
-    auto vertexArray = window.context().createVertexArray(*mesh);
+    std::shared_ptr<VertexArray> vertexArray = window.context().createVertexArray(*mesh);
 
     renderer::ClearState clearState{{0, 1, 1, 1}};
 
@@ -59,7 +59,7 @@ int main() {
         pipeline->uniforms()["bltin_model"] = model;
 
         // Draw the model
-        context.draw({{RasterizationMode::Line}, *pipeline, *vertexArray}, sceneState);
+        context.draw({{RasterizationMode::Line}, pipeline, vertexArray}, sceneState);
     };
 
     // Update function

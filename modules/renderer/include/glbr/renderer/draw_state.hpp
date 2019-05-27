@@ -9,8 +9,8 @@ namespace renderer {
 
 struct DrawState {
     RenderState renderState;
-    Pipeline &pipeline;
-    VertexArray &vertexArray;
+    std::shared_ptr<Pipeline> pipeline;
+    std::shared_ptr<VertexArray> vertexArray;
 };
 
 }  // namespace renderer

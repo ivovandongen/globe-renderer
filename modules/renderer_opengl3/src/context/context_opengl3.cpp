@@ -26,17 +26,17 @@ void ContextOpenGL3::draw(const DrawState &state, const SceneState &) {
     // Apply render state
     _renderState = state.renderState;
 
-    // TODO: dirty checking
-    state.pipeline.bind();
-    state.vertexArray.bind();
+    // Apply programmable state
+    _pipeline = std::dynamic_pointer_cast<PipelineOpenGL3>(state.pipeline);
+    _vertexArray = std::dynamic_pointer_cast<VertexArrayOpenGL3>(state.vertexArray);
 
-    dynamic_cast<VertexArrayOpenGL3 &>(state.vertexArray).clean(state.pipeline);
-    state.pipeline.uniforms().apply();
+    _vertexArray->clean(*_pipeline);
+    _pipeline->uniforms().apply();
 
     // TODO
-    if (state.vertexArray.indexBuffer()) {
+    if (state.vertexArray->indexBuffer()) {
         // TODO support other index types than uint
-        GL_VERIFY(glDrawElements(GL_TRIANGLES, state.vertexArray.indexBuffer()->size(), GL_UNSIGNED_INT, nullptr););
+        GL_VERIFY(glDrawElements(GL_TRIANGLES, state.vertexArray->indexBuffer()->size(), GL_UNSIGNED_INT, nullptr););
     } else {
         // TODO GL_VERIFY(glDrawArrays(GL_TRIANGLES, 0, state.vertexBu));
     }

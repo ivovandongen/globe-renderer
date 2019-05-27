@@ -6,7 +6,12 @@
 #include <glbr/renderer/graphics_window.hpp>
 #include <glbr/renderer/vertex_array/vertex_array.hpp>
 
+#include <glbr/renderer/opengl3/context/binding_ops.hpp>
+#include <glbr/renderer/opengl3/context/binding_state.hpp>
+#include <glbr/renderer/opengl3/context/clear_state_opengl3.hpp>
 #include <glbr/renderer/opengl3/context/render_state_opengl3.hpp>
+#include <glbr/renderer/opengl3/pipeline_opengl3.hpp>
+#include <glbr/renderer/opengl3/vertex_array/vertex_array_opengl3.hpp>
 
 namespace glbr {
 namespace renderer {
@@ -35,8 +40,13 @@ public:
 private:
     const GraphicsWindow &_window;
 
-    ClearState _clearState;
+    // Clear state
+    ClearStateOpenGL3 _clearState;
+
+    // Draw state
     RenderStateOpenGL3 _renderState;
+    BindingState<PipelineOpenGL3> _pipeline;
+    BindingState<VertexArrayOpenGL3> _vertexArray;
 };
 
 }  // namespace opengl3

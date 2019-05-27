@@ -23,14 +23,11 @@ int main() {
     auto &device = opengl3::DeviceOpenGL3::instance();
 
     // Create the pipeline
-    auto pipeline = device.createPipeline(io::readFile("resources/triangle.vertex.glsl"),
-                                          io::readFile("resources/triangle.fragment.glsl"));
-
-    pipeline->bind();
+    std::shared_ptr<Pipeline> pipeline = device.createPipeline(io::readFile("resources/triangle.vertex.glsl"),
+                                                               io::readFile("resources/triangle.fragment.glsl"));
 
     // Create a vertex array
-    auto vertexArray = window.context().createVertexArray();
-    vertexArray->bind();
+    std::shared_ptr<VertexArray> vertexArray = window.context().createVertexArray();
 
     std::array<float, 12> vertices{
         0.5f,  0.5f,  0.0f,  // top right
@@ -74,7 +71,7 @@ int main() {
         context.clear(clearState);
 
         // Draw the rectangle
-        context.draw({{}, *pipeline, *vertexArray}, sceneState);
+        context.draw({{}, pipeline, vertexArray}, sceneState);
     };
 
     // Update function

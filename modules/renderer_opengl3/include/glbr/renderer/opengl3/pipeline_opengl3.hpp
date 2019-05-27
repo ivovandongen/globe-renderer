@@ -29,6 +29,9 @@ public:
 
     GLuint id() const { return _id; }
 
+    bool operator==(const PipelineOpenGL3 &other) { return _id == other._id; }
+    bool operator!=(const PipelineOpenGL3 &other) { return !(*this == other); }
+
 private:
     void loadVertexAttributes();
     void loadUniforms();

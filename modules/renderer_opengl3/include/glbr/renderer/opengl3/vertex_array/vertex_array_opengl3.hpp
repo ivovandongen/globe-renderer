@@ -6,7 +6,10 @@
 #include <glbr/renderer/pipeline.hpp>
 #include <glbr/renderer/vertex_array/vertex_array.hpp>
 
+#include <utility>
 #include <vector>
+
+using namespace std::rel_ops;
 
 namespace glbr {
 namespace renderer {
@@ -33,6 +36,9 @@ public:
     void add(const std::string &key, VertexBufferAttribute attribute) override;
 
     GLuint id() const { return _id; }
+
+    bool operator==(const VertexArrayOpenGL3 &other) { return _id == other._id; }
+    bool operator!=(const VertexArrayOpenGL3 &other) { return !(*this == other); }
 
 private:
     GLuint _id{0};
