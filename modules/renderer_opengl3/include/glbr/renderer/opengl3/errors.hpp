@@ -1,8 +1,8 @@
 #pragma once
 
-#include <glad/glad.h>
+#include <glbr/logging/logging.hpp>
 
-#include <iostream>
+#include <glad/glad.h>
 
 #ifndef NDEBUG
 #define GL_VERIFY(cmd)                                                                                          \
@@ -24,7 +24,7 @@ namespace opengl3 {
 
 inline void glCheckError(const char *cmd, const char *file, int line) {
     if (GLenum err = glGetError()) {
-        std::cerr << "GL ERROR: " << err << " operation: " << cmd << " at: " << file << ":" << line << std::endl;
+        logging::error("GL ERROR: {} operation: {} at: {}:{}", err, cmd, file, line);
     }
 }
 

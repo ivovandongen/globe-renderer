@@ -3,7 +3,6 @@
 #include <glbr/renderer/opengl3/pipeline_opengl3.hpp>
 #include <glbr/renderer/opengl3/shaders/uniform_opengl3.hpp>
 
-#include <iostream>
 #include <string>
 #include <vector>
 
