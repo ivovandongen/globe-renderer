@@ -11,6 +11,7 @@ class ContextStub : public Context {
     std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint, int) override { assert(false); };
     void clear(const ClearState &) override { assert(false); };
     void draw(const DrawState &, const SceneState &) override { assert(false); };
+    TextureUnits &textureUnits() override { assert(false); }
 };
 
 TEST(Context, ResizeListener) {

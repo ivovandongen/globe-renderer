@@ -17,7 +17,7 @@ static GlfwGraphicsWindow *getGlfwGraphicsWindow(GLFWwindow *window) {
 }
 
 GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, bool vsync)
-    : _system(GLFWSystem::init()), _context(std::make_unique<opengl3::ContextOpenGL3>(*this)) {
+    : _system(GLFWSystem::init()) {
     // TODO Move OpenGL specifics
 
     // Specify OpenGL version to use
@@ -64,7 +64,7 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
     }
 
     // Make the context current for this thread
-    _context->makeCurrent();
+    makeContextCurrent();
 
     // Load glad
     if (!gladLoadGL()) {
@@ -80,6 +80,9 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
     // Print gl version
     auto version = glGetString(GL_VERSION);
     logging::info("Using OpenGL version: {}", version);
+
+    // Initialize our Context
+    _context = std::make_unique<opengl3::ContextOpenGL3>(*this);
 };
 
 GlfwGraphicsWindow::~GlfwGraphicsWindow() {

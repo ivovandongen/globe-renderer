@@ -1,7 +1,9 @@
 #include <glbr/renderer/opengl3/vertex_buffer_attributes/vertex_buffer_attribute_bindings_opengl3.hpp>
 
-#include <glad/glad.h>
+#include <glbr/logging/logging.hpp>
 #include <glbr/renderer/opengl3/errors.hpp>
+
+#include <glad/glad.h>
 
 #include <algorithm>
 
@@ -30,10 +32,15 @@ void VertexBufferAttributeBindingsOpenGL3::clean(const std::vector<ShaderVertexA
                                          [&](auto& val) { return val.name() == binding.first; });
 
             if (location == std::end(shaderAttributes)) {
-                // TODO log this properly
-                std::cerr << "No shader vertex attribute found for key: " << binding.first << std::endl;
+                logging::error("No shader vertex attribute found for key: {}", binding.first);
                 continue;
             }
+
+            logging::debug(
+                "Binding vertex attribute {} at position {} (components: {}, type: {}, normalize: {}, stride: {}, "
+                "offset: {})",
+                binding.first, location->location(), attrib.components(), type, attrib.normalize(), attrib.stride(),
+                attrib.offset());
 
             GL_VERIFY(glVertexAttribPointer(location->location(), attrib.components(), type, attrib.normalize(),
                                             attrib.stride(), reinterpret_cast<void*>(attrib.offset())));

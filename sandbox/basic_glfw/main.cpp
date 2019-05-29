@@ -28,6 +28,7 @@ int main() {
 
     // Create a vertex array
     std::shared_ptr<VertexArray> vertexArray = window.context().createVertexArray();
+    vertexArray->bind();
 
     std::array<float, 12> vertices{
         0.5f,  0.5f,  0.0f,  // top right
@@ -51,10 +52,9 @@ int main() {
     vertexArray->add("aPos", {vertexBuffer, VertexBufferAttribute::Type::Float, 3, false, 3 * sizeof(float), 0});
 
     // Add the indices to the IndexBuffer
-    auto indexBuffer = window.context().createIndexBuffer(BufferHint::StaticDraw, indices.size() * sizeof(float));
-    indexBuffer->bind();
-    indexBuffer->upload(indices.data());
-    vertexArray->indexBuffer(std::move(indexBuffer));
+    vertexArray->indexBuffer(window.context().createIndexBuffer(BufferHint::StaticDraw, indices.size() * sizeof(float)));
+    vertexArray->indexBuffer()->bind();
+    vertexArray->indexBuffer()->upload(indices.data());
 
     renderer::ClearState clearState{{0, 1, 1, 1}};
 

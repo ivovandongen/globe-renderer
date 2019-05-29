@@ -33,10 +33,14 @@ void ContextOpenGL3::draw(const DrawState &state, const SceneState &) {
     _vertexArray->clean(*_pipeline);
     _pipeline->uniforms().apply();
 
+    // Update the texture units
+    _textureUnits.clean();
+
     // TODO
     if (state.vertexArray->indexBuffer()) {
         // TODO support other index types than uint
-        GL_VERIFY(glDrawElements(GL_TRIANGLES, state.vertexArray->indexBuffer()->size(), GL_UNSIGNED_INT, nullptr););
+        // TODO support other primitives than triangles
+        GL_VERIFY(glDrawElements(GL_TRIANGLES, state.vertexArray->indexBuffer()->size(), GL_UNSIGNED_INT, nullptr));
     } else {
         // TODO GL_VERIFY(glDrawArrays(GL_TRIANGLES, 0, state.vertexBu));
     }

@@ -15,6 +15,15 @@ public:
     std::unique_ptr<Pipeline> createPipeline(const std::string &vertexSource,
                                              const std::string &fragmentSource) override;
 
+    std::unique_ptr<Texture2D> createTexture2D(const core::Image &image, bool generateMipmaps) override;
+
+    std::unique_ptr<Texture2D> createTexture2D(const core::Image &image, TextureFormat format,
+                                               bool generateMipmaps) override;
+
+    std::unique_ptr<TextureSampler> createTextureSampler(TextureMinificationFilter filter,
+                                                         TextureMagnificationFilter magnificationFilter, TextureWrap s,
+                                                         TextureWrap t) override;
+
 private:
     DeviceOpenGL3() = default;
 };

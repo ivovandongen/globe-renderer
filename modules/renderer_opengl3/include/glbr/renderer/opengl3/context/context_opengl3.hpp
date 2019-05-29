@@ -11,6 +11,7 @@
 #include <glbr/renderer/opengl3/context/clear_state_opengl3.hpp>
 #include <glbr/renderer/opengl3/context/render_state_opengl3.hpp>
 #include <glbr/renderer/opengl3/pipeline_opengl3.hpp>
+#include <glbr/renderer/opengl3/textures/texture_units_opengl3.hpp>
 #include <glbr/renderer/opengl3/vertex_array/vertex_array_opengl3.hpp>
 
 namespace glbr {
@@ -37,11 +38,16 @@ public:
 
     void draw(const DrawState &, const SceneState &) override;
 
+    TextureUnits &textureUnits() override { return _textureUnits; };
+
 private:
     const GraphicsWindow &_window;
 
     // Clear state
     ClearStateOpenGL3 _clearState;
+
+    // Per context state
+    TextureUnitsOpenGL3 _textureUnits;
 
     // Draw state
     RenderStateOpenGL3 _renderState;

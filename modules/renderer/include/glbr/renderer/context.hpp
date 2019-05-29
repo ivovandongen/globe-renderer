@@ -6,9 +6,11 @@
 #include <glbr/renderer/clear_state.hpp>
 #include <glbr/renderer/draw_state.hpp>
 #include <glbr/renderer/scene/scene_state.hpp>
+#include <glbr/renderer/textures/texture_units.hpp>
 #include <glbr/renderer/vertex_array/vertex_array.hpp>
 
 #include <glbr/core/optional.hpp>
+#include <glbr/renderer/textures/texture_unit.hpp>
 
 namespace glbr {
 namespace renderer {
@@ -35,6 +37,8 @@ public:
     virtual void clear(const ClearState &) = 0;
 
     virtual void draw(/* TODO: PrimitiveType */ const DrawState &, const SceneState &) = 0;
+
+    virtual TextureUnits &textureUnits() = 0;
 
     void setOnResizeListener(const ResizeFN &onResize) { _onResizeListener = onResize; };
 
