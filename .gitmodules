@@ -19,3 +19,6 @@
 [submodule "deps/stb"]
 	path = deps/stb
 	url = git@github.com:nothings/stb.git
+[submodule "deps/ctti"]
+	path = deps/ctti
+	url = git@github.com:Manu343726/ctti.git
