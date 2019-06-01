@@ -27,10 +27,15 @@ public:
 
     void run(const RenderFN &onRenderFrame, const UpdateFN &onUpdateFrame, double updateRate) override;
 
+    void onEvent(EventHandlerFN onEvent) override { _eventHandler = std::move(onEvent); }
+
+    void close() override;
+
 private:
     std::shared_ptr<GLFWSystem> _system;
     GLFWwindow *_window;
     std::unique_ptr<Context> _context;
+    EventHandlerFN _eventHandler;
 };
 
 }  // namespace glfw

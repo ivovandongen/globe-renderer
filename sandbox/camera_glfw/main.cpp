@@ -1,4 +1,5 @@
 #include <glbr/core/geometry/mesh.hpp>
+#include <glbr/input/events/key_event.hpp>
 #include <glbr/io/file.hpp>
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
@@ -51,6 +52,18 @@ int main() {
 
     // Create the window
     glfw::GlfwGraphicsWindow window{width, height};
+
+    window.onEvent([&window](auto &event) {
+        logging::debug("Event: {}", event.str());
+        core::EventDispatcher d(event);
+        d.dispatch<input::KeyEvent>([&window](auto &event) {
+            if (event.keyCode() == input::KeyCode::KEY_ESCAPE) {
+                window.close();
+                return true;
+            }
+            return false;
+        });
+    });
 
     // Set up the graphics device
     auto &device = opengl3::DeviceOpenGL3::instance();

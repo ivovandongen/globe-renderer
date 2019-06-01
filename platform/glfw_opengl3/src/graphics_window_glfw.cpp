@@ -1,5 +1,7 @@
+#include "glfw_events.hpp"
 #include "glfw_system.hpp"
 
+#include <glbr/input/events/key_event.hpp>
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
 #include <glbr/renderer/opengl3/context/context_opengl3.hpp>
@@ -52,9 +54,8 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
 
     // Handle some input
     glfwSetKeyCallback(_window, [](GLFWwindow *window, int key, int, int action, int) {
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
-        }
+        input::KeyEvent e = convertKeyCode(key, action);
+        getGlfwGraphicsWindow(window)->_eventHandler(e);
     });
 
     if (type != WindowType::FullScreen) {
@@ -127,6 +128,10 @@ void GlfwGraphicsWindow::run(const std::function<void(Context &)> &onRenderFrame
 
 Context &GlfwGraphicsWindow::context() const {
     return *_context;
+}
+
+void GlfwGraphicsWindow::close() {
+    glfwSetWindowShouldClose(_window, GLFW_TRUE);
 }
 
 }  // namespace glfw
