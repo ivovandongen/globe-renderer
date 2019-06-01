@@ -2,6 +2,7 @@
 #include "glfw_system.hpp"
 
 #include <glbr/input/events/key_event.hpp>
+#include <glbr/input/events/mouse_button_event.hpp>
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
 #include <glbr/renderer/opengl3/context/context_opengl3.hpp>
@@ -19,7 +20,7 @@ static GlfwGraphicsWindow *getGlfwGraphicsWindow(GLFWwindow *window) {
 }
 
 GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, bool vsync)
-    : _system(GLFWSystem::init()) {
+    : _system(GLFWSystem::init()), _eventHandler([](core::Event &) {}) {
     // TODO Move OpenGL specifics
 
     // Specify OpenGL version to use
@@ -54,7 +55,11 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
 
     // Handle some input
     glfwSetKeyCallback(_window, [](GLFWwindow *window, int key, int, int action, int) {
-        input::KeyEvent e = convertKeyCode(key, action);
+        input::KeyEvent e = convertKeyEvent(key, action);
+        getGlfwGraphicsWindow(window)->_eventHandler(e);
+    });
+    glfwSetMouseButtonCallback(_window, [](GLFWwindow *window, int button, int action, int) {
+        input::MouseButtonEvent e = convertMouseButtonEvent(button, action);
         getGlfwGraphicsWindow(window)->_eventHandler(e);
     });
 

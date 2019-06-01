@@ -2,12 +2,13 @@
 #include "glfw_system.hpp"
 
 #include <cassert>
+#include <glbr/input/events/mouse_button_event.hpp>
 
 namespace glbr {
 namespace renderer {
 namespace glfw {
 
-input::KeyEvent::Action convertAction(int action) {
+input::KeyEvent::Action convertKeyAction(int action) {
     using namespace input;
     switch (action) {
         case GLFW_PRESS:
@@ -18,6 +19,43 @@ input::KeyEvent::Action convertAction(int action) {
             return KeyEvent::Action::REPEAT;
         default:
             assert((printf("No action defined for: %i", action), false));
+    }
+}
+
+input::MouseButtonEvent::Action convertMouseButtonAction(int action) {
+    using namespace input;
+    switch (action) {
+        case GLFW_PRESS:
+            return MouseButtonEvent::Action::PRESS;
+        case GLFW_RELEASE:
+            return MouseButtonEvent::Action::RELEASE;
+        default:
+            assert((printf("No action defined for: %i", action), false));
+    }
+}
+
+input::MouseButtonCode convertMouseButton(int code) {
+    using namespace input;
+
+    switch (code) {
+        case GLFW_MOUSE_BUTTON_1:
+            return MouseButtonCode::MOUSE_BUTTON_1;
+        case GLFW_MOUSE_BUTTON_2:
+            return MouseButtonCode::MOUSE_BUTTON_2;
+        case GLFW_MOUSE_BUTTON_3:
+            return MouseButtonCode::MOUSE_BUTTON_3;
+        case GLFW_MOUSE_BUTTON_4:
+            return MouseButtonCode::MOUSE_BUTTON_4;
+        case GLFW_MOUSE_BUTTON_5:
+            return MouseButtonCode::MOUSE_BUTTON_5;
+        case GLFW_MOUSE_BUTTON_6:
+            return MouseButtonCode::MOUSE_BUTTON_6;
+        case GLFW_MOUSE_BUTTON_7:
+            return MouseButtonCode::MOUSE_BUTTON_7;
+        case GLFW_MOUSE_BUTTON_8:
+            return MouseButtonCode::MOUSE_BUTTON_8;
+        default:
+            assert(printf("Unknown mouse button: %i", code) && false);
     }
 }
 
@@ -272,8 +310,12 @@ input::KeyCode convertKey(int key) {
     }
 }
 
-input::KeyEvent convertKeyCode(int key, int action) {
-    return input::KeyEvent(convertKey(key), convertAction(action));
+input::KeyEvent convertKeyEvent(int key, int action) {
+    return input::KeyEvent(convertKey(key), convertKeyAction(action));
+}
+
+input::MouseButtonEvent convertMouseButtonEvent(int key, int action) {
+    return input::MouseButtonEvent(convertMouseButton(key), convertMouseButtonAction(action));
 }
 
 }  // namespace glfw
