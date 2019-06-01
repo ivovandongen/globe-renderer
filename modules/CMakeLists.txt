@@ -1,6 +1,7 @@
 add_subdirectory(logging)
 add_subdirectory(core)
 add_subdirectory(io)
+add_subdirectory(input)
 add_subdirectory(renderer)
 
 if (ENABLE_OPENGL)
