@@ -22,7 +22,9 @@ public:
 
     glm::mat4 viewMatrix();
 
-    inline float zoom() const { return _zoom; };
+    inline float zoom() const { return _zoom; }
+
+    inline void zoom(float offset) { _zoom += offset; }
 
     inline const glm::vec3& position() const { return _position; }
 

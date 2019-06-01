@@ -8,9 +8,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <array>
+#include <glbr/input/events/mouse_scroll_event.hpp>
 #include <memory>
 
 using namespace glbr;
+using namespace glbr::input;
 using namespace glbr::core::geometry;
 using namespace glbr::renderer;
 
@@ -53,23 +55,30 @@ int main() {
     // Create the window
     glfw::GlfwGraphicsWindow window{width, height};
 
-    window.onEvent([&window](auto &event) {
-        logging::debug("Event: {}", event.str());
-        core::EventDispatcher d(event);
-        d.dispatch<input::KeyEvent>([&window](auto &event) {
-            if (event.keyCode() == input::KeyCode::KEY_ESCAPE) {
-                window.close();
-                return true;
-            }
-            return false;
-        });
-    });
-
     // Set up the graphics device
     auto &device = opengl3::DeviceOpenGL3::instance();
 
     SceneState sceneState(width, height);
     sceneState.camera().position({0, 0, 3});
+
+    window.onEvent([&](auto &event) {
+        logging::debug("Event: {}", event.str());
+        core::EventDispatcher d(event);
+        d.dispatch<KeyEvent>([&window](auto &event) {
+            if (event.keyCode() == KeyCode::KEY_ESCAPE) {
+                window.close();
+                return true;
+            }
+            return false;
+        });
+        d.dispatch<MouseScrollEvent>([&sceneState](MouseScrollEvent &event) {
+            if (event.offsetY() != 0) {
+                sceneState.camera().zoom(event.offsetY());
+                return true;
+            }
+            return false;
+        });
+    });
 
     // Create the pipeline
     std::shared_ptr<Pipeline> pipeline =
@@ -82,7 +91,6 @@ int main() {
 
     // Add the static matrices as uniforms
     pipeline->uniforms()["bltin_view"] = sceneState.camera().viewMatrix();
-    pipeline->uniforms()["bltin_projection"] = sceneState.projectionMatrix();
 
     // Basic model matrix around the origin
     glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));
@@ -92,6 +100,9 @@ int main() {
         // Clear the scene
         clearState.color = {1., 0, 1., 1};
         context.clear(clearState);
+
+        // Update the projection matrix
+        pipeline->uniforms()["bltin_projection"] = sceneState.projectionMatrix();
 
         // Update the model uniform
         pipeline->uniforms()["bltin_model"] = model;
