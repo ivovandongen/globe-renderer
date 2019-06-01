@@ -56,10 +56,12 @@ public:
     explicit EventDispatcher(Event& event) : _event(event) {}
 
     template <typename T, typename Fn>
-    void dispatch(Fn&& fn) {
+    bool dispatch(Fn&& fn) {
         if (_event.type() == T::Type()) {
             _event._handled = fn(static_cast<T&>(_event));
+            return true;
         }
+        return false;
     }
 
 private:

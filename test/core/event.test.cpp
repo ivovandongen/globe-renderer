@@ -19,8 +19,8 @@ TEST(Event, Basic) {
 }
 
 TEST(Event, Switchable) {
-    Event a = EventA();
-    switch (a.type()) {
+    auto a = std::make_unique<EventA>();
+    switch (a->type()) {
         case EventA::Type():
             SUCCEED();
             break;
@@ -31,13 +31,13 @@ TEST(Event, Switchable) {
 }
 
 TEST(Event, Dispatcher) {
-    Event a = EventA();
+    auto a = std::make_unique<EventA>();
 
-    EventDispatcher d(a);
+    EventDispatcher d(*a);
 
     ASSERT_FALSE(d.dispatch<EventB>([](auto& e) -> bool { return true; }));
-    ASSERT_FALSE(a.handled());
+    ASSERT_FALSE(a->handled());
 
     ASSERT_TRUE(d.dispatch<EventA>([](auto& e) { return true; }));
-    ASSERT_TRUE(a.handled());
+    ASSERT_TRUE(a->handled());
 }
