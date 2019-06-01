@@ -3,6 +3,7 @@
 
 #include <glbr/input/events/key_event.hpp>
 #include <glbr/input/events/mouse_button_event.hpp>
+#include <glbr/input/events/mouse_move_event.hpp>
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
 #include <glbr/renderer/opengl3/context/context_opengl3.hpp>
@@ -60,6 +61,10 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
     });
     glfwSetMouseButtonCallback(_window, [](GLFWwindow *window, int button, int action, int) {
         input::MouseButtonEvent e = convertMouseButtonEvent(button, action);
+        getGlfwGraphicsWindow(window)->_eventHandler(e);
+    });
+    glfwSetCursorPosCallback(_window, [](GLFWwindow *window, double x, double y) {
+        input::MouseMoveEvent e{x, y};
         getGlfwGraphicsWindow(window)->_eventHandler(e);
     });
 
