@@ -2,29 +2,24 @@
 
 #include <glbr/core/event.hpp>
 #include <glbr/input/key_codes.hpp>
-
-#include <sstream>
+#include <glbr/input/key_state.hpp>
 
 namespace glbr {
 namespace input {
 
 class KeyEvent : public core::EventImpl<KeyEvent> {
 public:
-    enum class Action : int { PRESS, RELEASE, REPEAT };
-
-    KeyEvent(KeyCode keyCode, Action action) : _keyCode(keyCode), _action(action) {}
+    KeyEvent(KeyCode keyCode, KeyState state) : _keyCode(keyCode), _state(state) {}
 
     KeyCode keyCode() const { return _keyCode; }
-    Action action() const { return _action; }
+    KeyState state() const { return _state; }
 
     std::string str() override;
 
 private:
     KeyCode _keyCode;
-    Action _action;
+    KeyState _state;
 };
-
-std::ostream& operator<<(std::ostream& os, const KeyEvent::Action& action);
 
 }  // namespace input
 }  // namespace glbr

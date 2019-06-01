@@ -8,29 +8,17 @@ namespace glbr {
 namespace renderer {
 namespace glfw {
 
-input::KeyEvent::Action convertKeyAction(int action) {
+input::KeyState convertKeyState(int action) {
     using namespace input;
     switch (action) {
         case GLFW_PRESS:
-            return KeyEvent::Action::PRESS;
+            return KeyState::PRESS;
         case GLFW_RELEASE:
-            return KeyEvent::Action::RELEASE;
+            return KeyState::RELEASE;
         case GLFW_REPEAT:
-            return KeyEvent::Action::REPEAT;
+            return KeyState::REPEAT;
         default:
-            assert((printf("No action defined for: %i", action), false));
-    }
-}
-
-input::MouseButtonEvent::Action convertMouseButtonAction(int action) {
-    using namespace input;
-    switch (action) {
-        case GLFW_PRESS:
-            return MouseButtonEvent::Action::PRESS;
-        case GLFW_RELEASE:
-            return MouseButtonEvent::Action::RELEASE;
-        default:
-            assert((printf("No action defined for: %i", action), false));
+            assert((printf("No state defined for: %i", action), false));
     }
 }
 
@@ -311,11 +299,11 @@ input::KeyCode convertKey(int key) {
 }
 
 input::KeyEvent convertKeyEvent(int key, int action) {
-    return input::KeyEvent(convertKey(key), convertKeyAction(action));
+    return input::KeyEvent(convertKey(key), convertKeyState(action));
 }
 
 input::MouseButtonEvent convertMouseButtonEvent(int key, int action) {
-    return input::MouseButtonEvent(convertMouseButton(key), convertMouseButtonAction(action));
+    return input::MouseButtonEvent(convertMouseButton(key), convertKeyState(action));
 }
 
 }  // namespace glfw
