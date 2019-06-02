@@ -149,6 +149,20 @@ void GlfwGraphicsWindow::close() {
     glfwSetWindowShouldClose(_window, GLFW_TRUE);
 }
 
+input::KeyState GlfwGraphicsWindow::keyState(input::KeyCode code) const {
+    return convertKeyState(glfwGetKey(_window, convertKeyCode(code)));
+}
+
+input::KeyState GlfwGraphicsWindow::mouseButtonState(input::MouseButtonCode code) const {
+    return convertKeyState(glfwGetMouseButton(_window, convertMouseButtonCode(code)));
+}
+
+input::Position GlfwGraphicsWindow::mousePosition() const {
+    input::Position pos{};
+    glfwGetCursorPos(_window, &pos.x, &pos.y);
+    return pos;
+}
+
 }  // namespace glfw
 }  // namespace renderer
 }  // namespace glbr

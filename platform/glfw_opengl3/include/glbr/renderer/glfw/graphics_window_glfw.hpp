@@ -29,6 +29,12 @@ public:
 
     void onEvent(EventHandlerFN onEvent) override { _eventHandler = std::move(onEvent); }
 
+    input::KeyState keyState(input::KeyCode code) const override;
+
+    input::KeyState mouseButtonState(input::MouseButtonCode code) const override;
+
+    input::Position mousePosition() const override;
+
     void close() override;
 
 private:

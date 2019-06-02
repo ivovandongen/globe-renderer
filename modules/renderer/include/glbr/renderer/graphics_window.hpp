@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glbr/core/event.hpp>
+#include <glbr/input/input.hpp>
 
 #include <functional>
 
@@ -9,13 +10,13 @@ namespace renderer {
 
 enum class WindowType { Default = 0, FullScreen = 1 };
 
-class GraphicsWindow {
+class GraphicsWindow : public input::Input {
 public:
     using RenderFN = std::function<void(Context &)>;
     using UpdateFN = std::function<void()>;
     using EventHandlerFN = std::function<void(core::Event &)>;
 
-    virtual ~GraphicsWindow() = default;
+    ~GraphicsWindow() override = default;
 
     virtual void makeContextCurrent() const = 0;
 

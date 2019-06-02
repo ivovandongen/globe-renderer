@@ -7,6 +7,14 @@ namespace glbr {
 namespace renderer {
 namespace glfw {
 
+input::KeyState convertKeyState(int action);
+
+int convertKeyCode(input::KeyCode);
+
+int convertMouseButtonCode(input::MouseButtonCode code);
+
+input::MouseButtonCode convertMouseButton(int code);
+
 input::KeyEvent convertKeyEvent(int key, int action /*TODO: modifiers and scan codes*/);
 
 input::MouseButtonEvent convertMouseButtonEvent(int key, int action /*TODO: modifiers and scan codes*/);

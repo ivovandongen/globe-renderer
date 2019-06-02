@@ -298,6 +298,14 @@ input::KeyCode convertKey(int key) {
     }
 }
 
+int convertKeyCode(input::KeyCode code) {
+    return static_cast<std::underlying_type<input::KeyCode>::type>(code);
+}
+
+int convertMouseButtonCode(input::MouseButtonCode code) {
+    return static_cast<std::underlying_type<input::MouseButtonCode>::type>(code);
+}
+
 input::KeyEvent convertKeyEvent(int key, int action) {
     return input::KeyEvent(convertKey(key), convertKeyState(action));
 }
