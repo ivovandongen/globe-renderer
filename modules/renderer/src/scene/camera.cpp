@@ -30,5 +30,22 @@ void Camera::updateCameraVectors() {
     _up = glm::normalize(glm::cross(_right, _front));
 }
 
+void Camera::move(CameraMovement direction, float delta) {
+    switch (direction) {
+        case CameraMovement::FORWARD:
+            _position += _front * delta;
+            break;
+        case CameraMovement::BACKWARD:
+            _position -= _front * delta;
+            break;
+        case CameraMovement::LEFT:
+            _position -= _right * delta;
+            break;
+        case CameraMovement::RIGHT:
+            _position += _right * delta;
+            break;
+    }
+}
+
 }  // namespace renderer
 }  // namespace glbr

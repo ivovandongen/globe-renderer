@@ -1,5 +1,6 @@
 #include <glbr/core/geometry/mesh.hpp>
 #include <glbr/input/events/key_event.hpp>
+#include <glbr/input/events/mouse_scroll_event.hpp>
 #include <glbr/io/file.hpp>
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
@@ -8,7 +9,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <array>
-#include <glbr/input/events/mouse_scroll_event.hpp>
 #include <memory>
 
 using namespace glbr;
@@ -64,12 +64,30 @@ int main() {
     window.onEvent([&](auto &event) {
         logging::debug("Event: {}", event.str());
         core::EventDispatcher d(event);
-        d.dispatch<KeyEvent>([&window](auto &event) {
-            if (event.keyCode() == KeyCode::KEY_ESCAPE) {
-                window.close();
-                return true;
+        d.dispatch<KeyEvent>([&](KeyEvent &event) {
+            if (event.state() == KeyState::RELEASE) return false;
+
+            const float delta = 1./20;
+
+            switch (event.keyCode()) {
+                case KeyCode::KEY_ESCAPE:
+                    window.close();
+                    return true;
+                case KeyCode::KEY_LEFT:
+                    sceneState.camera().move(CameraMovement::LEFT, delta);
+                    return true;
+                case KeyCode::KEY_RIGHT:
+                    sceneState.camera().move(CameraMovement::RIGHT, delta);
+                    return true;
+                case KeyCode::KEY_UP:
+                    sceneState.camera().move(CameraMovement::FORWARD, delta);
+                    return true;
+                case KeyCode::KEY_DOWN:
+                    sceneState.camera().move(CameraMovement::BACKWARD, delta);
+                    return true;
+                default:
+                    return false;
             }
-            return false;
         });
         d.dispatch<MouseScrollEvent>([&sceneState](MouseScrollEvent &event) {
             if (event.offsetY() != 0) {
@@ -89,9 +107,6 @@ int main() {
 
     renderer::ClearState clearState{{0, 1, 1, 1}};
 
-    // Add the static matrices as uniforms
-    pipeline->uniforms()["bltin_view"] = sceneState.camera().viewMatrix();
-
     // Basic model matrix around the origin
     glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));
 
@@ -103,6 +118,9 @@ int main() {
 
         // Update the projection matrix
         pipeline->uniforms()["bltin_projection"] = sceneState.projectionMatrix();
+
+        // Update the view matrix
+        pipeline->uniforms()["bltin_view"] = sceneState.camera().viewMatrix();
 
         // Update the model uniform
         pipeline->uniforms()["bltin_model"] = model;
