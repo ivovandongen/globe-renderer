@@ -64,31 +64,39 @@ int main() {
     window.onEvent([&](auto &event) {
         logging::debug("Event: {}", event.str());
         core::EventDispatcher d(event);
+
+        // Move the view around
         d.dispatch<KeyEvent>([&](KeyEvent &event) {
             if (event.state() == KeyState::RELEASE) return false;
 
-            const float delta = 1./20;
+            const float delta = 1. / 20;
 
             switch (event.keyCode()) {
                 case KeyCode::KEY_ESCAPE:
                     window.close();
                     return true;
                 case KeyCode::KEY_LEFT:
+                case KeyCode ::KEY_A:
                     sceneState.camera().move(CameraMovement::LEFT, delta);
                     return true;
                 case KeyCode::KEY_RIGHT:
+                case KeyCode ::KEY_D:
                     sceneState.camera().move(CameraMovement::RIGHT, delta);
                     return true;
                 case KeyCode::KEY_UP:
+                case KeyCode ::KEY_W:
                     sceneState.camera().move(CameraMovement::FORWARD, delta);
                     return true;
                 case KeyCode::KEY_DOWN:
+                case KeyCode ::KEY_S:
                     sceneState.camera().move(CameraMovement::BACKWARD, delta);
                     return true;
                 default:
                     return false;
             }
         });
+
+        // Zoom on scroll
         d.dispatch<MouseScrollEvent>([&sceneState](MouseScrollEvent &event) {
             if (event.offsetY() != 0) {
                 sceneState.camera().zoom(event.offsetY());
