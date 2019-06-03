@@ -3,6 +3,7 @@
 #include "vertex_attributes/vertex_attribute.hpp"
 
 #include <cassert>
+#include <memory>
 #include <numeric>
 #include <string>
 #include <unordered_map>
