@@ -1,5 +1,6 @@
 #include <glbr/core/geometry/mesh.hpp>
 #include <glbr/input/events/key_event.hpp>
+#include <glbr/input/events/mouse_move_event.hpp>
 #include <glbr/input/events/mouse_scroll_event.hpp>
 #include <glbr/io/file.hpp>
 #include <glbr/logging/logging.hpp>
@@ -61,6 +62,10 @@ int main() {
     SceneState sceneState(width, height);
     sceneState.camera().position({0, 0, 3});
 
+    // Mouse move state
+    bool firstMove = true;
+    float lastX = 0, lastY = 0;
+
     window.onEvent([&](auto &event) {
         logging::debug("Event: {}", event.str());
         core::EventDispatcher d(event);
@@ -103,6 +108,30 @@ int main() {
                 return true;
             }
             return false;
+        });
+
+        // Orient the camera with the mouse when alt is held
+        d.dispatch<MouseMoveEvent>([&](MouseMoveEvent &event) {
+            if (window.keyState(KeyCode::KEY_LEFT_ALT) != KeyState::PRESS) {
+                return false;
+            }
+
+            if (firstMove) {
+                lastX = event.x();
+                lastY = event.y();
+                firstMove = false;
+                return true;
+            }
+
+            double xoffset = event.x() - lastX;
+            double yoffset = lastY - event.y();
+            lastX = event.x();
+            lastY = event.y();
+
+            const float sensitivity = .1;
+            sceneState.camera().orientation(yoffset * sensitivity, xoffset * sensitivity);
+
+            return true;
         });
     });
 

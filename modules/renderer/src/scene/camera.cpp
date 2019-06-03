@@ -3,6 +3,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
 
+#include <algorithm>
+
 namespace glbr {
 namespace renderer {
 
@@ -11,7 +13,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
     updateCameraVectors();
 }
 
-glm::mat4 Camera::viewMatrix() {
+glm::mat4 Camera::viewMatrix() const {
     return glm::lookAt(_position, _position + _front, _up);
 }
 
@@ -45,6 +47,16 @@ void Camera::move(CameraMovement direction, float delta) {
             _position += _right * delta;
             break;
     }
+}
+void Camera::orientation(float pitch, float yaw, bool constrainPitch) {
+    _yaw += yaw;
+    _pitch += pitch;
+
+    if (constrainPitch) {
+        std::max(-89.f, std::min(pitch, 89.f));
+    }
+
+    updateCameraVectors();
 }
 
 }  // namespace renderer
