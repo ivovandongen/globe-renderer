@@ -1,7 +1,23 @@
 #!/usr/bin/env bash
 
-#ALL_TESTS=`find . -type f -executable -print`
-ALL_TESTS=`find . -name test_* -type f -perm +111 -print`
+UNAME_OUT="$(uname -s)"
+case "${UNAME_OUT}" in
+    Linux*)     PLATFORM=Linux;;
+    Darwin*)    PLATFORM=Mac;;
+    CYGWIN*)    PLATFORM=Cygwin;;
+    MINGW*)     PLATFORM=MinGw;;
+    *)          PLATFORM="UNKNOWN:${UNAME_OUT}"
+esac
+
+echo "Running on: ${PLATFORM}"
+
+if [[ "$PLATFORM" = "Mac" ]]; then
+    ALL_TESTS=`find . -name test_* -type f -perm +111 -print`
+else
+    ALL_TESTS=`find . ! -name $(basename $0) -type f -executable -print`
+fi
+
+
 for TEST in ${ALL_TESTS}
 do
     WORK_DIR=`dirname ${TEST}`
