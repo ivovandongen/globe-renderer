@@ -113,6 +113,7 @@ int main() {
         // Orient the camera with the mouse when alt is held
         d.dispatch<MouseMoveEvent>([&](MouseMoveEvent &event) {
             if (window.keyState(KeyCode::KEY_LEFT_ALT) != KeyState::PRESS) {
+                firstMove = true;
                 return false;
             }
 
