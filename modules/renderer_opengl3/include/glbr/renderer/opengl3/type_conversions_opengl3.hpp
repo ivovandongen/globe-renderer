@@ -258,6 +258,28 @@ inline GLenum toWrap(TextureWrap wrap) {
     }
 }
 
+inline GLenum toWindingOrder(core::geometry::WindingOrder order) {
+    using namespace core::geometry;
+
+    switch (order) {
+        case WindingOrder::CLOCK_WISE:
+            return GL_CW;
+        case WindingOrder::COUNTER_CLOCK_WISE:
+            return GL_CCW;
+    }
+}
+
+inline GLenum toCullFace(CullFace face) {
+    switch (face) {
+        case CullFace::FRONT:
+            return GL_FRONT;
+        case CullFace::BACK:
+            return GL_BACK;
+        case CullFace::FRONT_AND_BACK:
+            return GL_FRONT_AND_BACK;
+    }
+}
+
 }  // namespace opengl3
 }  // namespace renderer
 }  // namespace glbr
