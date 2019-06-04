@@ -1,6 +1,7 @@
 #include "subdivision.hpp"
 
 #include <glbr/core/geometry/mesh.hpp>
+#include <glbr/input/events/mouse_scroll_event.hpp>
 #include <glbr/io/file.hpp>
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
@@ -12,7 +13,9 @@
 #include <memory>
 
 using namespace glbr;
+using namespace glbr::core;
 using namespace glbr::core::geometry;
+using namespace glbr::input;
 using namespace glbr::renderer;
 
 int main() {
@@ -33,6 +36,18 @@ int main() {
     SceneState sceneState(width, height);
     sceneState.camera().position({0, 0, 3});
 
+    window.onEvent([&](auto &event) {
+        core::EventDispatcher d(event);
+        // TODO: camera pan controls around world
+        d.dispatch<MouseScrollEvent>([&sceneState](MouseScrollEvent &event) {
+            if (event.offsetY() != 0) {
+                sceneState.camera().zoom(event.offsetY());
+                return true;
+            }
+            return false;
+        });
+    });
+
     // Create the pipeline
     std::shared_ptr<Pipeline> pipeline =
         device.createPipeline(io::readFile("resources/vertex.glsl"), io::readFile("resources/fragment.glsl"));
@@ -40,14 +55,20 @@ int main() {
     // Create a vertex array from the mesh
     std::shared_ptr<VertexArray> vertexArray = window.context().createVertexArray(*mesh);
 
+    // Add a texture to overlay on the globe
+    // TODO switch textures
+    window.context().textureUnits()[0].texture(
+        device.createTexture2D(Image{"resources/NE2_50M_SR_W_4096.jpg", false}, false));
+    window.context().textureUnits()[0].sampler(device.createTextureSampler(
+        TextureMinificationFilter::LINEAR, TextureMagnificationFilter::LINEAR, TextureWrap::CLAMP, TextureWrap::CLAMP));
+
+    pipeline->uniforms()["bltin_texture0"] = 0;
+
     renderer::ClearState clearState{{0, 1, 1, 1}};
 
-    // Add the static matrices as uniforms
-    pipeline->uniforms()["bltin_view"] = sceneState.camera().viewMatrix();
-    pipeline->uniforms()["bltin_projection"] = sceneState.projectionMatrix();
-
-    // Basic model matrix around the origin
+    // Basic model matrix around the origin (rotated so the north pole is pointing straight up)
     glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));
+    model = glm::rotate(model, 90.f, {1.f, 0.f, 0.f});
 
     // Render function
     auto renderFn = [&](renderer::Context &context) {
@@ -55,15 +76,21 @@ int main() {
         clearState.color = {1., 0, 1., 1};
         context.clear(clearState);
 
-        // Update the model uniform
+        // Update the MVP matrices
         pipeline->uniforms()["bltin_model"] = model;
+        pipeline->uniforms()["bltin_view"] = sceneState.camera().viewMatrix();
+        pipeline->uniforms()["bltin_projection"] = sceneState.projectionMatrix();
 
         // Draw the model
-        context.draw({{RasterizationMode::Line}, pipeline, vertexArray}, sceneState);
+        // TODO: switch Rasterization mode
+        context.draw({{RasterizationMode::Fill, {true, CullFace::BACK, mesh->windingOrder()}},
+                      pipeline,
+                      vertexArray},
+                     sceneState);
     };
 
     // Update function
-    auto updateFn = [&]() { model = glm::rotate(model, float(M_2_PI) / 50.f, glm::vec3(1.0f, 0.3f, 0.5f)); };
+    auto updateFn = [&]() { model = glm::rotate(model, float(M_2_PI) / 50.f, glm::vec3(0.0f, 0.0f, 1.0f)); };
 
     // Resize listener
     window.context().setOnResizeListener([&](float width, float height) {

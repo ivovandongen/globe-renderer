@@ -9,7 +9,7 @@
 #include <cmath>
 #include <vector>
 
-namespace {
+namespace detail {
 
 int indexCount(int subdivisions) {
     int triangles = 0;
@@ -41,9 +41,7 @@ void subdivide(std::vector<Vertex>& vertices, std::vector<Index>& indices, Index
         int i12 = vertices.size() - 2;
         int i20 = vertices.size() - 1;
 
-        //
         // Subdivide input triangle into four triangles
-        //
         --level;
         subdivide(vertices, indices, {triangle[0], i01, i20}, level);
         subdivide(vertices, indices, {i01, triangle[1], i12}, level);
@@ -54,18 +52,17 @@ void subdivide(std::vector<Vertex>& vertices, std::vector<Index>& indices, Index
     }
 }
 
-}  // namespace
+using Vertex = glm::vec3;
+using Index = std::array<int, 3>;
 
-std::unique_ptr<glbr::core::geometry::Mesh> subdivision(int subdivisions) {
-    using FT = float;
+}  // namespace detail
+
+std::unique_ptr<glbr::core::geometry::MeshImpl<detail::Vertex, detail::Index>> subdivision(int subdivisions) {
     using namespace glbr::core::geometry;
+    using namespace detail;
 
-    using Vertex = glm::vec3;
-    using Index = std::array<int, 3>;
-
-    //
     // Initial tetrahedron
-    //
+    using FT = float;
     FT negativeRootTwoOverThree = -sqrt(2.0) / 3.0;
     const FT negativeOneThird = -1.0 / 3.0;
     FT rootSixOverThree = sqrt(6.0) / 3.0;
@@ -87,7 +84,6 @@ std::unique_ptr<glbr::core::geometry::Mesh> subdivision(int subdivisions) {
     subdivide(vertices, indices, {1, 3, 2}, subdivisions);
 
     // Create the mesh
-
     auto mesh = Mesh::Create<Vertex, Index>({{"position", VertexAttributeType::Float, 3}});
 
     // Add data
