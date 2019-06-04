@@ -1,6 +1,8 @@
 #pragma once
 
+#include "primitive_type.hpp"
 #include "vertex_attributes/vertex_attribute.hpp"
+#include "winding_order.hpp"
 
 #include <cassert>
 #include <memory>
@@ -12,22 +14,6 @@
 namespace glbr {
 namespace core {
 namespace geometry {
-
-enum class PrimitiveType {
-    Points,
-    Lines,
-    LineLoop,
-    LineStrip,
-    Triangles,
-    TriangleStrip,
-    TriangleFan,
-    LinesAdjacency,
-    LineStripAdjacency,
-    TrianglesAdjacency,
-    TriangleStripAdjacency
-};
-
-enum class WindingOrder { Clockwise, Counterclockwise };
 
 template <class Vertex, class Index>
 class MeshImpl;
@@ -49,9 +35,9 @@ public:
     virtual const unsigned int indexSize() const = 0;
 
     template <class Vertex, class Index>
-    static std::unique_ptr<MeshImpl<Vertex, Index>> Create(std::initializer_list<VertexAttribute> attributes,
-                                                           PrimitiveType primitiveType = PrimitiveType::Triangles,
-                                                           WindingOrder windingOrder = WindingOrder::Counterclockwise) {
+    static std::unique_ptr<MeshImpl<Vertex, Index>> Create(
+        std::initializer_list<VertexAttribute> attributes, PrimitiveType primitiveType = PrimitiveType::Triangles,
+        WindingOrder windingOrder = WindingOrder::COUNTER_CLOCK_WISE) {
         return std::make_unique<MeshImpl<Vertex, Index>>(attributes, primitiveType, windingOrder);
     }
 };
