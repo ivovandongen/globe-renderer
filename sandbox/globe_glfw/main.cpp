@@ -10,6 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <array>
+#include <glbr/input/events/key_event.hpp>
 #include <memory>
 
 using namespace glbr;
@@ -36,18 +37,6 @@ int main() {
     SceneState sceneState(width, height);
     sceneState.camera().position({0, 0, 3});
 
-    window.onEvent([&](auto &event) {
-        core::EventDispatcher d(event);
-        // TODO: camera pan controls around world
-        d.dispatch<MouseScrollEvent>([&sceneState](MouseScrollEvent &event) {
-            if (event.offsetY() != 0) {
-                sceneState.camera().zoom(event.offsetY());
-                return true;
-            }
-            return false;
-        });
-    });
-
     // Create the pipeline
     std::shared_ptr<Pipeline> pipeline =
         device.createPipeline(io::readFile("resources/vertex.glsl"), io::readFile("resources/fragment.glsl"));
@@ -58,7 +47,7 @@ int main() {
     // Add a texture to overlay on the globe
     // TODO switch textures
     window.context().textureUnits()[0].texture(
-        device.createTexture2D(Image{"resources/NE2_50M_SR_W_4096.jpg", false}, false));
+        device.createTexture2D(Image{"resources/NE2_50M_SR_W_4096.jpg", true}, false));
     window.context().textureUnits()[0].sampler(device.createTextureSampler(
         TextureMinificationFilter::LINEAR, TextureMagnificationFilter::LINEAR, TextureWrap::CLAMP, TextureWrap::CLAMP));
 
@@ -66,9 +55,59 @@ int main() {
 
     renderer::ClearState clearState{{0, 1, 1, 1}};
 
+    const auto deg2rad = [](auto deg) -> float { return deg * M_PI / 180; };
+
     // Basic model matrix around the origin (rotated so the north pole is pointing straight up)
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));
-    model = glm::rotate(model, 90.f, {1.f, 0.f, 0.f});
+    const auto modelMatrix = [&deg2rad]() {
+        auto model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));
+        return glm::rotate(model, deg2rad(-90.f), {1.f, 0.f, 0.f});
+    };
+
+    glm::mat4 model = modelMatrix();
+
+    bool animate = true;
+
+    window.onEvent([&](auto &event) {
+        core::EventDispatcher d(event);
+
+        d.dispatch<KeyEvent>([&](KeyEvent &event) {
+            if (event.state() == KeyState::RELEASE) {
+                return false;
+            }
+
+            switch (event.keyCode()) {
+                case KeyCode::KEY_A:
+                    animate = !animate;
+                    return true;
+                case KeyCode::KEY_UP:
+                    model = glm::rotate(model, deg2rad(10), {1.f, 0.f, 0.f});
+                    return true;
+                case KeyCode::KEY_DOWN:
+                    model = glm::rotate(model, deg2rad(-10), {1.f, 0.f, 0.f});
+                    return true;
+                case KeyCode::KEY_LEFT:
+                    model = glm::rotate(model, deg2rad(10), {0.f, 0.f, 1.f});
+                    return true;
+                case KeyCode::KEY_RIGHT:
+                    model = glm::rotate(model, deg2rad(-10), {0.f, 0.f, 1.f});
+                    return true;
+                case KeyCode::KEY_R:
+                    model = modelMatrix();
+                    return true;
+                default:
+                    return false;
+            }
+        });
+
+        // TODO: camera pan controls around world
+        d.dispatch<MouseScrollEvent>([&sceneState](MouseScrollEvent &event) {
+            if (event.offsetY() != 0) {
+                sceneState.camera().zoom(event.offsetY());
+                return true;
+            }
+            return false;
+        });
+    });
 
     // Render function
     auto renderFn = [&](renderer::Context &context) {
@@ -83,14 +122,16 @@ int main() {
 
         // Draw the model
         // TODO: switch Rasterization mode
-        context.draw({{RasterizationMode::Fill, {true, CullFace::BACK, mesh->windingOrder()}},
-                      pipeline,
-                      vertexArray},
+        context.draw({{RasterizationMode::Fill, {true, CullFace::BACK, mesh->windingOrder()}}, pipeline, vertexArray},
                      sceneState);
     };
 
     // Update function
-    auto updateFn = [&]() { model = glm::rotate(model, float(M_2_PI) / 50.f, glm::vec3(0.0f, 0.0f, 1.0f)); };
+    auto updateFn = [&]() {
+        if (animate) {
+            model = glm::rotate(model, float(M_2_PI) / 50.f, glm::vec3(0.0f, 0.0f, 1.0f));
+        }
+    };
 
     // Resize listener
     window.context().setOnResizeListener([&](float width, float height) {
