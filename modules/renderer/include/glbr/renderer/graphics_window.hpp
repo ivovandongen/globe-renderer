@@ -3,6 +3,7 @@
 #include <glbr/core/event.hpp>
 #include <glbr/input/input.hpp>
 
+#include <chrono>
 #include <functional>
 
 namespace glbr {
@@ -13,7 +14,7 @@ enum class WindowType { Default = 0, FullScreen = 1 };
 class GraphicsWindow : public input::Input {
 public:
     using RenderFN = std::function<void(Context &)>;
-    using UpdateFN = std::function<void()>;
+    using UpdateFN = std::function<void(std::chrono::nanoseconds)>;
     using EventHandlerFN = std::function<void(core::Event &)>;
 
     ~GraphicsWindow() override = default;

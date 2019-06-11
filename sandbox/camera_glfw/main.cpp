@@ -168,7 +168,7 @@ int main() {
     };
 
     // Update function
-    auto updateFn = [&]() { model = glm::rotate(model, float(M_2_PI) / 10.f, glm::vec3(1.0f, 0.3f, 0.5f)); };
+    auto updateFn = [&](auto) { model = glm::rotate(model, float(M_2_PI) / 10.f, glm::vec3(1.0f, 0.3f, 0.5f)); };
 
     // Runloop
     window.run(renderFn, updateFn, 60);

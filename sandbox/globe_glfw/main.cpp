@@ -127,9 +127,10 @@ int main() {
     };
 
     // Update function
-    auto updateFn = [&]() {
+    auto updateFn = [&](auto interval) {
         if (animate) {
-            model = glm::rotate(model, float(M_2_PI) / 50.f, glm::vec3(0.0f, 0.0f, 1.0f));
+            model =
+                glm::rotate(model, float(M_2_PI) / 50.f * (interval.count() / 16666666), glm::vec3(0.0f, 0.0f, 1.0f));
         }
     };
 

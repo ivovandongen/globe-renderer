@@ -97,7 +97,7 @@ int main() {
 
     renderer::ClearState clearState{{0, 1, 1, 1}};
 
-    int counter = 1;
+    float counter = 1;
     int step = 1;
 
     // Render function
@@ -111,13 +111,13 @@ int main() {
     };
 
     // Update function
-    auto updateFn = [&]() {
+    auto updateFn = [&](auto interval) {
         if (counter >= 100) {
             step = -1;
         } else if (counter <= 0) {
             step = 1;
         }
-        counter += step;
+        counter += step * interval.count() / 16666666;
     };
 
     // Runloop
