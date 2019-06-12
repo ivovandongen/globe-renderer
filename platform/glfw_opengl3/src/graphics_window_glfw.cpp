@@ -22,7 +22,7 @@ static GlfwGraphicsWindow *getGlfwGraphicsWindow(GLFWwindow *window) {
 }
 
 GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, bool vsync)
-    : _system(GLFWSystem::init()), _eventHandler([](core::Event &) {}) {
+    : _system(GLFWSystem::init()) {
     // TODO Move OpenGL specifics
 
     // Specify OpenGL version to use
@@ -58,19 +58,27 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
     // Handle some input
     glfwSetKeyCallback(_window, [](GLFWwindow *window, int key, int, int action, int) {
         input::KeyEvent e = convertKeyEvent(key, action);
-        getGlfwGraphicsWindow(window)->_eventHandler(e);
+        for (const auto &handler : getGlfwGraphicsWindow(window)->_eventHandlers) {
+            handler(e);
+        }
     });
     glfwSetMouseButtonCallback(_window, [](GLFWwindow *window, int button, int action, int) {
         input::MouseButtonEvent e = convertMouseButtonEvent(button, action);
-        getGlfwGraphicsWindow(window)->_eventHandler(e);
+        for (const auto &handler : getGlfwGraphicsWindow(window)->_eventHandlers) {
+            handler(e);
+        }
     });
     glfwSetCursorPosCallback(_window, [](GLFWwindow *window, double x, double y) {
         input::MouseMoveEvent e{x, y};
-        getGlfwGraphicsWindow(window)->_eventHandler(e);
+        for (const auto &handler : getGlfwGraphicsWindow(window)->_eventHandlers) {
+            handler(e);
+        }
     });
     glfwSetScrollCallback(_window, [](GLFWwindow *window, double x, double y) {
         input::MouseScrollEvent e{x, y};
-        getGlfwGraphicsWindow(window)->_eventHandler(e);
+        for (const auto &handler : getGlfwGraphicsWindow(window)->_eventHandlers) {
+            handler(e);
+        }
     });
 
     if (type != WindowType::FullScreen) {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glbr/core/event.hpp>
+#include <glbr/core/events/event.hpp>
 #include <glbr/input/key_state.hpp>
 #include <glbr/input/mouse_button_codes.hpp>
 

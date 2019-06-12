@@ -27,7 +27,9 @@ public:
 
     void run(const RenderFN &onRenderFrame, const UpdateFN &onUpdateFrame, double updateRate) override;
 
-    void onEvent(EventHandlerFN onEvent) override { _eventHandler = std::move(onEvent); }
+    void registerHandler(const core::EventHandlingFN &handler) override {
+        _eventHandlers.push_back(std::move(handler));
+    }
 
     input::KeyState keyState(input::KeyCode code) const override;
 
@@ -41,7 +43,7 @@ private:
     std::shared_ptr<GLFWSystem> _system;
     GLFWwindow *_window;
     std::unique_ptr<Context> _context;
-    EventHandlerFN _eventHandler;
+    std::vector<core::EventHandlingFN> _eventHandlers;
 };
 
 }  // namespace glfw

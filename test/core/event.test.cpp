@@ -1,6 +1,6 @@
 #include <test.hpp>
 
-#include <glbr/core/event.hpp>
+#include <glbr/core/events/event.hpp>
 
 using namespace glbr::core;
 

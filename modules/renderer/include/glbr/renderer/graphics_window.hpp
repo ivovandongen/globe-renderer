@@ -1,6 +1,7 @@
 #pragma once
 
-#include <glbr/core/event.hpp>
+#include <glbr/core/events/event.hpp>
+#include <glbr/core/events/event_producer.hpp>
 #include <glbr/input/input.hpp>
 
 #include <chrono>
@@ -11,19 +12,16 @@ namespace renderer {
 
 enum class WindowType { Default = 0, FullScreen = 1 };
 
-class GraphicsWindow : public input::Input {
+class GraphicsWindow : public input::Input, public core::EventProducer {
 public:
     using RenderFN = std::function<void(Context &)>;
     using UpdateFN = std::function<void(std::chrono::nanoseconds)>;
-    using EventHandlerFN = std::function<void(core::Event &)>;
 
     ~GraphicsWindow() override = default;
 
     virtual void makeContextCurrent() const = 0;
 
     virtual Context &context() const = 0;
-
-    virtual void onEvent(EventHandlerFN handler) = 0;
 
     virtual void run(const RenderFN &onRenderFrame) = 0;
 

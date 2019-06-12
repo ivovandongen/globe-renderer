@@ -67,7 +67,7 @@ int main() {
 
     bool animate = true;
 
-    window.onEvent([&](auto &event) {
+    window.registerHandler([&](auto &event) {
         core::EventDispatcher d(event);
 
         d.dispatch<KeyEvent>([&](KeyEvent &event) {

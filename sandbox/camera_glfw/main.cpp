@@ -66,7 +66,7 @@ int main() {
     bool firstMove = true;
     float lastX = 0, lastY = 0;
 
-    window.onEvent([&](auto &event) {
+    window.registerHandler([&](auto &event) {
         logging::debug("Event: {}", event.str());
         core::EventDispatcher d(event);
 

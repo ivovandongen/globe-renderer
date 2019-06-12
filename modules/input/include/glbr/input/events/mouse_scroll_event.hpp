@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glbr/core/event.hpp>
+#include <glbr/core/events/event.hpp>
 
 namespace glbr {
 namespace input {
