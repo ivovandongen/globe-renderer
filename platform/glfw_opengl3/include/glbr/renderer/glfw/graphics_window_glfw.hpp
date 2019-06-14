@@ -27,9 +27,7 @@ public:
 
     void run(const RenderFN &onRenderFrame, const UpdateFN &onUpdateFrame, double updateRate) override;
 
-    void registerHandler(const core::EventHandlingFN &handler) override {
-        _eventHandlers.push_back(std::move(handler));
-    }
+    void registerHandler(const core::EventHandlingFN &handler) override { _eventHandlers.push_back(handler); }
 
     input::KeyState keyState(input::KeyCode code) const override;
 
