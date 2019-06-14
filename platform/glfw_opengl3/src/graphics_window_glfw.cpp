@@ -17,6 +17,15 @@ namespace glbr {
 namespace renderer {
 namespace glfw {
 
+void emit(core::Event &event, const std::vector<core::EventHandlingFN> &handlers) {
+    for (const auto &handler : handlers) {
+        handler(event);
+        if (event.handled()) {
+            break;
+        }
+    }
+}
+
 static GlfwGraphicsWindow *getGlfwGraphicsWindow(GLFWwindow *window) {
     return static_cast<GlfwGraphicsWindow *>(glfwGetWindowUserPointer(window));
 }
@@ -58,34 +67,20 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
     // Handle some input
     glfwSetKeyCallback(_window, [](GLFWwindow *window, int key, int, int action, int) {
         input::KeyEvent e = convertKeyEvent(key, action);
-        for (const auto &handler : getGlfwGraphicsWindow(window)->_eventHandlers) {
-            handler(e);
-        }
+        emit(e, getGlfwGraphicsWindow(window)->_eventHandlers);
     });
     glfwSetMouseButtonCallback(_window, [](GLFWwindow *window, int button, int action, int) {
         input::MouseButtonEvent e = convertMouseButtonEvent(button, action);
-        for (const auto &handler : getGlfwGraphicsWindow(window)->_eventHandlers) {
-            handler(e);
-        }
+        emit(e, getGlfwGraphicsWindow(window)->_eventHandlers);
     });
     glfwSetCursorPosCallback(_window, [](GLFWwindow *window, double x, double y) {
         input::MouseMoveEvent e{x, y};
-        for (const auto &handler : getGlfwGraphicsWindow(window)->_eventHandlers) {
-            handler(e);
-        }
+        emit(e, getGlfwGraphicsWindow(window)->_eventHandlers);
     });
     glfwSetScrollCallback(_window, [](GLFWwindow *window, double x, double y) {
         input::MouseScrollEvent e{x, y};
-        for (const auto &handler : getGlfwGraphicsWindow(window)->_eventHandlers) {
-            handler(e);
-        }
+        emit(e, getGlfwGraphicsWindow(window)->_eventHandlers);
     });
-
-    if (type != WindowType::FullScreen) {
-        // Position window in the center
-        const GLFWvidmode *videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        glfwSetWindowPos(_window, (videoMode->width - width) / 2, (videoMode->height - height) / 2);
-    }
 
     // Make the context current for this thread
     makeContextCurrent();
