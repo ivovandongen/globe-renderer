@@ -102,6 +102,12 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
 
     // Initialize our Context
     _context = std::make_unique<opengl3::ContextOpenGL3>(*this);
+
+    if (type != WindowType::FullScreen) {
+        // Position window in the center
+        const GLFWvidmode *videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        glfwSetWindowPos(_window, (videoMode->width - width) / 2, (videoMode->height - height) / 2);
+    }
 };
 
 GlfwGraphicsWindow::~GlfwGraphicsWindow() {
