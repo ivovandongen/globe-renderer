@@ -1,16 +1,18 @@
 #include "subdivision.hpp"
 
 #include <glbr/core/geometry/mesh.hpp>
+#include <glbr/core/maths.hpp>
+#include <glbr/input/events/key_event.hpp>
 #include <glbr/input/events/mouse_scroll_event.hpp>
 #include <glbr/io/file.hpp>
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
 #include <glbr/renderer/opengl3/device_opengl3.hpp>
+#include <glbr/scene/camera/orbiting_camera_ctrl.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <array>
-#include <glbr/input/events/key_event.hpp>
 #include <memory>
 
 using namespace glbr;
@@ -34,8 +36,33 @@ int main() {
     // Set up the graphics device
     auto &device = opengl3::DeviceOpenGL3::instance();
 
+    // Set up scene state
     SceneState sceneState(width, height);
     sceneState.camera().position({0, 0, 3});
+
+    // Set up camera controller
+    scene::OrbitingCameraController cameraCtrl{sceneState.camera(), window};
+    window.registerHandler(cameraCtrl);
+
+    // Add key controller
+    bool animate = true;
+    window.registerHandler([&](auto &event) {
+        core::EventDispatcher d(event);
+
+        d.dispatch<KeyEvent>([&](KeyEvent &event) {
+            if (event.state() == KeyState::RELEASE) {
+                return false;
+            }
+
+            switch (event.keyCode()) {
+                case KeyCode::KEY_A:
+                    animate = !animate;
+                    return true;
+                default:
+                    return false;
+            }
+        });
+    });
 
     // Create the pipeline
     std::shared_ptr<Pipeline> pipeline =
@@ -55,59 +82,11 @@ int main() {
 
     renderer::ClearState clearState{{0, 1, 1, 1}};
 
-    const auto deg2rad = [](auto deg) -> float { return deg * M_PI / 180; };
-
     // Basic model matrix around the origin (rotated so the north pole is pointing straight up)
-    const auto modelMatrix = [&deg2rad]() {
+    pipeline->uniforms()["bltin_model"] = [&]() {
         auto model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));
-        return glm::rotate(model, deg2rad(-90.f), {1.f, 0.f, 0.f});
-    };
-
-    glm::mat4 model = modelMatrix();
-
-    bool animate = true;
-
-    window.registerHandler([&](auto &event) {
-        core::EventDispatcher d(event);
-
-        d.dispatch<KeyEvent>([&](KeyEvent &event) {
-            if (event.state() == KeyState::RELEASE) {
-                return false;
-            }
-
-            switch (event.keyCode()) {
-                case KeyCode::KEY_A:
-                    animate = !animate;
-                    return true;
-                case KeyCode::KEY_UP:
-                    model = glm::rotate(model, deg2rad(10), {1.f, 0.f, 0.f});
-                    return true;
-                case KeyCode::KEY_DOWN:
-                    model = glm::rotate(model, deg2rad(-10), {1.f, 0.f, 0.f});
-                    return true;
-                case KeyCode::KEY_LEFT:
-                    model = glm::rotate(model, deg2rad(10), {0.f, 0.f, 1.f});
-                    return true;
-                case KeyCode::KEY_RIGHT:
-                    model = glm::rotate(model, deg2rad(-10), {0.f, 0.f, 1.f});
-                    return true;
-                case KeyCode::KEY_R:
-                    model = modelMatrix();
-                    return true;
-                default:
-                    return false;
-            }
-        });
-
-        // TODO: camera pan controls around world
-        d.dispatch<MouseScrollEvent>([&sceneState](MouseScrollEvent &event) {
-            if (event.offsetY() != 0) {
-                sceneState.camera().zoom(event.offsetY());
-                return true;
-            }
-            return false;
-        });
-    });
+        return glm::rotate(model, deg2rad(-90), {1.f, 0.f, 0.f});
+    }();
 
     // Render function
     auto renderFn = [&](renderer::Context &context) {
@@ -116,7 +95,6 @@ int main() {
         context.clear(clearState);
 
         // Update the MVP matrices
-        pipeline->uniforms()["bltin_model"] = model;
         pipeline->uniforms()["bltin_view"] = sceneState.camera().viewMatrix();
         pipeline->uniforms()["bltin_projection"] = sceneState.projectionMatrix();
 
@@ -129,8 +107,7 @@ int main() {
     // Update function
     auto updateFn = [&](auto interval) {
         if (animate) {
-            model =
-                glm::rotate(model, float(M_2_PI) / 50.f * (interval.count() / 16666666), glm::vec3(0.0f, 0.0f, 1.0f));
+            cameraCtrl.rotateBy(0, float(M_2_PI) / 50.f * (interval.count() / 16666666));
         }
     };
 

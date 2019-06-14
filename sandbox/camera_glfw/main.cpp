@@ -1,11 +1,10 @@
 #include <glbr/core/geometry/mesh.hpp>
 #include <glbr/input/events/key_event.hpp>
-#include <glbr/input/events/mouse_move_event.hpp>
-#include <glbr/input/events/mouse_scroll_event.hpp>
 #include <glbr/io/file.hpp>
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
 #include <glbr/renderer/opengl3/device_opengl3.hpp>
+#include <glbr/scene/camera/pov_camera_ctrl.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -59,80 +58,29 @@ int main() {
     // Set up the graphics device
     auto &device = opengl3::DeviceOpenGL3::instance();
 
+    // Setup the scene and place the camera
     SceneState sceneState(width, height);
     sceneState.camera().position({0, 0, 3});
 
-    // Mouse move state
-    bool firstMove = true;
-    float lastX = 0, lastY = 0;
+    // Add a POV camera ctrl and register to listen for events
+    scene::POVCameraController cameraCtrl{sceneState.camera(), window};
+    window.registerHandler(cameraCtrl);
 
+    // Register a lambda for key events as well
     window.registerHandler([&](auto &event) {
-        logging::debug("Event: {}", event.str());
         core::EventDispatcher d(event);
 
         // Move the view around
         d.dispatch<KeyEvent>([&](KeyEvent &event) {
             if (event.state() == KeyState::RELEASE) return false;
 
-            const float delta = 1. / 20;
-
             switch (event.keyCode()) {
                 case KeyCode::KEY_ESCAPE:
                     window.close();
                     return true;
-                case KeyCode::KEY_LEFT:
-                case KeyCode ::KEY_A:
-                    sceneState.camera().move(CameraMovement::LEFT, delta);
-                    return true;
-                case KeyCode::KEY_RIGHT:
-                case KeyCode ::KEY_D:
-                    sceneState.camera().move(CameraMovement::RIGHT, delta);
-                    return true;
-                case KeyCode::KEY_UP:
-                case KeyCode ::KEY_W:
-                    sceneState.camera().move(CameraMovement::FORWARD, delta);
-                    return true;
-                case KeyCode::KEY_DOWN:
-                case KeyCode ::KEY_S:
-                    sceneState.camera().move(CameraMovement::BACKWARD, delta);
-                    return true;
                 default:
                     return false;
             }
-        });
-
-        // Zoom on scroll
-        d.dispatch<MouseScrollEvent>([&sceneState](MouseScrollEvent &event) {
-            if (event.offsetY() != 0) {
-                sceneState.camera().zoom(event.offsetY());
-                return true;
-            }
-            return false;
-        });
-
-        // Orient the camera with the mouse when alt is held
-        d.dispatch<MouseMoveEvent>([&](MouseMoveEvent &event) {
-            if (window.keyState(KeyCode::KEY_LEFT_ALT) != KeyState::PRESS) {
-                firstMove = true;
-                return false;
-            }
-
-            if (firstMove) {
-                lastX = event.x();
-                lastY = event.y();
-                firstMove = false;
-                return true;
-            }
-
-            double xoffset = event.x() - lastX;
-            double yoffset = lastY - event.y();
-            lastX = event.x();
-            lastY = event.y();
-
-            const float sensitivity = .1;
-            sceneState.camera().orientation(yoffset * sensitivity, xoffset * sensitivity);
-
-            return true;
         });
     });
 

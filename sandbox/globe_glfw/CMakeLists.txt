@@ -12,7 +12,7 @@ target_link_libraries(${EXECUTABLE} PRIVATE
         renderer
         renderer_opengl3
         renderer_glfw
-        glfw
+        scene
         )
 
 file(GLOB files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "resources/*.*" "resources/**/*.*")
