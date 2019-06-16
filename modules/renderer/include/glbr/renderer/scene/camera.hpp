@@ -24,7 +24,7 @@ public:
     inline void position(const glm::vec3& position) { _position = position; }
 
     inline void front(const glm::vec3& front) {
-        _front = front;
+        _front = glm::normalize(front);
         updateDerivedVectors();
     }
 
@@ -38,13 +38,17 @@ public:
 
     inline const glm::vec3& front() const { return _front; }
 
+    inline const glm::vec3& right() const { return _right; }
+
+    inline const glm::vec3& up() const { return _up; }
+
     inline std::string str() const {
         std::stringstream ss;
         ss << "camera[";
         ss << "position: (" << _position.x << ", " << _position.y << ", " << _position.z << ")";
-        ss << "front: (" << _front.x << ", " << _front.y << ", " << _front.z << ")";
-        ss << "up: (" << _up.x << ", " << _up.y << ", " << _up.z << ")";
-        ss << "right: (" << _right.x << ", " << _right.y << ", " << _right.z << ")";
+        ss << " front: (" << _front.x << ", " << _front.y << ", " << _front.z << ")";
+        ss << " up: (" << _up.x << ", " << _up.y << ", " << _up.z << ")";
+        ss << " right: (" << _right.x << ", " << _right.y << ", " << _right.z << ")";
         ss << "]";
         return ss.str();
     }

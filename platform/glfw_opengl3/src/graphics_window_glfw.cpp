@@ -31,7 +31,7 @@ static GlfwGraphicsWindow *getGlfwGraphicsWindow(GLFWwindow *window) {
 }
 
 GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, bool vsync)
-    : _system(GLFWSystem::init()) {
+    : _system(GLFWSystem::init()), _size({width, height}) {
     // TODO Move OpenGL specifics
 
     // Specify OpenGL version to use
@@ -61,6 +61,7 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
 
     // Resize gl viewport on window viewport
     glfwSetFramebufferSizeCallback(_window, [](GLFWwindow *window, int width, int height) {
+        getGlfwGraphicsWindow(window)->_size = {width, height};
         getGlfwGraphicsWindow(window)->_context->viewport(width, height);
     });
 

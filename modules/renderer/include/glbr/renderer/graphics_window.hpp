@@ -2,7 +2,9 @@
 
 #include <glbr/core/events/event.hpp>
 #include <glbr/core/events/event_producer.hpp>
+#include <glbr/core/size.hpp>
 #include <glbr/input/input.hpp>
+#include <glbr/renderer/context.hpp>
 
 #include <chrono>
 #include <functional>
@@ -22,6 +24,8 @@ public:
     virtual void makeContextCurrent() const = 0;
 
     virtual Context &context() const = 0;
+
+    virtual core::Size2D<int> size() const = 0;
 
     virtual void run(const RenderFN &onRenderFrame) = 0;
 

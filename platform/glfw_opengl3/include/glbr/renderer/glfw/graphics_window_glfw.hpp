@@ -23,6 +23,8 @@ public:
 
     void makeContextCurrent() const override;
 
+    core::Size2D<int> size() const override { return _size; }
+
     void run(const RenderFN &_onRenderFrame) override;
 
     void run(const RenderFN &onRenderFrame, const UpdateFN &onUpdateFrame, double updateRate) override;
@@ -42,6 +44,7 @@ private:
     GLFWwindow *_window;
     std::unique_ptr<Context> _context;
     std::vector<core::EventHandlingFN> _eventHandlers;
+    core::Size2D<int> _size;
 };
 
 }  // namespace glfw
