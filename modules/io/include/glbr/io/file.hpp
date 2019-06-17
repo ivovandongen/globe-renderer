@@ -8,7 +8,7 @@
 namespace glbr {
 namespace io {
 
-std::string readFile(const std::string &fileName) {
+inline std::string readFile(const std::string &fileName) {
     std::ifstream t(fileName);
     std::string result;
 
