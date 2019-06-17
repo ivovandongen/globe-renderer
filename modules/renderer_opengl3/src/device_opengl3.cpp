@@ -13,11 +13,11 @@ DeviceOpenGL3 &DeviceOpenGL3::instance() {
 }
 
 std::unique_ptr<Pipeline> DeviceOpenGL3::createPipeline(const std::string &vertexSource,
-                                                        const std::string &fragmentSource) {
+                                                        const std::string &fragmentSource) const {
     return std::make_unique<PipelineOpenGL3>(vertexSource, fragmentSource);
 }
 
-std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(const core::Image &image, bool generateMipmaps) {
+std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(const core::Image &image, bool generateMipmaps) const {
     TextureFormat format = [&]() {
         switch (image.channels()) {
             case 1:
@@ -39,15 +39,16 @@ std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(const core::Image &ima
 }
 
 std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(const core::Image &image, TextureFormat format,
-                                                          bool generateMipmaps) {
+                                                          bool generateMipmaps) const {
     auto texture = std::make_unique<Texture2DOpenGL3>(
         Texture2DDescription{image.width(), image.height(), format, generateMipmaps}, TextureTarget::Texture2D);
     texture->upload(image.data());
     return texture;
 }
+
 std::unique_ptr<TextureSampler> DeviceOpenGL3::createTextureSampler(TextureMinificationFilter min,
                                                                     TextureMagnificationFilter mag, TextureWrap s,
-                                                                    TextureWrap t) {
+                                                                    TextureWrap t) const {
     return std::make_unique<TextureSamplerOpenGL3>(min, mag, s, t);
 }
 

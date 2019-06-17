@@ -28,11 +28,11 @@ public:
 
     void makeCurrent() const override;
 
-    std::unique_ptr<VertexArray> createVertexArray() override;
+    std::unique_ptr<VertexArray> createVertexArray() const override;
 
-    std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint, int sizeInBytes) override;
+    std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint, int sizeInBytes) const override;
 
-    std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint, int sizeInBytes) override;
+    std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint, int sizeInBytes) const override;
 
     void clear(const ClearState &) override;
 

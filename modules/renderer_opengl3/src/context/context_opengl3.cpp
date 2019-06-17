@@ -62,15 +62,15 @@ void ContextOpenGL3::viewport(int width, int height) {
     Context::viewport(width, height);
 }
 
-std::unique_ptr<VertexArray> ContextOpenGL3::createVertexArray() {
+std::unique_ptr<VertexArray> ContextOpenGL3::createVertexArray() const {
     return std::make_unique<VertexArrayOpenGL3>();
 }
 
-std::unique_ptr<VertexBuffer> ContextOpenGL3::createVertexBuffer(BufferHint usageHint, int sizeInBytes) {
+std::unique_ptr<VertexBuffer> ContextOpenGL3::createVertexBuffer(BufferHint usageHint, int sizeInBytes) const {
     return std::make_unique<VertexBufferOpenGL3>(usageHint, sizeInBytes);
 }
 
-std::unique_ptr<IndexBuffer> ContextOpenGL3::createIndexBuffer(BufferHint usageHint, int sizeInBytes) {
+std::unique_ptr<IndexBuffer> ContextOpenGL3::createIndexBuffer(BufferHint usageHint, int sizeInBytes) const {
     return std::make_unique<IndexBufferOpenGL3>(usageHint, sizeInBytes);
 }
 

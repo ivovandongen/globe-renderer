@@ -26,13 +26,13 @@ public:
 
     virtual void makeCurrent() const = 0;
 
-    virtual std::unique_ptr<VertexArray> createVertexArray() = 0;
+    virtual std::unique_ptr<VertexArray> createVertexArray() const = 0;
 
-    std::unique_ptr<VertexArray> createVertexArray(const core::geometry::Mesh &);
+    std::unique_ptr<VertexArray> createVertexArray(const core::geometry::Mesh &) const;
 
-    virtual std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint, int sizeInBytes) = 0;
+    virtual std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint, int sizeInBytes) const = 0;
 
-    virtual std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint, int sizeInBytes) = 0;
+    virtual std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint, int sizeInBytes) const = 0;
 
     virtual void clear(const ClearState &) = 0;
 

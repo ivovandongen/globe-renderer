@@ -5,7 +5,7 @@
 namespace glbr {
 namespace renderer {
 
-std::unique_ptr<VertexArray> Context::createVertexArray(const core::geometry::Mesh &mesh) {
+std::unique_ptr<VertexArray> Context::createVertexArray(const core::geometry::Mesh &mesh) const {
     using namespace core::geometry;
 
     // TODO BufferHint (2x)
