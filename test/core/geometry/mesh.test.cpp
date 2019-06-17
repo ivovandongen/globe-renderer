@@ -18,7 +18,7 @@ TEST(Mesh, Basic) {
                                              {"other", VertexAttributeType::UnsignedByte, 2, offsetof(Vertex, color)}});
 
     ASSERT_EQ(mesh->windingOrder(), WindingOrder::COUNTER_CLOCK_WISE);
-    ASSERT_EQ(mesh->primitiveType(), PrimitiveType::Triangles);
+    ASSERT_EQ(mesh->primitiveType(), PrimitiveType::TRIANGLES);
     ASSERT_EQ(mesh->vertexAttributes().size(), 2);
     ASSERT_EQ(mesh->vertexAttributes()[0].name(), "position");
     ASSERT_EQ(mesh->vertexAttributes()[0].type(), VertexAttributeType::Float);

@@ -4,6 +4,7 @@
 #include <glbr/renderer/textures/texture_format.hpp>
 
 #include <glad/glad.h>
+#include <glbr/core/geometry/primitive_type.hpp>
 #include <glbr/renderer/textures/texture_magnification_filter.hpp>
 #include <glbr/renderer/textures/texture_minification_filter.hpp>
 #include <glbr/renderer/textures/texture_target.hpp>
@@ -277,6 +278,35 @@ inline GLenum toCullFace(CullFace face) {
             return GL_BACK;
         case CullFace::FRONT_AND_BACK:
             return GL_FRONT_AND_BACK;
+    }
+}
+
+inline GLenum toPrimitiveType(core::geometry::PrimitiveType type) {
+    using namespace core::geometry;
+
+    switch (type) {
+        case PrimitiveType::POINTS:
+            return GL_POINTS;
+        case PrimitiveType::LINES:
+            return GL_LINES;
+        case PrimitiveType::LINE_LOOP:
+            return GL_LINE_LOOP;
+        case PrimitiveType::LINE_STRIP:
+            return GL_LINE_STRIP;
+        case PrimitiveType::TRIANGLES:
+            return GL_TRIANGLES;
+        case PrimitiveType::TRIANGLE_STRIP:
+            return GL_TRIANGLE_STRIP;
+        case PrimitiveType::TRIANGLE_FAN:
+            return GL_TRIANGLE_FAN;
+        case PrimitiveType::LINES_ADJACENCY:
+            return GL_LINES_ADJACENCY;
+        case PrimitiveType::LINE_STRIP_ADJACENCY:
+            return GL_LINE_STRIP_ADJACENCY;
+        case PrimitiveType::TRIANGLES_ADJACENCY:
+            return GL_TRIANGLES_ADJACENCY;
+        case PrimitiveType::TRIANGLE_STRIP_ADJACENCY:
+            return GL_TRIANGLE_STRIP_ADJACENCY;
     }
 }
 

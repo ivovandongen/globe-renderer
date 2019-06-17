@@ -41,7 +41,7 @@ public:
 
     template <class Vertex, class Index>
     static std::unique_ptr<MeshImpl<Vertex, Index>> Create(
-        std::initializer_list<VertexAttribute> attributes, PrimitiveType primitiveType = PrimitiveType::Triangles,
+        std::initializer_list<VertexAttribute> attributes, PrimitiveType primitiveType = PrimitiveType::TRIANGLES,
         WindingOrder windingOrder = WindingOrder::COUNTER_CLOCK_WISE) {
         return std::make_unique<MeshImpl<Vertex, Index>>(attributes, primitiveType, windingOrder);
     }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glbr/core/geometry/mesh.hpp>
+#include <glbr/core/geometry/primitive_type.hpp>
 #include <glbr/renderer/buffers/buffer_hint.hpp>
 #include <glbr/renderer/buffers/vertex_buffer.hpp>
 #include <glbr/renderer/clear_state.hpp>
@@ -36,7 +37,7 @@ public:
 
     virtual void clear(const ClearState &) = 0;
 
-    virtual void draw(/* TODO: PrimitiveType */ const DrawState &, const SceneState &) = 0;
+    virtual void draw(core::geometry::PrimitiveType primitive, const DrawState &, const SceneState &) = 0;
 
     virtual TextureUnits &textureUnits() = 0;
 

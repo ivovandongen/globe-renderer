@@ -107,7 +107,7 @@ int main() {
         context.clear(clearState);
 
         // Draw the rectangle
-        context.draw({{}, pipeline, vertexArray}, sceneState);
+        context.draw(core::geometry::PrimitiveType::TRIANGLES, {{}, pipeline, vertexArray}, sceneState);
     };
 
     // Update function

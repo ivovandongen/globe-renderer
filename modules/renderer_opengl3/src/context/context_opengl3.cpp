@@ -3,6 +3,7 @@
 #include <glbr/renderer/clear_state.hpp>
 #include <glbr/renderer/opengl3/buffers/vertex_buffer_opengl3.hpp>
 #include <glbr/renderer/opengl3/errors.hpp>
+#include <glbr/renderer/opengl3/type_conversions_opengl3.hpp>
 #include <glbr/renderer/opengl3/vertex_array/vertex_array_opengl3.hpp>
 
 #include <glad/glad.h>
@@ -22,7 +23,7 @@ void ContextOpenGL3::makeCurrent() const {
     _window.makeContextCurrent();
 }
 
-void ContextOpenGL3::draw(const DrawState &state, const SceneState &) {
+void ContextOpenGL3::draw(core::geometry::PrimitiveType primitiveType, const DrawState &state, const SceneState &) {
     // Apply render state
     _renderState = state.renderState;
 
@@ -39,9 +40,10 @@ void ContextOpenGL3::draw(const DrawState &state, const SceneState &) {
     // TODO
     if (state.vertexArray->indexBuffer()) {
         // TODO support other index types than uint
-        // TODO support other primitives than triangles
-        GL_VERIFY(glDrawElements(GL_TRIANGLES, state.vertexArray->indexBuffer()->size(), GL_UNSIGNED_INT, nullptr));
+        GL_VERIFY(glDrawElements(toPrimitiveType(primitiveType), state.vertexArray->indexBuffer()->size(),
+                                 GL_UNSIGNED_INT, nullptr));
     } else {
+        assert(false);
         // TODO GL_VERIFY(glDrawArrays(GL_TRIANGLES, 0, state.vertexBu));
     }
 }

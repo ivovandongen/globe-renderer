@@ -100,7 +100,8 @@ int main() {
 
         // Draw the model
         // TODO: switch Rasterization mode
-        context.draw({{RasterizationMode::Fill, {true, CullFace::BACK, mesh->windingOrder()}}, pipeline, vertexArray},
+        context.draw(mesh->primitiveType(),
+                     {{RasterizationMode::Fill, {true, CullFace::BACK, mesh->windingOrder()}}, pipeline, vertexArray},
                      sceneState);
     };
 

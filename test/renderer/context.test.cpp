@@ -3,6 +3,7 @@
 #include <glbr/renderer/context.hpp>
 
 using namespace glbr::renderer;
+using namespace glbr::core::geometry;
 
 class ContextStub : public Context {
     void makeCurrent() const override { assert(false); };
@@ -10,7 +11,7 @@ class ContextStub : public Context {
     std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint, int) const override { assert(false); };
     std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint, int) const override { assert(false); };
     void clear(const ClearState &) override { assert(false); };
-    void draw(const DrawState &, const SceneState &) override { assert(false); };
+    void draw(PrimitiveType, const DrawState &, const SceneState &) override { assert(false); };
     TextureUnits &textureUnits() override { assert(false); }
 };
 
