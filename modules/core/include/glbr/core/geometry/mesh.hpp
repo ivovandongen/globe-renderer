@@ -22,7 +22,12 @@ class Mesh {
 public:
     using VertexAttributes = std::vector<VertexAttribute>;
 
+    Mesh(PrimitiveType primitiveType, WindingOrder windingOrder)
+        : _primitiveType(primitiveType), _windingOrder(windingOrder) {}
     virtual ~Mesh() = default;
+
+    inline const PrimitiveType& primitiveType() const { return _primitiveType; }
+    inline const WindingOrder& windingOrder() const { return _windingOrder; }
 
     virtual const VertexAttributes& vertexAttributes() const = 0;
 
@@ -40,13 +45,17 @@ public:
         WindingOrder windingOrder = WindingOrder::COUNTER_CLOCK_WISE) {
         return std::make_unique<MeshImpl<Vertex, Index>>(attributes, primitiveType, windingOrder);
     }
+
+private:
+    PrimitiveType _primitiveType;
+    WindingOrder _windingOrder;
 };
 
 template <class Vertex, class Index>
 class MeshImpl : public Mesh {
 public:
     MeshImpl(std::initializer_list<VertexAttribute> attributes, PrimitiveType primitiveType, WindingOrder windingOrder)
-        : _primitiveType(primitiveType), _windingOrder(windingOrder), _vertexAttributes(attributes) {
+        : Mesh(primitiveType, windingOrder), _vertexAttributes(attributes) {
         // Check that the defined attribute bindings size does not exceed  the vertex size
         assert(sizeof(Vertex) >= std::prev(attributes.end())->offset() + std::prev(attributes.end())->size());
     }
@@ -54,9 +63,6 @@ public:
     ~MeshImpl() override = default;
 
     const VertexAttributes& vertexAttributes() const override { return _vertexAttributes; }
-
-    inline const PrimitiveType& primitiveType() const { return _primitiveType; }
-    inline const WindingOrder& windingOrder() const { return _windingOrder; }
 
     void data(std::vector<Vertex>&& data) { _data = std::move(data); }
     void indices(std::vector<Index>&& indices) { _indices = std::move(indices); };
@@ -72,8 +78,6 @@ public:
     inline const unsigned int indexSize() const override { return sizeof(Index); }
 
 private:
-    PrimitiveType _primitiveType;
-    WindingOrder _windingOrder;
     VertexAttributes _vertexAttributes;
     std::vector<Vertex> _data;
     std::vector<Index> _indices;
