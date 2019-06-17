@@ -9,6 +9,7 @@
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
 #include <glbr/renderer/opengl3/device_opengl3.hpp>
 #include <glbr/scene/camera/orbiting_camera_ctrl.hpp>
+#include <glbr/scene/renderables/axis_renderable.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -80,25 +81,33 @@ int main() {
 
     pipeline->uniforms()["bltin_texture0"] = 0;
 
-    renderer::ClearState clearState{{0, 1, 1, 1}};
-
     // Basic model matrix around the origin (rotated so the north pole is pointing straight up)
     pipeline->uniforms()["bltin_model"] = [&]() {
         auto model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));
         return glm::rotate(model, deg2rad(-90), {1.f, 0.f, 0.f});
     }();
 
+    // Create an axis renderable
+    scene::renderables::AxisRenderable axis{10};
+    axis.init(device, window.context());
+
+    renderer::ClearState clearState{{0, 1, 1, 1}};
+
     // Render function
     auto renderFn = [&](renderer::Context &context) {
-        // Clear the scene
-        clearState.color = {1., 0, 1., 1};
+        // Clear the scene //
+        clearState.color = {1., 1., 1., 1.};
         context.clear(clearState);
+
+        // Draw the axis //
+        axis.render(context, sceneState);
+
+        // Draw the model //
 
         // Update the MVP matrices
         pipeline->uniforms()["bltin_view"] = sceneState.camera().viewMatrix();
         pipeline->uniforms()["bltin_projection"] = sceneState.projectionMatrix();
 
-        // Draw the model
         // TODO: switch Rasterization mode
         context.draw(mesh->primitiveType(),
                      {{RasterizationMode::Fill, {true, CullFace::BACK, mesh->windingOrder()}}, pipeline, vertexArray},
@@ -114,9 +123,8 @@ int main() {
 
     // Resize listener
     window.context().setOnResizeListener([&](float width, float height) {
-        // Update projection matrix
+        // Update scene state
         sceneState.viewport(width, height);
-        pipeline->uniforms()["bltin_projection"] = sceneState.projectionMatrix();
     });
 
     // Runloop

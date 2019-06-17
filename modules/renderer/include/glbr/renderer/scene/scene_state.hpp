@@ -13,6 +13,8 @@ public:
 
     Camera& camera() { return _camera; };
 
+    const Camera& camera() const { return _camera; };
+
     glm::mat4 projectionMatrix() const;
 
 private:
