@@ -36,6 +36,9 @@ void VertexBufferAttributeBindingsOpenGL3::clean(const std::vector<ShaderVertexA
                 continue;
             }
 
+            // Bind the vertex buffer
+            attrib.buffer().bind();
+
             logging::debug(
                 "Binding vertex attribute {} at position {} (components: {}, type: {}, normalize: {}, stride: {}, "
                 "offset: {})",

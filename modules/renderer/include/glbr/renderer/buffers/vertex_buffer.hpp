@@ -7,7 +7,7 @@ class VertexBuffer {
 public:
     virtual ~VertexBuffer() = default;
 
-    virtual void bind() = 0;
+    virtual void bind() const = 0;
 
     virtual void upload(const void* data) = 0;
 

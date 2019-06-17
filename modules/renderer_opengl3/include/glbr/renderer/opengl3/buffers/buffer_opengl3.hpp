@@ -17,7 +17,7 @@ public:
 
     virtual ~BufferOpenGL3();
 
-    inline void bind() { GL_VERIFY(glBindBuffer(_target, _id)); }
+    inline void bind() const { GL_VERIFY(glBindBuffer(_target, _id)); }
 
     inline void upload(const void* data) { GL_VERIFY(glBufferData(_target, _size, data, _usage)); }
 

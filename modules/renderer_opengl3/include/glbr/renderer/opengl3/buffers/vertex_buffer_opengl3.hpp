@@ -13,7 +13,7 @@ public:
 
     ~VertexBufferOpenGL3() override = default;
 
-    void bind() override { BufferOpenGL3::bind(); }
+    void bind() const override { BufferOpenGL3::bind(); }
 
     void upload(const void* data) override { BufferOpenGL3::upload(data); }
 

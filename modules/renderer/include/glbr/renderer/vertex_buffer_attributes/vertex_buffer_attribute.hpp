@@ -25,6 +25,7 @@ public:
 
     ~VertexBufferAttribute() = default;
 
+    const VertexBuffer& buffer() { return *_buffer; }
     Type type() const { return _type; };
     unsigned int components() const { return _components; }
     bool normalize() const { return _normalize; }
