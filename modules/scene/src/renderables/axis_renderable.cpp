@@ -12,12 +12,10 @@ layout (location = 1) in vec3 color;
 
 out vec3 v_color;
 
-uniform mat4 bltin_model;
-uniform mat4 bltin_view;
-uniform mat4 bltin_projection;
+uniform mat4 bltin_modelViewProjection;
 
 void main() {
-    gl_Position = bltin_projection * bltin_view * bltin_model * vec4(position, 1.0);
+    gl_Position = bltin_modelViewProjection * vec4(position, 1.0);
     v_color = color;
 }
 )";

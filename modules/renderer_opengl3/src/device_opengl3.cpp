@@ -23,6 +23,7 @@ DeviceOpenGL3::DeviceOpenGL3() {
     _drawAutoUniformFactories["bltin_model"] = std::make_unique<ModelMatrixDrawAutoFactory>();
     _drawAutoUniformFactories["bltin_view"] = std::make_unique<ViewMatrixDrawAutoFactory>();
     _drawAutoUniformFactories["bltin_projection"] = std::make_unique<ProjectionMatrixDrawAutoFactory>();
+    _drawAutoUniformFactories["bltin_modelViewProjection"] = std::make_unique<ModelViewProjectionMatrixDrawAutoFactory>();
 }
 
 std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(const core::Image &image, bool generateMipmaps) const {

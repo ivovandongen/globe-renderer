@@ -17,5 +17,9 @@ struct ProjectionMatrixDrawAutoFactory : DrawAutoUniformFactory {
     DrawAutoUniform operator()(Uniform& uniform) override;
 };
 
+struct ModelViewProjectionMatrixDrawAutoFactory : DrawAutoUniformFactory {
+    DrawAutoUniform operator()(Uniform& uniform) override;
+};
+
 }  // namespace renderer
 }  // namespace glbr

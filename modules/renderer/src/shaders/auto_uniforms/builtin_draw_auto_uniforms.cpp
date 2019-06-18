@@ -21,5 +21,11 @@ DrawAutoUniform ProjectionMatrixDrawAutoFactory::operator()(Uniform& uniform) {
     };
 }
 
+DrawAutoUniform ModelViewProjectionMatrixDrawAutoFactory::operator()(Uniform& uniform) {
+    return [&uniform](const Context&, const DrawState&, const SceneState& sceneState) {
+        uniform = sceneState.projectionMatrix() * sceneState.camera().viewMatrix() * sceneState.modelMatrix();
+    };
+}
+
 }  // namespace renderer
 }  // namespace glbr
