@@ -16,7 +16,11 @@ namespace renderer {
 
 class Uniform {
 public:
-    using Value = core::variant<bool, unsigned int, int, float, glm::vec2, glm::vec3, glm::vec4, glm::mat4>;
+    struct NOT_SET {
+        bool operator==(const NOT_SET&) const { return true; }
+        bool operator!=(const NOT_SET&) const { return false; }
+    };
+    using Value = core::variant<NOT_SET, bool, unsigned int, int, float, glm::vec2, glm::vec3, glm::vec4, glm::mat4>;
 
 public:
     explicit Uniform(std::string name) : _name(std::move(name)) {}
@@ -36,8 +40,12 @@ public:
 
     void apply() {
         if (_dirty) {
-            doApply(_value);
-            _dirty = false;
+            if (!_value.is<NOT_SET>()) {
+                doApply(_value);
+                _dirty = false;
+            } else {
+                logging::error("Uniform {} has no value", _name);
+            }
         }
     }
 
@@ -47,7 +55,7 @@ protected:
 private:
     std::string _name;
     Value _value;
-    bool _dirty{false};
+    bool _dirty{true};
 };
 
 }  // namespace renderer

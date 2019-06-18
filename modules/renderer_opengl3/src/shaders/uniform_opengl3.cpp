@@ -9,6 +9,10 @@ namespace {
 struct ValueApplyVisitor {
     int location;
 
+    void operator()(const glbr::renderer::Uniform::NOT_SET& value) {
+        // NOOP, no value set
+    }
+
     void operator()(const float& value) { GL_VERIFY(glUniform1f(location, value)); }
     void operator()(const glm::vec2& value) { GL_VERIFY(glUniform2f(location, value.x, value.y)); }
     void operator()(const glm::vec3& value) { GL_VERIFY(glUniform3f(location, value.x, value.y, value.z)); }
