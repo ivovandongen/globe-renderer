@@ -19,7 +19,7 @@ namespace geometry {
 
 class Mesh;
 
-} // namespace geometry
+}  // namespace geometry
 }  // namespace core
 
 namespace scene {
@@ -33,7 +33,7 @@ public:
 
     void init(const renderer::Device& device, const renderer::Context& context) override;
 
-    void render(renderer::Context& context, const renderer::SceneState& sceneState) override;
+    void render(renderer::Context& context, renderer::SceneState& sceneState) override;
 
 private:
     glm::mat4 _model;
@@ -45,4 +45,4 @@ private:
 
 }  // namespace renderables
 }  // namespace scene
-} // namespace glbr
+}  // namespace glbr

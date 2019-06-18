@@ -90,15 +90,11 @@ void AxisRenderable::init(const renderer::Device& device, const renderer::Contex
 
     // Create the VAO
     _vao = context.createVertexArray(*_mesh);
-
-    // Set the model matrix
-    _pipeline->uniforms()["bltin_model"] = _model;
 }
 
-void AxisRenderable::render(renderer::Context& context, const renderer::SceneState& sceneState) {
-    // Update the transformation matrices
-    _pipeline->uniforms()["bltin_view"] = sceneState.camera().viewMatrix();
-    _pipeline->uniforms()["bltin_projection"] = sceneState.projectionMatrix();
+void AxisRenderable::render(renderer::Context& context, renderer::SceneState& sceneState) {
+    // Set the model matrix
+    sceneState.modelMatrix(_model);
 
     // Draw
     context.draw(_mesh->primitiveType(), {{}, _pipeline, _vao}, sceneState);

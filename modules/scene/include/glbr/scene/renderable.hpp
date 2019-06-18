@@ -13,7 +13,7 @@ public:
 
     virtual void init(const renderer::Device& device, const renderer::Context& context){};
 
-    virtual void render(renderer::Context& context, const renderer::SceneState& sceneState) = 0;
+    virtual void render(renderer::Context& context, renderer::SceneState& sceneState) = 0;
 };
 
 }  // namespace scene
