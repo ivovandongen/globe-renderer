@@ -9,6 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <array>
+#include <glbr/scene/renderables/axis_renderable.hpp>
 #include <memory>
 
 using namespace glbr;
@@ -96,11 +97,18 @@ int main() {
     // Basic model matrix around the origin
     glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));
 
+    // Add axis
+    scene::renderables::AxisRenderable axis{10};
+    axis.init(device, window.context());
+
     // Render function
     auto renderFn = [&](renderer::Context &context) {
         // Clear the scene
         clearState.color = {1., 0, 1., 1};
         context.clear(clearState);
+
+        // Draw axis
+        axis.render(context, sceneState);
 
         // Update the projection matrix
         pipeline->uniforms()["bltin_projection"] = sceneState.projectionMatrix();
