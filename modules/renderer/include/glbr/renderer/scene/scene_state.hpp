@@ -15,12 +15,17 @@ public:
 
     const Camera& camera() const { return _camera; };
 
+    void modelMatrix(const glm::mat4& modelMatrix) { _modelMatrix = modelMatrix; }
+
+    const glm::mat4& modelMatrix() const { return _modelMatrix; }
+
     glm::mat4 projectionMatrix() const;
 
 private:
     Camera _camera;
     float _width;
     float _height;
+    glm::mat4 _modelMatrix;
 };
 
 }  // namespace renderer

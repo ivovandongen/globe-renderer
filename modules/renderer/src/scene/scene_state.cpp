@@ -5,7 +5,8 @@
 namespace glbr {
 namespace renderer {
 
-SceneState::SceneState(float width, float height) : _camera(Camera()), _width(width), _height(height) {}
+SceneState::SceneState(float width, float height)
+    : _camera(Camera()), _width(width), _height(height), _modelMatrix(glm::mat4(1)) {}
 
 glm::mat4 SceneState::projectionMatrix() const {
     // TODO hardcoded FOV
