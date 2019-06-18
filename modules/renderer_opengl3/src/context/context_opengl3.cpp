@@ -40,7 +40,7 @@ void ContextOpenGL3::draw(core::geometry::PrimitiveType primitiveType, const Dra
     // TODO
     if (state.vertexArray->indexBuffer()) {
         // TODO support other index types than uint
-        GL_VERIFY(glDrawElements(toPrimitiveType(primitiveType), state.vertexArray->indexBuffer()->size(),
+        GL_VERIFY(glDrawElements(toPrimitiveType(primitiveType), state.vertexArray->indexBuffer()->count(),
                                  GL_UNSIGNED_INT, nullptr));
     } else {
         assert(false);
@@ -72,8 +72,8 @@ std::unique_ptr<VertexBuffer> ContextOpenGL3::createVertexBuffer(BufferHint usag
     return std::make_unique<VertexBufferOpenGL3>(usageHint, sizeInBytes);
 }
 
-std::unique_ptr<IndexBuffer> ContextOpenGL3::createIndexBuffer(BufferHint usageHint, int sizeInBytes) const {
-    return std::make_unique<IndexBufferOpenGL3>(usageHint, sizeInBytes);
+std::unique_ptr<IndexBuffer> ContextOpenGL3::createIndexBuffer(BufferHint usageHint, uint32_t count) const {
+    return std::make_unique<IndexBufferOpenGL3>(usageHint, count);
 }
 
 }  // namespace opengl3

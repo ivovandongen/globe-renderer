@@ -9,7 +9,7 @@ namespace opengl3 {
 
 class IndexBufferOpenGL3 : private BufferOpenGL3, public IndexBuffer {
 public:
-    IndexBufferOpenGL3(BufferHint usageHint, uint sizeInBytes);
+    IndexBufferOpenGL3(BufferHint usageHint, uint32_t count);
 
     ~IndexBufferOpenGL3() override = default;
 
@@ -17,7 +17,10 @@ public:
 
     void upload(const void* data) override { BufferOpenGL3::upload(data); }
 
-    uint size() override { return BufferOpenGL3::size(); }
+    uint32_t count() const override { return _count; }
+
+private:
+    uint32_t _count;
 };
 
 }  // namespace opengl3

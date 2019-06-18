@@ -76,7 +76,7 @@ int main() {
         "aTex", {vertexBuffer, VertexBufferAttribute::Type::Float, 2, false, 5 * sizeof(float), 3 * sizeof(float)});
 
     // Add the indices to the IndexBuffer
-    auto indexBuffer = window.context().createIndexBuffer(BufferHint::StaticDraw, indices.size() * sizeof(float));
+    auto indexBuffer = window.context().createIndexBuffer(BufferHint::StaticDraw, indices.size());
     indexBuffer->bind();
     indexBuffer->upload(indices.data());
     vertexArray->indexBuffer(std::move(indexBuffer));

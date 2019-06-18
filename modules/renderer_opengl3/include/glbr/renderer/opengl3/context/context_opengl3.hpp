@@ -32,7 +32,7 @@ public:
 
     std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint, int sizeInBytes) const override;
 
-    std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint, int sizeInBytes) const override;
+    std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint, uint32_t count) const override;
 
     void clear(const ClearState &) override;
 

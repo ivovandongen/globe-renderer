@@ -4,6 +4,8 @@
 
 #include <glbr/io/file.hpp>
 
+#include <glm/vec3.hpp>
+
 #include <array>
 
 int main() {
@@ -30,13 +32,14 @@ int main() {
     std::shared_ptr<VertexArray> vertexArray = window.context().createVertexArray();
     vertexArray->bind();
 
-    std::array<float, 12> vertices{
-        0.5f,  0.5f,  0.0f,  // top right
-        0.5f,  -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f, 0.5f,  0.0f   // top left
+    using Vertex = glm::vec3;
+    std::array<Vertex, 4> vertices{
+        Vertex{0.5f, 0.5f, 0.0f},    // top right
+        Vertex{0.5f, -0.5f, 0.0f},   // bottom right
+        Vertex{-0.5f, -0.5f, 0.0f},  // bottom left
+        Vertex{-0.5f, 0.5f, 0.0f}    // top left
     };
-    std::array<unsigned int, 6> indices{
+    std::array<uint32_t, 6> indices{
         // note that we start from 0!
         0, 1, 3,  // first triangle
         1, 2, 3   // second triangle
@@ -44,15 +47,15 @@ int main() {
 
     // Add the vertices to the VertexBuffer
     std::shared_ptr<VertexBuffer> vertexBuffer =
-        window.context().createVertexBuffer(BufferHint::StaticDraw, vertices.size() * sizeof(float));
+        window.context().createVertexBuffer(BufferHint::StaticDraw, vertices.size() * sizeof(Vertex));
     vertexBuffer->bind();
     vertexBuffer->upload(vertices.data());
 
     // Set up the VertexAttributes
-    vertexArray->add("aPos", {vertexBuffer, VertexBufferAttribute::Type::Float, 3, false, 3 * sizeof(float), 0});
+    vertexArray->add("aPos", {vertexBuffer, VertexBufferAttribute::Type::Float, 3, false, sizeof(Vertex), 0});
 
     // Add the indices to the IndexBuffer
-    vertexArray->indexBuffer(window.context().createIndexBuffer(BufferHint::StaticDraw, indices.size() * sizeof(float)));
+    vertexArray->indexBuffer(window.context().createIndexBuffer(BufferHint::StaticDraw, indices.size()));
     vertexArray->indexBuffer()->bind();
     vertexArray->indexBuffer()->upload(indices.data());
 

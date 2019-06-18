@@ -31,7 +31,7 @@ public:
 
     std::unique_ptr<VertexArray> createVertexArray(const core::geometry::Mesh &) const;
 
-    virtual std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint, int sizeInBytes) const = 0;
+    virtual std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint, uint32_t count) const = 0;
 
     virtual std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint, int sizeInBytes) const = 0;
 

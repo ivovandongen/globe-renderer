@@ -4,8 +4,8 @@ namespace glbr {
 namespace renderer {
 namespace opengl3 {
 
-IndexBufferOpenGL3::IndexBufferOpenGL3(BufferHint usageHint, unsigned int sizeInBytes)
-    : BufferOpenGL3(BufferTarget::ElementArrayBuffer, usageHint, sizeInBytes) {}
+IndexBufferOpenGL3::IndexBufferOpenGL3(BufferHint usageHint, uint32_t count)
+    : BufferOpenGL3(BufferTarget::ElementArrayBuffer, usageHint, count * sizeof(uint32_t)), _count(count) {}
 
 }  // namespace opengl3
 }  // namespace renderer

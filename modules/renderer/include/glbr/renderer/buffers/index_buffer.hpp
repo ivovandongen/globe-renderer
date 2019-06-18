@@ -11,7 +11,7 @@ public:
 
     virtual void upload(const void* data) = 0;
 
-    virtual unsigned int size() = 0;
+    virtual unsigned int count() const = 0;
 };
 
 }  // namespace renderer

@@ -37,7 +37,6 @@ public:
 
     virtual const void* indexData() const = 0;
     virtual const size_t indexCount() const = 0;
-    virtual const unsigned int indexSize() const = 0;
 
     template <class Vertex, class Index>
     static std::unique_ptr<MeshImpl<Vertex, Index>> Create(
@@ -74,8 +73,7 @@ public:
     inline const unsigned int vertexSize() const override { return sizeof(Vertex); }
 
     inline const void* indexData() const override { return _indices.data(); }
-    inline const size_t indexCount() const override { return _indices.size(); }
-    inline const unsigned int indexSize() const override { return sizeof(Index); }
+    inline const size_t indexCount() const override { return _indices.size() * sizeof(Index) / sizeof(uint32_t); }
 
 private:
     VertexAttributes _vertexAttributes;
