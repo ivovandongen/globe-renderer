@@ -1,4 +1,5 @@
 #include <glbr/logging/logging.hpp>
+#include <glbr/renderer/opengl3/device_opengl3.hpp>
 #include <glbr/renderer/opengl3/errors.hpp>
 #include <glbr/renderer/opengl3/pipeline_opengl3.hpp>
 #include <glbr/renderer/opengl3/shaders/uniform_opengl3.hpp>
@@ -113,7 +114,25 @@ void PipelineOpenGL3::loadUniforms() {
         std::string name(nameBuffer.data(), nameLength);
         int location = GL_VERIFY(glGetUniformLocation(_id, name.c_str()));
         _uniforms.add(name, std::make_unique<UniformOpenGL3>(location, name));
+
+        // Check if this is an automatic uniform
+        auto &drawAutoFactories = DeviceOpenGL3::instance().drawAutoUniformFactories();
+        auto drawAutoFactory = drawAutoFactories.find(name);
+        if (drawAutoFactory != drawAutoFactories.end()) {
+            logging::debug("Registering draw auto uniform: {}", name);
+            _drawAutoUniforms.push_back((*drawAutoFactory->second)(_uniforms[name]));
+        }
     }
+}
+
+void PipelineOpenGL3::clean(const Context &context, const DrawState &drawState, const SceneState &sceneState) {
+    // Update draw automatic uniforms
+    for (auto &dau : _drawAutoUniforms) {
+        dau(context, drawState, sceneState);
+    }
+
+    // Apply uniforms
+    _uniforms.apply();
 }
 
 }  // namespace opengl3

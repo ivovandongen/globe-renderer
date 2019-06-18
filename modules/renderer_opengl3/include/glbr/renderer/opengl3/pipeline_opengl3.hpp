@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glbr/renderer/pipeline.hpp>
+#include <glbr/renderer/shaders/auto_uniforms/draw_auto_uniform.hpp>
 
 #include <glad/glad.h>
 
@@ -21,6 +22,8 @@ public:
 
     void bind() const override;
 
+    void clean(const Context&, const DrawState&, const SceneState&);
+
     const VertexAttributeBindings &vertexAttributeBindings() const override { return _vertexAttributeBindings; }
 
     const Uniforms &uniforms() const override { return _uniforms; }
@@ -40,6 +43,7 @@ private:
     GLuint _id;
     VertexAttributeBindings _vertexAttributeBindings;
     Uniforms _uniforms;
+    std::vector<DrawAutoUniform> _drawAutoUniforms;
 };
 
 }  // namespace opengl3

@@ -2,6 +2,7 @@
 #include <glbr/renderer/opengl3/pipeline_opengl3.hpp>
 #include <glbr/renderer/opengl3/textures/texture2d_opengl3.hpp>
 #include <glbr/renderer/opengl3/textures/texture_sampler_opengl3.hpp>
+#include <glbr/renderer/shaders/auto_uniforms/builtin_draw_auto_uniforms.hpp>
 
 namespace glbr {
 namespace renderer {
@@ -15,6 +16,13 @@ DeviceOpenGL3 &DeviceOpenGL3::instance() {
 std::unique_ptr<Pipeline> DeviceOpenGL3::createPipeline(const std::string &vertexSource,
                                                         const std::string &fragmentSource) const {
     return std::make_unique<PipelineOpenGL3>(vertexSource, fragmentSource);
+}
+
+DeviceOpenGL3::DeviceOpenGL3() {
+    // Register draw auto factories
+    _drawAutoUniformFactories["bltin_model"] = std::make_unique<ModelMatrixDrawAutoFactory>();
+    _drawAutoUniformFactories["bltin_view"] = std::make_unique<ViewMatrixDrawAutoFactory>();
+    _drawAutoUniformFactories["bltin_projection"] = std::make_unique<ProjectionMatrixDrawAutoFactory>();
 }
 
 std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(const core::Image &image, bool generateMipmaps) const {

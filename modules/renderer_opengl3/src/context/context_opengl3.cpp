@@ -23,24 +23,25 @@ void ContextOpenGL3::makeCurrent() const {
     _window.makeContextCurrent();
 }
 
-void ContextOpenGL3::draw(core::geometry::PrimitiveType primitiveType, const DrawState &state, const SceneState &) {
+void ContextOpenGL3::draw(core::geometry::PrimitiveType primitiveType, const DrawState &drawState,
+                          const SceneState &sceneState) {
     // Apply render state
-    _renderState = state.renderState;
+    _renderState = drawState.renderState;
 
     // Apply programmable state
-    _pipeline = std::dynamic_pointer_cast<PipelineOpenGL3>(state.pipeline);
-    _vertexArray = std::dynamic_pointer_cast<VertexArrayOpenGL3>(state.vertexArray);
+    _pipeline = std::dynamic_pointer_cast<PipelineOpenGL3>(drawState.pipeline);
+    _vertexArray = std::dynamic_pointer_cast<VertexArrayOpenGL3>(drawState.vertexArray);
 
     _vertexArray->clean(*_pipeline);
-    _pipeline->uniforms().apply();
+    _pipeline->clean(*this, drawState, sceneState);
 
     // Update the texture units
     _textureUnits.clean();
 
     // TODO
-    if (state.vertexArray->indexBuffer()) {
+    if (drawState.vertexArray->indexBuffer()) {
         // TODO support other index types than uint
-        GL_VERIFY(glDrawElements(toPrimitiveType(primitiveType), state.vertexArray->indexBuffer()->count(),
+        GL_VERIFY(glDrawElements(toPrimitiveType(primitiveType), drawState.vertexArray->indexBuffer()->count(),
                                  GL_UNSIGNED_INT, nullptr));
     } else {
         assert(false);

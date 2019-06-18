@@ -82,10 +82,8 @@ int main() {
     pipeline->uniforms()["bltin_texture0"] = 0;
 
     // Basic model matrix around the origin (rotated so the north pole is pointing straight up)
-    pipeline->uniforms()["bltin_model"] = [&]() {
-        auto model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));
-        return glm::rotate(model, deg2rad(-90), {1.f, 0.f, 0.f});
-    }();
+    auto model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));
+    model = glm::rotate(model, deg2rad(-90), {1.f, 0.f, 0.f});
 
     // Create an axis renderable
     scene::renderables::AxisRenderable axis{10};
@@ -104,9 +102,7 @@ int main() {
 
         // Draw the model //
 
-        // Update the MVP matrices
-        pipeline->uniforms()["bltin_view"] = sceneState.camera().viewMatrix();
-        pipeline->uniforms()["bltin_projection"] = sceneState.projectionMatrix();
+        sceneState.modelMatrix(model);
 
         // TODO: switch Rasterization mode
         context.draw(mesh->primitiveType(),

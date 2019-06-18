@@ -1,6 +1,9 @@
 #pragma once
 
 #include <glbr/renderer/device.hpp>
+#include <glbr/renderer/shaders/auto_uniforms/draw_auto_uniform_factory.hpp>
+
+#include <string>
 
 namespace glbr {
 namespace renderer {
@@ -8,6 +11,8 @@ namespace opengl3 {
 
 class DeviceOpenGL3 : public Device {
 public:
+    using DrawAutoFactories = std::unordered_map<std::string, std::unique_ptr<DrawAutoUniformFactory>>;
+
     static DeviceOpenGL3 &instance();
 
     ~DeviceOpenGL3() override = default;
@@ -24,8 +29,13 @@ public:
                                                          TextureMagnificationFilter magnificationFilter, TextureWrap s,
                                                          TextureWrap t) const override;
 
+    const DrawAutoFactories& drawAutoUniformFactories() const { return _drawAutoUniformFactories; }
+
 private:
-    DeviceOpenGL3() = default;
+    DeviceOpenGL3();
+
+private:
+    DrawAutoFactories _drawAutoUniformFactories;
 };
 
 }  // namespace opengl3

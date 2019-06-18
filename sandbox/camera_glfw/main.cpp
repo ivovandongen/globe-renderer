@@ -110,17 +110,11 @@ int main() {
         // Draw axis
         axis.render(context, sceneState);
 
-        // Update the projection matrix
-        pipeline->uniforms()["bltin_projection"] = sceneState.projectionMatrix();
-
-        // Update the view matrix
-        pipeline->uniforms()["bltin_view"] = sceneState.camera().viewMatrix();
-
-        // Update the model uniform
-        pipeline->uniforms()["bltin_model"] = model;
+        // Update the model matrix
+        sceneState.modelMatrix(model);
 
         // Draw the rectangle
-        context.draw(core::geometry::PrimitiveType::TRIANGLES,{{}, pipeline, vertexArray}, sceneState);
+        context.draw(core::geometry::PrimitiveType::TRIANGLES, {{}, pipeline, vertexArray}, sceneState);
     };
 
     // Update function
