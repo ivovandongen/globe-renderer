@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glbr/core/size.hpp>
 #include "camera.hpp"
 
 namespace glbr {
@@ -10,6 +11,8 @@ public:
     SceneState(float width, float height);
 
     void viewport(float width, float height);
+
+    core::Size2D<float> viewport() const { return {_width, _height}; }
 
     Camera& camera() { return _camera; };
 
