@@ -14,6 +14,8 @@ GLenum convert(glbr::renderer::VertexBufferAttribute::Type type) {
     switch (type) {
         case VertexBufferAttribute::Type::Float:
             return GL_FLOAT;
+        case VertexBufferAttribute::Type::UnsignedByte:
+            return GL_UNSIGNED_BYTE;
     }
 }
 

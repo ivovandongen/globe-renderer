@@ -10,7 +10,7 @@ namespace renderer {
 
 class VertexBufferAttribute {
 public:
-    enum class Type { Float };
+    enum class Type { Float, UnsignedByte };
 
     VertexBufferAttribute() = default;
 
