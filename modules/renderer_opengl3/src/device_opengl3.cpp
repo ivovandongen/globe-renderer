@@ -26,7 +26,13 @@ DeviceOpenGL3::DeviceOpenGL3() {
     _drawAutoUniformFactories["bltin_modelViewProjection"] = std::make_unique<ModelViewProjectionMatrixDrawAutoFactory>();
 }
 
+std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(Texture2DDescription description,
+                                                          TextureTarget target) const {
+    return std::make_unique<Texture2DOpenGL3>(description, target);
+}
+
 std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(const core::Image &image, bool generateMipmaps) const {
+    // TODO: move to abstract Context
     TextureFormat format = [&]() {
         switch (image.channels()) {
             case 1:
@@ -49,6 +55,7 @@ std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(const core::Image &ima
 
 std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(const core::Image &image, TextureFormat format,
                                                           bool generateMipmaps) const {
+    // TODO: move to abstract Context
     auto texture = std::make_unique<Texture2DOpenGL3>(
         Texture2DDescription{image.width(), image.height(), format, generateMipmaps}, TextureTarget::Texture2D);
     texture->upload(image.data());
