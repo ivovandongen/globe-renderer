@@ -2,6 +2,7 @@
 
 #include <glbr/renderer/clear_state.hpp>
 #include <glbr/renderer/opengl3/buffers/vertex_buffer_opengl3.hpp>
+#include <glbr/renderer/opengl3/device_opengl3.hpp>
 #include <glbr/renderer/opengl3/errors.hpp>
 #include <glbr/renderer/opengl3/type_conversions_opengl3.hpp>
 #include <glbr/renderer/opengl3/vertex_array/vertex_array_opengl3.hpp>
@@ -75,6 +76,14 @@ std::unique_ptr<VertexBuffer> ContextOpenGL3::createVertexBuffer(BufferHint usag
 
 std::unique_ptr<IndexBuffer> ContextOpenGL3::createIndexBuffer(BufferHint usageHint, uint32_t count) const {
     return std::make_unique<IndexBufferOpenGL3>(usageHint, count);
+}
+
+Device &ContextOpenGL3::device() {
+    return DeviceOpenGL3::instance();
+}
+
+const Device &ContextOpenGL3::device() const {
+    return DeviceOpenGL3::instance();
 }
 
 }  // namespace opengl3

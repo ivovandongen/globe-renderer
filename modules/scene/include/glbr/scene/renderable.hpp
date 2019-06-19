@@ -11,7 +11,9 @@ class Renderable {
 public:
     ~Renderable() = default;
 
-    virtual void init(const renderer::Device& device, const renderer::Context& context){};
+    virtual void init(const renderer::Context& context){};
+
+    virtual void update(std::chrono::nanoseconds interval, const renderer::SceneState& sceneState){};
 
     virtual void render(renderer::Context& context, renderer::SceneState& sceneState) = 0;
 };

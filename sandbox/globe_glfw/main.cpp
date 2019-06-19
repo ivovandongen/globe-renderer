@@ -87,7 +87,7 @@ int main() {
 
     // Create an axis renderable
     scene::renderables::AxisRenderable axis{10};
-    axis.init(device, window.context());
+    axis.init(window.context());
 
     renderer::ClearState clearState{{0, 1, 1, 1}};
 

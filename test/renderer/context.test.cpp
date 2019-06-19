@@ -7,6 +7,8 @@ using namespace glbr::core::geometry;
 
 class ContextStub : public Context {
     void makeCurrent() const override { assert(false); };
+    Device &device() override { assert(false); }
+    const Device &device() const override { assert(false); }
     std::unique_ptr<VertexArray> createVertexArray() const override { assert(false); };
     std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint, uint32_t) const override { assert(false); };
     std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint, int) const override { assert(false); };

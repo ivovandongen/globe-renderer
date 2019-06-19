@@ -2,16 +2,16 @@
 
 #include <glbr/core/geometry/mesh.hpp>
 #include <glbr/core/geometry/primitive_type.hpp>
+#include <glbr/core/optional.hpp>
 #include <glbr/renderer/buffers/buffer_hint.hpp>
 #include <glbr/renderer/buffers/vertex_buffer.hpp>
 #include <glbr/renderer/clear_state.hpp>
+#include <glbr/renderer/device.hpp>
 #include <glbr/renderer/draw_state.hpp>
 #include <glbr/renderer/scene/scene_state.hpp>
+#include <glbr/renderer/textures/texture_unit.hpp>
 #include <glbr/renderer/textures/texture_units.hpp>
 #include <glbr/renderer/vertex_array/vertex_array.hpp>
-
-#include <glbr/core/optional.hpp>
-#include <glbr/renderer/textures/texture_unit.hpp>
 
 namespace glbr {
 namespace renderer {
@@ -26,6 +26,10 @@ public:
     virtual void viewport(int width, int height);
 
     virtual void makeCurrent() const = 0;
+
+    virtual Device &device() = 0;
+
+    virtual const Device &device() const = 0;
 
     virtual std::unique_ptr<VertexArray> createVertexArray() const = 0;
 

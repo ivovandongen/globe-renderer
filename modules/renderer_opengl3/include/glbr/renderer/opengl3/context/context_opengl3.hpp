@@ -28,6 +28,10 @@ public:
 
     void makeCurrent() const override;
 
+    Device &device() override;
+
+    const Device &device() const override;
+
     std::unique_ptr<VertexArray> createVertexArray() const override;
 
     std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint, int sizeInBytes) const override;

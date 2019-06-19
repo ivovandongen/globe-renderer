@@ -99,7 +99,7 @@ int main() {
 
     // Add axis
     scene::renderables::AxisRenderable axis{10};
-    axis.init(device, window.context());
+    axis.init(window.context());
 
     // Render function
     auto renderFn = [&](renderer::Context &context) {

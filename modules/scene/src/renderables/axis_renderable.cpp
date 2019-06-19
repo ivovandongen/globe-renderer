@@ -82,9 +82,9 @@ AxisRenderable::AxisRenderable(float scale, glm::vec3 position) : _model(glm::ma
     _mesh = createMesh();
 }
 
-void AxisRenderable::init(const renderer::Device& device, const renderer::Context& context) {
+void AxisRenderable::init(const renderer::Context& context) {
     // Create the pipeline
-    _pipeline = device.createPipeline(VERTEX_SRC, FRAGMENT_SRC);
+    _pipeline = context.device().createPipeline(VERTEX_SRC, FRAGMENT_SRC);
 
     // Create the VAO
     _vao = context.createVertexArray(*_mesh);
