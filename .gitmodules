@@ -22,3 +22,6 @@
 [submodule "deps/ctti"]
 	path = deps/ctti
 	url = git@github.com:Manu343726/ctti.git
+[submodule "deps/imgui"]
+	path = deps/imgui
+	url = git@github.com:ocornut/imgui.git
