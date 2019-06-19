@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace glbr {
 namespace renderer {
 
@@ -10,6 +12,8 @@ public:
     virtual void bind() const = 0;
 
     virtual void upload(const void* data) = 0;
+
+    virtual void upload(const void* data, uint32_t size) = 0;
 
     virtual unsigned int size() = 0;
 };

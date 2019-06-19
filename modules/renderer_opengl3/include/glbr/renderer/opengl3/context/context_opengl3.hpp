@@ -34,7 +34,11 @@ public:
 
     std::unique_ptr<VertexArray> createVertexArray() const override;
 
+    std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint) const override;
+
     std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint, int sizeInBytes) const override;
+
+    std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint) const override;
 
     std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint, uint32_t count) const override;
 

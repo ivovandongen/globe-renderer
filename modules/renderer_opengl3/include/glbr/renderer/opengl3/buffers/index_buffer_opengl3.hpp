@@ -17,6 +17,11 @@ public:
 
     void upload(const void* data) override { BufferOpenGL3::upload(data); }
 
+    void upload(const void* data, uint32_t count) override {
+        _count = count;
+        BufferOpenGL3::upload(data, count * sizeof(uint32_t));
+    }
+
     uint32_t count() const override { return _count; }
 
 private:

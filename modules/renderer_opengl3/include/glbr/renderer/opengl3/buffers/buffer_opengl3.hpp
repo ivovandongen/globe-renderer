@@ -13,13 +13,24 @@ enum class BufferTarget { ArrayBuffer, ElementArrayBuffer };
 
 class BufferOpenGL3 {
 public:
+    BufferOpenGL3(BufferTarget type, BufferHint usageHint);
+
     BufferOpenGL3(BufferTarget type, ::glbr::renderer::BufferHint usageHint, unsigned int sizeInBytes);
 
     virtual ~BufferOpenGL3();
 
     inline void bind() const { GL_VERIFY(glBindBuffer(_target, _id)); }
 
-    inline void upload(const void* data) { GL_VERIFY(glBufferData(_target, _size, data, _usage)); }
+    inline void upload(const void* data) {
+        assert(_size > 0);
+        GL_VERIFY(glBufferData(_target, _size, data, _usage));
+    }
+
+    inline void upload(const void* data, uint32_t size) {
+        _size = size;
+        assert(_size > 0);
+        GL_VERIFY(glBufferData(_target, _size, data, _usage));
+    }
 
     inline unsigned int size() { return _size; }
 

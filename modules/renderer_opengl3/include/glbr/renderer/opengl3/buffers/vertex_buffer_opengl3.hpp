@@ -17,6 +17,8 @@ public:
 
     void upload(const void* data) override { BufferOpenGL3::upload(data); }
 
+    void upload(const void* data, uint32_t size) override { BufferOpenGL3::upload(data, size); };
+
     unsigned int size() override { return BufferOpenGL3::size(); }
 };
 

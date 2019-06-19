@@ -50,7 +50,12 @@ namespace glbr {
 namespace renderer {
 namespace opengl3 {
 
-BufferOpenGL3::BufferOpenGL3(BufferTarget type, ::glbr::renderer::BufferHint usageHint, unsigned int sizeInBytes)
+BufferOpenGL3::BufferOpenGL3(BufferTarget type, BufferHint usageHint)
+    : _target(convert(type)), _usage(convert(usageHint)), _size(0) {
+    GL_VERIFY(glGenBuffers(1, &_id));
+}
+
+BufferOpenGL3::BufferOpenGL3(BufferTarget type, BufferHint usageHint, unsigned int sizeInBytes)
     : _target(convert(type)), _usage(convert(usageHint)), _size(sizeInBytes) {
     GL_VERIFY(glGenBuffers(1, &_id));
 }
