@@ -15,7 +15,7 @@ struct ContextStub : public Context {
     };
     std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint, int) const override { assert(false); };
     void clear(const ClearState &) override { assert(false); };
-    void draw(PrimitiveType, const DrawState &, const SceneState &) override { assert(false); };
+    void draw(PrimitiveType, const DrawState &, const SceneState &, uint32_t) override { assert(false); };
     TextureUnits &textureUnits() override { assert(false); }
 };
 

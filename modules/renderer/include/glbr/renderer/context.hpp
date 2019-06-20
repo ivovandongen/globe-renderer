@@ -32,6 +32,10 @@ public:
         return createVertexBuffer(usageHint, 0);
     }
 
+    void draw(core::geometry::PrimitiveType primitive, const DrawState &drawState, const SceneState &sceneState) {
+        draw(primitive, drawState, sceneState, 0);
+    };
+
     void setOnResizeListener(const ResizeFN &onResize) { _onResizeListener = onResize; };
 
     // Needs to be called from sub-classes
@@ -52,7 +56,8 @@ public:
 
     virtual void clear(const ClearState &) = 0;
 
-    virtual void draw(core::geometry::PrimitiveType primitive, const DrawState &, const SceneState &) = 0;
+    virtual void draw(core::geometry::PrimitiveType primitive, const DrawState &, const SceneState &,
+                      uint32_t offset) = 0;
 
     virtual TextureUnits &textureUnits() = 0;
 

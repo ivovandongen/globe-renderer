@@ -41,7 +41,7 @@ public:
 
     void clear(const ClearState &) override;
 
-    void draw(core::geometry::PrimitiveType, const DrawState &, const SceneState &) override;
+    void draw(core::geometry::PrimitiveType, const DrawState &, const SceneState &, uint32_t offset) override;
 
     TextureUnits &textureUnits() override { return _textureUnits; };
 

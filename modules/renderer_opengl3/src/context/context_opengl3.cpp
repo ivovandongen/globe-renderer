@@ -25,7 +25,7 @@ void ContextOpenGL3::makeCurrent() const {
 }
 
 void ContextOpenGL3::draw(core::geometry::PrimitiveType primitiveType, const DrawState &drawState,
-                          const SceneState &sceneState) {
+                          const SceneState &sceneState, uint32_t offset) {
     // Apply render state
     _renderState = drawState.renderState;
     // Update clear state
@@ -41,13 +41,10 @@ void ContextOpenGL3::draw(core::geometry::PrimitiveType primitiveType, const Dra
     // Update the texture units
     _textureUnits.clean();
 
-    // TODO
     if (drawState.vertexArray->indexBuffer()) {
-        // TODO support other index types than uint
         GL_VERIFY(glDrawElements(toPrimitiveType(primitiveType), drawState.vertexArray->indexBuffer()->count(),
-                                 GL_UNSIGNED_INT, nullptr));
                                  toIndexBufferType(drawState.vertexArray->indexBuffer()->type()),
-                                 nullptr));
+                                 (const void *)intptr_t(offset)));
     } else {
         assert(false);
         // TODO GL_VERIFY(glDrawArrays(GL_TRIANGLES, 0, state.vertexBu));
