@@ -41,6 +41,7 @@ public:
     void apply() {
         if (_dirty) {
             if (!_value.is<NOT_SET>()) {
+                logging::debug("Setting uniform {}", _name);
                 doApply(_value);
                 _dirty = false;
             } else {
