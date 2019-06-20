@@ -1,15 +1,16 @@
 #pragma once
 
+#include <glbr/core/geometry/primitive_type.hpp>
 #include <glbr/renderer/buffers/index_buffer.hpp>
 #include <glbr/renderer/render_state.hpp>
+#include <glbr/renderer/state/clear_buffers.hpp>
 #include <glbr/renderer/textures/texture_format.hpp>
-
-#include <glad/glad.h>
-#include <glbr/core/geometry/primitive_type.hpp>
 #include <glbr/renderer/textures/texture_magnification_filter.hpp>
 #include <glbr/renderer/textures/texture_minification_filter.hpp>
 #include <glbr/renderer/textures/texture_target.hpp>
 #include <glbr/renderer/textures/texture_wrap.hpp>
+
+#include <glad/glad.h>
 
 namespace glbr {
 namespace renderer {
@@ -17,11 +18,11 @@ namespace opengl3 {
 
 inline GLenum toPolygonMode(RasterizationMode mode) {
     switch (mode) {
-        case RasterizationMode::Point:
+        case RasterizationMode::POINT:
             return GL_POINT;
-        case RasterizationMode::Line:
+        case RasterizationMode::LINE:
             return GL_LINE;
-        case RasterizationMode::Fill:
+        case RasterizationMode::FILL:
             return GL_FILL;
     }
 }
@@ -308,6 +309,121 @@ inline GLenum toPrimitiveType(core::geometry::PrimitiveType type) {
             return GL_TRIANGLES_ADJACENCY;
         case PrimitiveType::TRIANGLE_STRIP_ADJACENCY:
             return GL_TRIANGLE_STRIP_ADJACENCY;
+    }
+}
+
+inline GLbitfield toClearBitfield(ClearBuffers buffers) {
+    switch (buffers) {
+        case ClearBuffers::COLOR:
+            return GL_COLOR_BUFFER_BIT;
+        case ClearBuffers::DEPTH:
+            return GL_DEPTH_BUFFER_BIT;
+        case ClearBuffers::STENCIL:
+            return GL_STENCIL_BUFFER_BIT;
+        case ClearBuffers::COLOR_AND_DEPTH:
+            return GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+        case ClearBuffers::ALL:
+            return GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+    }
+}
+
+inline GLenum toBlendEquationMode(BlendEquation equation) {
+    switch (equation) {
+        case BlendEquation::ADD:
+            return GL_FUNC_ADD;
+        case BlendEquation::MINIMUM:
+            return GL_MIN;
+        case BlendEquation::MAXIMUM:
+            return GL_MAX;
+        case BlendEquation::SUBTRACT:
+            return GL_FUNC_SUBTRACT;
+        case BlendEquation::REVERSE_SUBTRACT:
+            return GL_FUNC_REVERSE_SUBTRACT;
+    }
+}
+
+inline GLenum toSourceBlendingFactor(SourceBlendingFactor factor) {
+    switch (factor) {
+        case SourceBlendingFactor::ZERO:
+            return GL_ZERO;
+        case SourceBlendingFactor::ONE:
+            return GL_ONE;
+        case SourceBlendingFactor::SOURCE_ALPHA:
+            return GL_SRC_ALPHA;
+        case SourceBlendingFactor::ONE_MINUS_SOURCE_ALPHA:
+            return GL_ONE_MINUS_SRC_ALPHA;
+        case SourceBlendingFactor::DESTINATION_ALPHA:
+            return GL_DST_ALPHA;
+        case SourceBlendingFactor::ONE_MINUS_DESTINATION_ALPHA:
+            return GL_ONE_MINUS_DST_ALPHA;
+        case SourceBlendingFactor::DESTINATION_COLOR:
+            return GL_DST_COLOR;
+        case SourceBlendingFactor::ONE_MINUS_DESTINATION_COLOR:
+            return GL_ONE_MINUS_DST_COLOR;
+        case SourceBlendingFactor::SOURCE_ALPHA_SATURATE:
+            return GL_SRC_ALPHA_SATURATE;
+        case SourceBlendingFactor::CONSTANT_COLOR:
+            return GL_CONSTANT_COLOR;
+        case SourceBlendingFactor::ONE_MINUS_CONSTANT_COLOR:
+            return GL_ONE_MINUS_CONSTANT_COLOR;
+        case SourceBlendingFactor::CONSTANT_ALPHA:
+            return GL_CONSTANT_ALPHA;
+        case SourceBlendingFactor::ONE_MINUS_CONSTANT_ALPHA:
+            return GL_ONE_MINUS_CONSTANT_ALPHA;
+    }
+}
+
+inline GLenum toDestinationBlendingFactor(DestinationBlendingFactor factor) {
+    switch (factor) {
+        case DestinationBlendingFactor::ZERO:
+            return GL_ZERO;
+        case DestinationBlendingFactor::ONE:
+            return GL_ONE;
+        case DestinationBlendingFactor::SOURCE_COLOR:
+            return GL_SRC_COLOR;
+        case DestinationBlendingFactor::ONE_MINUS_SOURCE_COLOR:
+            return GL_ONE_MINUS_SRC_COLOR;
+        case DestinationBlendingFactor::SOURCE_ALPHA:
+            return GL_SRC_ALPHA;
+        case DestinationBlendingFactor::ONE_MINUS_SOURCE_ALPHA:
+            return GL_ONE_MINUS_SRC_ALPHA;
+        case DestinationBlendingFactor::DESTINATION_ALPHA:
+            return GL_DST_ALPHA;
+        case DestinationBlendingFactor::ONE_MINUS_DESTINATION_ALPHA:
+            return GL_ONE_MINUS_DST_ALPHA;
+        case DestinationBlendingFactor::DESTINATION_COLOR:
+            return GL_DST_COLOR;
+        case DestinationBlendingFactor::ONE_MINUS_DESTINATION_COLOR:
+            return GL_ONE_MINUS_DST_COLOR;
+        case DestinationBlendingFactor::CONSTANT_COLOR:
+            return GL_CONSTANT_COLOR;
+        case DestinationBlendingFactor::ONE_MINUS_CONSTANT_COLOR:
+            return GL_ONE_MINUS_CONSTANT_COLOR;
+        case DestinationBlendingFactor::CONSTANT_ALPHA:
+            return GL_CONSTANT_ALPHA;
+        case DestinationBlendingFactor::ONE_MINUS_CONSTANT_ALPHA:
+            return GL_ONE_MINUS_CONSTANT_ALPHA;
+    }
+}
+
+inline GLenum toDepthFunction(DepthTestFunction func) {
+    switch (func) {
+        case DepthTestFunction::NEVER:
+            return GL_NEVER;
+        case DepthTestFunction::LESS:
+            return GL_LESS;
+        case DepthTestFunction::EQUAL:
+            return GL_EQUAL;
+        case DepthTestFunction::LESSTHAN_OR_EQUAL:
+            return GL_LEQUAL;
+        case DepthTestFunction::GREATER:
+            return GL_GREATER;
+        case DepthTestFunction::NOT_EQUAL:
+            return GL_NOTEQUAL;
+        case DepthTestFunction::GREATERTHAN_OR_EQUAL:
+            return GL_GEQUAL;
+        case DepthTestFunction::ALWAYS:
+            return GL_ALWAYS;
     }
 }
 

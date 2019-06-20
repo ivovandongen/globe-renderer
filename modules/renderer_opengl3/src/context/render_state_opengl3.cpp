@@ -2,6 +2,7 @@
 
 #include <glbr/renderer/opengl3/errors.hpp>
 #include <glbr/renderer/opengl3/type_conversions_opengl3.hpp>
+#include "shared_state_updates.hpp"
 
 #include <glad/glad.h>
 
@@ -20,7 +21,18 @@ RenderStateOpenGL3& RenderStateOpenGL3::operator=(const RenderState& update) {
         GL_VERIFY(glFrontFace(toWindingOrder(update.faceCulling.frontFaceWindingOrder)));
     }
 
+    apply(_renderState.scissorTest, update.scissorTest);
+    apply(_renderState.blending, update.blending);
+    apply(_renderState.depthTest, update.depthTest);
+
     _renderState = update;
+
+    return *this;
+}
+
+RenderStateOpenGL3& RenderStateOpenGL3::operator=(const ClearState& update) {
+    _renderState.scissorTest = update.scissorTest;
+    _renderState.blending = update.blending;
 
     return *this;
 }

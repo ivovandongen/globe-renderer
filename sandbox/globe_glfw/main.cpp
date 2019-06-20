@@ -89,7 +89,7 @@ int main() {
     scene::renderables::AxisRenderable axis{10};
     axis.init(window.context());
 
-    renderer::ClearState clearState{{0, 1, 1, 1}};
+    renderer::ClearState clearState{ClearBuffers::COLOR, {0, 1, 1, 1}};
 
     // Render function
     auto renderFn = [&](renderer::Context &context) {
@@ -106,7 +106,7 @@ int main() {
 
         // TODO: switch Rasterization mode
         context.draw(mesh->primitiveType(),
-                     {{RasterizationMode::Fill, {true, CullFace::BACK, mesh->windingOrder()}}, pipeline, vertexArray},
+                     {{RasterizationMode::FILL, {true, CullFace::BACK, mesh->windingOrder()}}, pipeline, vertexArray},
                      sceneState);
     };
 

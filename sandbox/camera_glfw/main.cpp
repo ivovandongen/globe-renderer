@@ -92,7 +92,7 @@ int main() {
     // Create a vertex array from the mesh
     std::shared_ptr<VertexArray> vertexArray = window.context().createVertexArray(*mesh);
 
-    renderer::ClearState clearState{{0, 1, 1, 1}};
+    renderer::ClearState clearState{ClearBuffers::COLOR, {0, 1, 1, 1}};
 
     // Basic model matrix around the origin
     glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));

@@ -96,7 +96,7 @@ int main() {
                                     TextureWrap::MIRRORED_REPEAT, TextureWrap::MIRRORED_REPEAT));
     pipeline->uniforms()["texture2"] = 1;
 
-    renderer::ClearState clearState{{0, 1, 1, 1}};
+    renderer::ClearState clearState{ClearBuffers::COLOR, {0, 1, 1, 1}};
 
     float counter = 1;
     int step = 1;

@@ -60,7 +60,7 @@ int main() {
     vertexArray->indexBuffer()->bind();
     vertexArray->indexBuffer()->upload(indices.data());
 
-    renderer::ClearState clearState{{0, 1, 1, 1}};
+    renderer::ClearState clearState{ClearBuffers::COLOR, {0, 1, 1, 1}};
 
     // Add the color as a uniform
     pipeline->uniforms()["u_color"] = glm::vec4{1, 0, 0, 1};

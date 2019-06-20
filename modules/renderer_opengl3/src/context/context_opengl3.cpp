@@ -28,6 +28,8 @@ void ContextOpenGL3::draw(core::geometry::PrimitiveType primitiveType, const Dra
                           const SceneState &sceneState) {
     // Apply render state
     _renderState = drawState.renderState;
+    // Update clear state
+    _clearState = drawState.renderState;
 
     // Apply programmable state
     _pipeline = std::dynamic_pointer_cast<PipelineOpenGL3>(drawState.pipeline);
@@ -56,9 +58,11 @@ void ContextOpenGL3::clear(const ClearState &state) {
     // Update clear state
     _clearState = state;
 
+    // Update render state
+    _renderState = state;
+
     // Clear
-    // TODO: other bits
-    GL_VERIFY(glClear(GL_COLOR_BUFFER_BIT));
+    GL_VERIFY(glClear(toClearBitfield(state.buffers)));
 }
 
 void ContextOpenGL3::viewport(int width, int height) {
