@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glbr/renderer/buffers/index_buffer.hpp>
 #include <glbr/renderer/render_state.hpp>
 #include <glbr/renderer/textures/texture_format.hpp>
 
@@ -307,6 +308,15 @@ inline GLenum toPrimitiveType(core::geometry::PrimitiveType type) {
             return GL_TRIANGLES_ADJACENCY;
         case PrimitiveType::TRIANGLE_STRIP_ADJACENCY:
             return GL_TRIANGLE_STRIP_ADJACENCY;
+    }
+}
+
+inline GLenum toIndexBufferType(IndexBufferType type) {
+    switch (type) {
+        case IndexBufferType::U_SHORT:
+            return GL_UNSIGNED_SHORT;
+        case IndexBufferType::U_INT:
+            return GL_UNSIGNED_INT;
     }
 }
 

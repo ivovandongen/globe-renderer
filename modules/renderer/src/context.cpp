@@ -39,7 +39,8 @@ std::unique_ptr<VertexArray> Context::createVertexArray(const core::geometry::Me
     }
 
     // Add the indices to the IndexBuffer
-    vertexArray->indexBuffer(createIndexBuffer(BufferHint::StaticDraw, mesh.indexCount()));
+    // TODO: support meshes with short indices
+    vertexArray->indexBuffer(createIndexBuffer(IndexBufferType::U_INT, BufferHint::StaticDraw, mesh.indexCount()));
     vertexArray->indexBuffer()->bind();
     vertexArray->indexBuffer()->upload(mesh.indexData());
 

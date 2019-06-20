@@ -22,6 +22,18 @@ public:
 
     virtual ~Context() = default;
 
+    std::unique_ptr<VertexArray> createVertexArray(const core::geometry::Mesh &) const;
+
+    std::unique_ptr<IndexBuffer> createIndexBuffer(IndexBufferType type, BufferHint usageHint) const {
+        return createIndexBuffer(type, usageHint, 0);
+    }
+
+    std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint) const {
+        return createVertexBuffer(usageHint, 0);
+    }
+
+    void setOnResizeListener(const ResizeFN &onResize) { _onResizeListener = onResize; };
+
     // Needs to be called from sub-classes
     virtual void viewport(int width, int height);
 
@@ -33,13 +45,8 @@ public:
 
     virtual std::unique_ptr<VertexArray> createVertexArray() const = 0;
 
-    std::unique_ptr<VertexArray> createVertexArray(const core::geometry::Mesh &) const;
-
-    virtual std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint) const = 0;
-
-    virtual std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint, uint32_t count) const = 0;
-
-    virtual std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint) const = 0;
+    virtual std::unique_ptr<IndexBuffer> createIndexBuffer(IndexBufferType type, BufferHint usageHint,
+                                                           uint32_t count) const = 0;
 
     virtual std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint, int sizeInBytes) const = 0;
 
@@ -48,8 +55,6 @@ public:
     virtual void draw(core::geometry::PrimitiveType primitive, const DrawState &, const SceneState &) = 0;
 
     virtual TextureUnits &textureUnits() = 0;
-
-    void setOnResizeListener(const ResizeFN &onResize) { _onResizeListener = onResize; };
 
 protected:
     core::optional<ResizeFN> _onResizeListener;

@@ -44,6 +44,8 @@ void ContextOpenGL3::draw(core::geometry::PrimitiveType primitiveType, const Dra
         // TODO support other index types than uint
         GL_VERIFY(glDrawElements(toPrimitiveType(primitiveType), drawState.vertexArray->indexBuffer()->count(),
                                  GL_UNSIGNED_INT, nullptr));
+                                 toIndexBufferType(drawState.vertexArray->indexBuffer()->type()),
+                                 nullptr));
     } else {
         assert(false);
         // TODO GL_VERIFY(glDrawArrays(GL_TRIANGLES, 0, state.vertexBu));
@@ -70,20 +72,13 @@ std::unique_ptr<VertexArray> ContextOpenGL3::createVertexArray() const {
     return std::make_unique<VertexArrayOpenGL3>();
 }
 
-std::unique_ptr<VertexBuffer> ContextOpenGL3::createVertexBuffer(BufferHint usageHint) const {
-    return std::make_unique<VertexBufferOpenGL3>(usageHint, 0);
-}
-
 std::unique_ptr<VertexBuffer> ContextOpenGL3::createVertexBuffer(BufferHint usageHint, int sizeInBytes) const {
     return std::make_unique<VertexBufferOpenGL3>(usageHint, sizeInBytes);
 }
 
-std::unique_ptr<IndexBuffer> ContextOpenGL3::createIndexBuffer(BufferHint usageHint) const {
-    return std::make_unique<IndexBufferOpenGL3>(usageHint, 0);
-}
-
-std::unique_ptr<IndexBuffer> ContextOpenGL3::createIndexBuffer(BufferHint usageHint, uint32_t count) const {
-    return std::make_unique<IndexBufferOpenGL3>(usageHint, count);
+std::unique_ptr<IndexBuffer> ContextOpenGL3::createIndexBuffer(IndexBufferType type, BufferHint usageHint,
+                                                               uint32_t count) const {
+    return std::make_unique<IndexBufferOpenGL3>(type, usageHint, count);
 }
 
 Device &ContextOpenGL3::device() {

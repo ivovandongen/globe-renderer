@@ -10,9 +10,9 @@ struct ContextStub : public Context {
     Device &device() override { assert(false); }
     const Device &device() const override { assert(false); }
     std::unique_ptr<VertexArray> createVertexArray() const override { assert(false); };
-    std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint usageHint) const override { assert(false); }
-    std::unique_ptr<IndexBuffer> createIndexBuffer(BufferHint, uint32_t) const override { assert(false); };
-    std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint) const override { assert(false); }
+    std::unique_ptr<IndexBuffer> createIndexBuffer(IndexBufferType, BufferHint, uint32_t) const override {
+        assert(false);
+    };
     std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint, int) const override { assert(false); };
     void clear(const ClearState &) override { assert(false); };
     void draw(PrimitiveType, const DrawState &, const SceneState &) override { assert(false); };

@@ -55,7 +55,8 @@ int main() {
     vertexArray->add("aPos", {vertexBuffer, VertexBufferAttribute::Type::Float, 3, false, sizeof(Vertex), 0});
 
     // Add the indices to the IndexBuffer
-    vertexArray->indexBuffer(window.context().createIndexBuffer(BufferHint::StaticDraw, indices.size()));
+    vertexArray->indexBuffer(
+        window.context().createIndexBuffer(IndexBufferType::U_INT, BufferHint::StaticDraw, indices.size()));
     vertexArray->indexBuffer()->bind();
     vertexArray->indexBuffer()->upload(indices.data());
 
