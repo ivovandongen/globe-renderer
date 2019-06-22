@@ -1,6 +1,7 @@
 #include "glfw_events.hpp"
 #include "glfw_system.hpp"
 
+#include <glbr/input/events/char_event.hpp>
 #include <glbr/input/events/key_event.hpp>
 #include <glbr/input/events/mouse_button_event.hpp>
 #include <glbr/input/events/mouse_move_event.hpp>
@@ -88,6 +89,10 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
     });
     glfwSetScrollCallback(_window, [](GLFWwindow *window, double x, double y) {
         input::MouseScrollEvent e{x, y};
+        emit(e, getGlfwGraphicsWindow(window)->_eventHandlers);
+    });
+    glfwSetCharCallback(_window, [](GLFWwindow *window, input::CharEvent::Char c) {
+        input::CharEvent e{c};
         emit(e, getGlfwGraphicsWindow(window)->_eventHandlers);
     });
 
