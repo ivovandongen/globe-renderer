@@ -13,7 +13,7 @@ static const constexpr double TOLERANCE = 0.001;
 
 class DummyGraphicsWindow : public GraphicsWindow {
 public:
-    void registerHandler(const EventHandlingFN& fn) override {}
+    std::unique_ptr<EventHandlerRegistration> registerHandler(const EventHandlingFN& fn) override {}
     KeyState keyState(KeyCode code) const override { assert(false); }
     KeyState mouseButtonState(MouseButtonCode code) const override { assert(false); }
     Position mousePosition() const override { return {0, 0}; }

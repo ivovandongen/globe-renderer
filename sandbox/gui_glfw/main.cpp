@@ -35,7 +35,7 @@ int main() {
     ClearState clearState{ClearBuffers::ALL, {1, 1, 1, 1}, {false}};
 
 
-    imgui::ImGuiLayer imguiLayer;
+    imgui::ImGuiLayer imguiLayer{window};
 
     // Add update rate widget
     std::chrono::nanoseconds updateInterval;

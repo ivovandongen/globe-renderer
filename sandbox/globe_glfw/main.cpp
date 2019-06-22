@@ -43,11 +43,11 @@ int main() {
 
     // Set up camera controller
     scene::OrbitingCameraController cameraCtrl{sceneState.camera(), window};
-    window.registerHandler(cameraCtrl);
+    auto camHandlerRegistration = window.registerHandler(cameraCtrl);
 
     // Add key controller
     bool animate = true;
-    window.registerHandler([&](auto &event) {
+    auto keyHandlerRegistration = window.registerHandler([&](auto &event) {
         core::EventDispatcher d(event);
 
         d.dispatch<KeyEvent>([&](KeyEvent &event) {

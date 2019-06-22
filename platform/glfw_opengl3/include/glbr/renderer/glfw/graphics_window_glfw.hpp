@@ -5,6 +5,7 @@
 
 #include <functional>
 #include <memory>
+#include <vector>
 
 class GLFWSystem;
 class GLFWwindow;
@@ -29,7 +30,7 @@ public:
 
     void run(const RenderFN &onRenderFrame, const UpdateFN &onUpdateFrame, double updateRate) override;
 
-    void registerHandler(const core::EventHandlingFN &handler) override { _eventHandlers.push_back(handler); }
+    std::unique_ptr<core::EventHandlerRegistration> registerHandler(const core::EventHandlingFN &handler) override;
 
     input::KeyState keyState(input::KeyCode code) const override;
 
@@ -43,7 +44,7 @@ private:
     std::shared_ptr<GLFWSystem> _system;
     GLFWwindow *_window;
     std::unique_ptr<Context> _context;
-    std::vector<core::EventHandlingFN> _eventHandlers;
+    std::vector<std::weak_ptr<core::EventHandlingFN>> _eventHandlers;
     core::Size2D<int> _size;
 };
 

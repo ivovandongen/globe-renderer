@@ -17,11 +17,19 @@ namespace glbr {
 namespace renderer {
 namespace glfw {
 
-void emit(core::Event &event, const std::vector<core::EventHandlingFN> &handlers) {
-    for (const auto &handler : handlers) {
-        handler(event);
+void emit(core::Event &event, std::vector<std::weak_ptr<core::EventHandlingFN>> &handlers) {
+    for (auto iter = handlers.begin(); iter != handlers.end();) {
         if (event.handled()) {
             break;
+        }
+
+        auto handler = iter->lock();
+        if (handler) {
+            (*handler)(event);
+            ++iter;
+        } else {
+            logging::debug("Removing stale event handler registration");
+            iter = handlers.erase(iter);
         }
     }
 }
@@ -112,6 +120,7 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
 };
 
 GlfwGraphicsWindow::~GlfwGraphicsWindow() {
+    logging::debug("Closing GLFW window");
     glfwDestroyWindow(_window);
 };
 
@@ -171,6 +180,24 @@ input::Position GlfwGraphicsWindow::mousePosition() const {
     input::Position pos{};
     glfwGetCursorPos(_window, &pos.x, &pos.y);
     return pos;
+}
+
+class EventHandlerRegistrationImpl : public core::EventHandlerRegistration {
+public:
+    explicit EventHandlerRegistrationImpl(std::shared_ptr<core::EventHandlingFN> handler)
+        : _handler(std::move(handler)) {}
+
+    ~EventHandlerRegistrationImpl() override { logging::debug("Abandoning event handler registration"); }
+
+private:
+    std::shared_ptr<core::EventHandlingFN> _handler;
+};
+
+std::unique_ptr<core::EventHandlerRegistration> GlfwGraphicsWindow::registerHandler(
+    const core::EventHandlingFN &handler) {
+    auto sHandler = std::make_shared<core::EventHandlingFN>(handler);
+    _eventHandlers.push_back(sHandler);
+    return std::make_unique<EventHandlerRegistrationImpl>(std::move(sHandler));
 }
 
 }  // namespace glfw

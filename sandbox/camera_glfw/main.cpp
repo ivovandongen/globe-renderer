@@ -65,10 +65,10 @@ int main() {
 
     // Add a POV camera ctrl and register to listen for events
     scene::POVCameraController cameraCtrl{sceneState.camera(), window};
-    window.registerHandler(cameraCtrl);
+    auto camHandlerRegistration = window.registerHandler(cameraCtrl);
 
     // Register a lambda for key events as well
-    window.registerHandler([&](auto &event) {
+    auto keyHandlerRegistration = window.registerHandler([&](auto &event) {
         core::EventDispatcher d(event);
 
         // Move the view around
