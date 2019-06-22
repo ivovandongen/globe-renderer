@@ -44,7 +44,7 @@ int main() {
             auto interval = std::chrono::duration_cast<std::chrono::duration<float>>(updateInterval).count();
             ImGui::SetNextWindowPos({0, 0});
             ImGui::SetNextWindowSize({float(width), 100});
-            ImGui::Begin("Update Rate", nullptr, ImGuiWindowFlags_None);
+            ImGui::Begin("Update Rate", nullptr, ImGuiWindowFlags_Modal);
             if (interval > 0) {
                 ImGui::Text("Application update rate %.3f ms/frame (%.1f FPS)", interval * 1000, 1 / interval);
             }
@@ -54,15 +54,23 @@ int main() {
     // Add render rate window
     imguiLayer.addRenderable(
         [&]() {
+            static std::array<char, 10> buf;
             ImGui::SetNextWindowPos({0, 100});
             ImGui::SetNextWindowSize({float(width), 100});
             auto& io = ImGui::GetIO();
             ImGui::Begin("Render rate", nullptr, ImGuiWindowFlags_None);
             ImGui::Text("Application render rate %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+            ImGui::InputText("string", buf.data(), buf.size());
             ImGui::End();
         });
 
     imguiLayer.init(window.context());
+
+    // Add a debug event handler to see if event capturing works correctly
+    auto handlerReg = window.registerHandler([](auto &event) {
+       logging::debug("Event: {} (handled: {})", event.str(), event.handled());
+       return false;
+    });
 
     // Render function
     auto renderFn = [&](renderer::Context& context) {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glbr/core/events/event_producer.hpp>
 #include <glbr/scene/renderable.hpp>
 
 #include <memory>
@@ -16,7 +17,7 @@ using ImGuiRenderable = std::function<void()>;
 
 class ImGuiLayer : public scene::Renderable {
 public:
-    ImGuiLayer();
+    explicit ImGuiLayer(core::EventProducer&);
 
     void addRenderable(const ImGuiRenderable& renderable) { _renderables.push_back(renderable); }
 

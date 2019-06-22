@@ -98,14 +98,13 @@ void ImGuiLayer::renderDrawData(Context& context, const SceneState& sceneState, 
                 }
             } else {
                 // Project scissor/clipping rectangles into framebuffer space
-                Rectangle clipRect{
-                    static_cast<int>((pcmd->ClipRect.x - clipOff.x) * clipScale.x),
-                    static_cast<int>((pcmd->ClipRect.y - clipOff.y) * clipScale.y),
-                    static_cast<int>((pcmd->ClipRect.z - clipOff.x) * clipScale.x),
-                    static_cast<int>((pcmd->ClipRect.w - clipOff.y) * clipScale.y)
-                };
+                Rectangle clipRect{static_cast<int>((pcmd->ClipRect.x - clipOff.x) * clipScale.x),
+                                   static_cast<int>((pcmd->ClipRect.y - clipOff.y) * clipScale.y),
+                                   static_cast<int>((pcmd->ClipRect.z - clipOff.x) * clipScale.x),
+                                   static_cast<int>((pcmd->ClipRect.w - clipOff.y) * clipScale.y)};
 
-                if (clipRect.x < fbWidth && clipRect.y < fbHeight && clipRect.width >= 0.0f && clipRect.height >= 0.0f) {
+                if (clipRect.x < fbWidth && clipRect.y < fbHeight && clipRect.width >= 0.0f &&
+                    clipRect.height >= 0.0f) {
                     // Apply scissor/clipping rectangle
                     _renderState.scissorTest.rectangle = clipRect;
 
@@ -138,7 +137,10 @@ static std::shared_ptr<Texture2D> createFontsTexture(const Context& context) {
     return fontsTexture;
 }
 
-ImGuiLayer::ImGuiLayer() : _backend(ImGuiBackend::instance()) {}
+ImGuiLayer::ImGuiLayer(core::EventProducer& producer)
+    : _backend(ImGuiBackend::instance(producer)){
+
+      };
 
 void ImGuiLayer::init(const Context& context) {
     _pipeline = context.device().createPipeline(VERTEX_SRC, FRAGMENT_SRC);
