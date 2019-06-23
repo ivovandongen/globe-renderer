@@ -12,9 +12,9 @@
 #include <glbr/scene/camera/orbiting_camera_ctrl.hpp>
 #include <glbr/scene/renderables/axis_renderable.hpp>
 
+#include <imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <imgui.h>
 #include <array>
 #include <memory>
 
@@ -95,9 +95,6 @@ int main() {
         ImGui::Checkbox("Show globe grid", &options.showGrid);
         ImGui::Checkbox("Night mode", &options.nightMode);
         ImGui::End();
-    });
-    imguiLayer.addRenderable([&options]() {
-       ImGui::ShowDemoWindow(nullptr);
     });
 
     imguiLayer.init(window.context());
