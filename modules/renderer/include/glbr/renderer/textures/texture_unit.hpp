@@ -12,6 +12,11 @@ class TextureUnit {
 public:
     virtual ~TextureUnit() = default;
 
+    void operator()(std::shared_ptr<Texture2D> t, std::shared_ptr<TextureSampler> s) {
+        texture(std::move(t));
+        sampler(std::move(s));
+    }
+
     virtual const Texture2D& texture() const = 0;
     virtual void texture(std::shared_ptr<Texture2D>) = 0;
 
