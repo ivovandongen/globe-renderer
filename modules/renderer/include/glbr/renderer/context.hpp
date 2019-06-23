@@ -22,7 +22,7 @@ public:
 
     virtual ~Context() = default;
 
-    std::unique_ptr<VertexArray> createVertexArray(const core::geometry::Mesh &) const;
+    std::shared_ptr<VertexArray> createVertexArray(const core::geometry::Mesh &);
 
     std::unique_ptr<IndexBuffer> createIndexBuffer(IndexBufferType type, BufferHint usageHint) const {
         return createIndexBuffer(type, usageHint, 0);
@@ -47,7 +47,7 @@ public:
 
     virtual const Device &device() const = 0;
 
-    virtual std::unique_ptr<VertexArray> createVertexArray() const = 0;
+    virtual std::shared_ptr<VertexArray> createVertexArray() = 0;
 
     virtual std::unique_ptr<IndexBuffer> createIndexBuffer(IndexBufferType type, BufferHint usageHint,
                                                            uint32_t count) const = 0;

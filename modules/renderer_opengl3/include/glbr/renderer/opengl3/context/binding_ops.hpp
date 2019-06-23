@@ -11,12 +11,12 @@ namespace opengl3 {
 
 template <>
 struct BindingOp<PipelineOpenGL3> {
-    static void Apply(const PipelineOpenGL3& val);
+    static void Apply(const std::shared_ptr<PipelineOpenGL3>& val);
 };
 
 template <>
 struct BindingOp<VertexArrayOpenGL3> {
-    static void Apply(const VertexArrayOpenGL3& val);
+    static void Apply(const std::shared_ptr<VertexArrayOpenGL3>& val);
 };
 
 }  // namespace opengl3

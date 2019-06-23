@@ -6,12 +6,16 @@ namespace glbr {
 namespace renderer {
 namespace opengl3 {
 
-void BindingOp<PipelineOpenGL3>::Apply(const PipelineOpenGL3& val) {
-    val.bind();
+void BindingOp<PipelineOpenGL3>::Apply(const std::shared_ptr<PipelineOpenGL3>& val) {
+    val->bind();
 }
 
-void BindingOp<VertexArrayOpenGL3>::Apply(const VertexArrayOpenGL3& val) {
-    val.bind();
+void BindingOp<VertexArrayOpenGL3>::Apply(const std::shared_ptr<VertexArrayOpenGL3>& val) {
+    if (!val) {
+        GL_VERIFY(glBindVertexArray(0));
+    } else {
+        GL_VERIFY(glBindVertexArray(val->id()));
+    }
 }
 
 }  // namespace opengl3

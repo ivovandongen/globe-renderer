@@ -12,13 +12,15 @@ class VertexArray {
 public:
     virtual ~VertexArray() = default;
 
-    virtual void bind() const = 0;
-
     virtual IndexBuffer *indexBuffer() = 0;
 
     virtual void indexBuffer(std::shared_ptr<IndexBuffer>) = 0;
 
     virtual void add(const std::string &key, VertexBufferAttribute) = 0;
+
+    virtual void bind() = 0;
+
+    virtual void unbind() = 0;
 
 protected:
     VertexArray() = default;

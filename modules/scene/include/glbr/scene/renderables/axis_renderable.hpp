@@ -31,7 +31,7 @@ public:
 
     explicit AxisRenderable(float scale, glm::vec3 position = {0, 0, 0});
 
-    void init(const renderer::Context& context) override;
+    void init(renderer::Context& context) override;
 
     void render(renderer::Context& context, renderer::SceneState& sceneState) override;
 

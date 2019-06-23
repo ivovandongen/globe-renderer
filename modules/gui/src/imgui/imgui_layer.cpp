@@ -75,6 +75,12 @@ void ImGuiLayer::renderDrawData(Context& context, const SceneState& sceneState, 
     ImVec2 clipOff = drawData->DisplayPos;          // (0,0) unless using multi-viewports
     ImVec2 clipScale = drawData->FramebufferScale;  // (1,1) unless using retina display which are often (2,2)
 
+    // Bind the vertex array
+    _vertexArray->bind();
+
+    // TODO: this should not be necessary, if we did not postpone attribute binding
+    _vertexBuffer->bind();
+
     // Render command lists
     for (int n = 0; n < drawData->CmdListsCount; n++) {
         const ImDrawList* cmdList = drawData->CmdLists[n];
@@ -142,7 +148,7 @@ ImGuiLayer::ImGuiLayer(core::EventProducer& producer)
 
       };
 
-void ImGuiLayer::init(const Context& context) {
+void ImGuiLayer::init(Context& context) {
     _pipeline = context.device().createPipeline(VERTEX_SRC, FRAGMENT_SRC);
 
     _fontsTexture = createFontsTexture(context);
@@ -163,7 +169,7 @@ void ImGuiLayer::init(const Context& context) {
                              offsetof(ImDrawVert, uv)});
     _vertexArray->add("Color", {_vertexBuffer, VertexBufferAttribute::Type::UnsignedByte, 4, true, sizeof(ImDrawVert),
                                 offsetof(ImDrawVert, col)});
-    // TODO _vertexArray->unbind();
+    _vertexArray->unbind();
 
     _renderState.blending.enabled = true;
     _renderState.blending.equation(BlendEquation::ADD);

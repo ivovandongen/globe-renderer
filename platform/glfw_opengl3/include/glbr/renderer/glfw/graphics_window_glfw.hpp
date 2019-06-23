@@ -1,7 +1,7 @@
 #pragma once
 
-#include <glbr/renderer/context.hpp>
 #include <glbr/renderer/graphics_window.hpp>
+#include <glbr/renderer/opengl3/context/context_opengl3.hpp>
 
 #include <functional>
 #include <memory>
@@ -43,7 +43,7 @@ public:
 private:
     std::shared_ptr<GLFWSystem> _system;
     GLFWwindow *_window;
-    std::unique_ptr<Context> _context;
+    std::shared_ptr<opengl3::ContextOpenGL3> _context;
     std::vector<std::weak_ptr<core::EventHandlingFN>> _eventHandlers;
     core::Size2D<int> _size;
 };

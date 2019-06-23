@@ -9,7 +9,7 @@ struct ContextStub : public Context {
     void makeCurrent() const override { assert(false); };
     Device &device() override { assert(false); }
     const Device &device() const override { assert(false); }
-    std::unique_ptr<VertexArray> createVertexArray() const override { assert(false); };
+    std::shared_ptr<VertexArray> createVertexArray() override { assert(false); };
     std::unique_ptr<IndexBuffer> createIndexBuffer(IndexBufferType, BufferHint, uint32_t) const override {
         assert(false);
     };

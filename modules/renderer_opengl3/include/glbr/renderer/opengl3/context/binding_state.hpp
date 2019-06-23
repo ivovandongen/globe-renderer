@@ -14,8 +14,8 @@ template <class T>
 class BindingState {
 public:
     BindingState& operator=(const std::shared_ptr<T>& val) {
-        if (!current || *current != *val) {
-            BindingOp<T>::Apply(*val);
+        if ((!current && !val) || (!current || !val || *current != *val)) {
+            BindingOp<T>::Apply(val);
             current = val;
         }
 

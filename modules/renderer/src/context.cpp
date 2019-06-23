@@ -5,13 +5,13 @@
 namespace glbr {
 namespace renderer {
 
-std::unique_ptr<VertexArray> Context::createVertexArray(const core::geometry::Mesh &mesh) const {
+std::shared_ptr<VertexArray> Context::createVertexArray(const core::geometry::Mesh &mesh) {
     using namespace core::geometry;
 
     // TODO BufferHint (2x)
 
     // Create a vertex array
-    auto vertexArray = createVertexArray();
+    std::shared_ptr<VertexArray> vertexArray = createVertexArray();
     vertexArray->bind();
 
     // Add the vertices to the VertexBuffer
@@ -43,6 +43,8 @@ std::unique_ptr<VertexArray> Context::createVertexArray(const core::geometry::Me
     vertexArray->indexBuffer(createIndexBuffer(IndexBufferType::U_INT, BufferHint::StaticDraw, mesh.indexCount()));
     vertexArray->indexBuffer()->bind();
     vertexArray->indexBuffer()->upload(mesh.indexData());
+
+    vertexArray->unbind();
 
     return vertexArray;
 }

@@ -115,7 +115,7 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
     logging::info("Using OpenGL version: {}", version);
 
     // Initialize our Context
-    _context = std::make_unique<opengl3::ContextOpenGL3>(*this);
+    _context = std::make_shared<opengl3::ContextOpenGL3>(*this);
 
     if (type != WindowType::FullScreen) {
         // Position window in the center

@@ -82,7 +82,7 @@ AxisRenderable::AxisRenderable(float scale, glm::vec3 position) : _model(glm::ma
     _mesh = createMesh();
 }
 
-void AxisRenderable::init(const renderer::Context& context) {
+void AxisRenderable::init(renderer::Context& context) {
     // Create the pipeline
     _pipeline = context.device().createPipeline(VERTEX_SRC, FRAGMENT_SRC);
 

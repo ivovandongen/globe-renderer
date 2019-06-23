@@ -14,11 +14,13 @@
 #include <glbr/renderer/opengl3/textures/texture_units_opengl3.hpp>
 #include <glbr/renderer/opengl3/vertex_array/vertex_array_opengl3.hpp>
 
+#include <memory>
+
 namespace glbr {
 namespace renderer {
 namespace opengl3 {
 
-class ContextOpenGL3 : public Context {
+class ContextOpenGL3 : public Context, public std::enable_shared_from_this<ContextOpenGL3> {
 public:
     explicit ContextOpenGL3(const GraphicsWindow &);
 
@@ -32,7 +34,7 @@ public:
 
     const Device &device() const override;
 
-    std::unique_ptr<VertexArray> createVertexArray() const override;
+    std::shared_ptr<VertexArray> createVertexArray() override;
 
     std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint, int sizeInBytes) const override;
 
@@ -44,6 +46,8 @@ public:
     void draw(core::geometry::PrimitiveType, const DrawState &, const SceneState &, uint32_t offset) override;
 
     TextureUnits &textureUnits() override { return _textureUnits; };
+
+    void set(const std::shared_ptr<VertexArrayOpenGL3> &array) { _vertexArray = array; }
 
 private:
     const GraphicsWindow &_window;

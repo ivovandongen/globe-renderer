@@ -21,7 +21,7 @@ public:
 
     void addRenderable(const ImGuiRenderable& renderable) { _renderables.push_back(renderable); }
 
-    void init(const renderer::Context& context) override;
+    void init(renderer::Context& context) override;
 
     void render(renderer::Context& context, renderer::SceneState& sceneState) override;
 
