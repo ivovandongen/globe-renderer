@@ -28,8 +28,7 @@ public:
 
     inline void upload(const void* data, uint32_t size) {
         _size = size;
-        assert(_size > 0);
-        GL_VERIFY(glBufferData(_target, _size, data, _usage));
+        upload(data);
     }
 
     inline unsigned int size() { return _size; }
