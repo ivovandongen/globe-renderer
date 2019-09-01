@@ -72,4 +72,5 @@ add_subdirectory(platform)
 add_subdirectory(sandbox)
 
 # Tests
+enable_testing()
 add_subdirectory(test)
