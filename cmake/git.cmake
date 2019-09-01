@@ -1,6 +1,6 @@
 
 macro(GIT_RESOLVE_EXECUTABLE)
-    if (NOT GIT_FOUND)
+    if (NOT GIT_EXECUTABLE OR NOT EXISTS ${GIT_EXECUTABLE})
 
         message(STATUS "GIT: Trying to locate git executable")
 
@@ -20,6 +20,9 @@ macro(GIT_RESOLVE_EXECUTABLE)
             unset(GIT_EXECUTABLE CACHE)
             message(STATUS "GIT: Trying to locate with find_package")
             find_package(Git QUIET)
+            if (EXISTS ${GIT_EXECUTABLE})
+                set(GIT_FOUND TRUE)
+            endif ()
         endif ()
 
         # Try with find_program
@@ -50,34 +53,41 @@ macro(GIT_RESOLVE_EXECUTABLE)
 
     endif ()
 
+    if (GIT_FOUND)
+        set(GIT_EXECUTABLE CACHE FILEPATH "Git executable")
+    endif ()
+
+    if (NOT GIT_EXECUTABLE)
+        message(FATAL_ERROR "GIT: Could not find git
+        Try setting the path to the executable with -DGIT_EXECUTABLE=/path/to/git.
+        ")
+    endif ()
+
 endmacro(GIT_RESOLVE_EXECUTABLE)
 
 macro(GIT_UPDATE MODULE_NAME)
 
     git_resolve_executable()
 
-    if (NOT GIT_FOUND)
-        message(FATAL_ERROR "GIT: Could not find git
-        Try setting the path to the executable with -DGIT_EXECUTABLE=/path/to/git.
-        ")
-    endif()
-
-    # Check if this is a git submodule
-    execute_process(COMMAND ${GIT_EXECUTABLE} submodule status ${CMAKE_SOURCE_DIR}/deps/${MODULE_NAME}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            RESULT_VARIABLE GIT_STATUS_RESULT)
-
-    if (${GIT_STATUS_RESULT} STREQUAL "0")
-        message(STATUS "GIT: Using git from ${GIT_EXECUTABLE}")
-        message(STATUS "GIT: Submodule update ${MODULE_NAME}")
-        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive ${CMAKE_SOURCE_DIR}/deps/${MODULE_NAME}
+    if (NOT ${MODULE_NAME}_UPDATED)
+        # Check if this is a git submodule
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule status ${CMAKE_SOURCE_DIR}/deps/${MODULE_NAME}
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                RESULT_VARIABLE GIT_SUBMOD_RESULT)
-        if (NOT GIT_SUBMOD_RESULT EQUAL "0")
-            message(FATAL_ERROR "GIT: git submodule update --init --recursive ${CMAKE_SOURCE_DIR}/deps/${MODULE_NAME} failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+                RESULT_VARIABLE GIT_STATUS_RESULT)
+
+        if (${GIT_STATUS_RESULT} STREQUAL "0")
+            message(STATUS "GIT: Submodule update ${MODULE_NAME}")
+            execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive ${CMAKE_SOURCE_DIR}/deps/${MODULE_NAME}
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                    RESULT_VARIABLE GIT_SUBMOD_RESULT)
+            if (NOT GIT_SUBMOD_RESULT EQUAL "0")
+                message(FATAL_ERROR "GIT: git submodule update --init --recursive ${CMAKE_SOURCE_DIR}/deps/${MODULE_NAME} failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+            endif ()
+        else ()
+            message(STATUS "GIT: Not a git module ${MODULE_NAME}")
         endif ()
-    else()
-        message(STATUS "GIT: Not a git module ${MODULE_NAME}")
+
+        SET_PROPERTY(GLOBAL PROPERTY ${MODULE_NAME}_UPDATED TRUE)
     endif ()
 
 endmacro(GIT_UPDATE)
