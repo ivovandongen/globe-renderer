@@ -106,9 +106,7 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
     }
 
     // Enable vsync
-    if (vsync) {
-        glfwSwapInterval(1);
-    }
+    glfwSwapInterval(vsync ? 1 : 0);
 
     // Print gl version
     auto version = glGetString(GL_VERSION);
