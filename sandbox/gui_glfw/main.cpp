@@ -38,18 +38,22 @@ int main() {
     imgui::ImGuiLayer imguiLayer{window};
 
     // Add update rate widget
-    std::chrono::nanoseconds updateInterval;
-    imguiLayer.addRenderable(
-        [&]() {
-            auto interval = std::chrono::duration_cast<std::chrono::duration<float>>(updateInterval).count();
-            ImGui::SetNextWindowPos({0, 0});
-            ImGui::SetNextWindowSize({float(width), 100});
-            ImGui::Begin("Update Rate", nullptr, ImGuiWindowFlags_Modal);
-            if (interval > 0) {
-                ImGui::Text("Application update rate %.3f ms/frame (%.1f FPS)", interval * 1000, 1 / interval);
-            }
-            ImGui::End();
-        });
+    std::vector<float> updateTimes;
+    imguiLayer.addRenderable([&]() {
+        ImGui::SetNextWindowPos({0, 0});
+        ImGui::SetNextWindowSize({float(width), 100});
+        ImGui::Begin("Update Rate", nullptr, ImGuiWindowFlags_Modal);
+
+        float interval = updateTimes.empty() ? 0.f : updateTimes.back();
+        if (interval > 0) {
+            ImGui::Text("Application update rate %.3f ms/frame (%.1f FPS)", interval, 1000.f / interval);
+        }
+
+        // Plot some values
+        ImGui::PlotLines("Frame Times", updateTimes.data(), updateTimes.size(), 0, nullptr, 0.f, 50.f);
+
+        ImGui::End();
+    });
 
     // Add render rate window
     imguiLayer.addRenderable(
@@ -86,7 +90,11 @@ int main() {
         // Update img gui layer
         imguiLayer.update(interval, sceneState);
 
-        updateInterval = interval;
+        updateTimes.push_back(std::chrono::duration_cast<std::chrono::duration<float>>(interval).count() * 1000);
+        const float maxItems = 200;
+        if (updateTimes.size() > maxItems) {
+            updateTimes.erase(updateTimes.begin(), updateTimes.begin() + (updateTimes.size() - maxItems));
+        }
     };
 
     // Runloop
