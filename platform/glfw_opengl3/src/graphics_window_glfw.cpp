@@ -143,7 +143,7 @@ void GlfwGraphicsWindow::run(const std::function<void(Context &)> &_onRenderFram
 }
 
 void GlfwGraphicsWindow::run(const RenderFN &onRenderFrame, const UpdateFN &onUpdateFrame, double updateRate) {
-    auto updateIntervalNS = 1 / updateRate * 1000 * 1000 * 1000;
+    auto updateIntervalNS = 1. / updateRate;
     auto lastUpdate = std::chrono::high_resolution_clock::now();
 
     // Keep running
@@ -151,8 +151,9 @@ void GlfwGraphicsWindow::run(const RenderFN &onRenderFrame, const UpdateFN &onUp
         glfwPollEvents();
 
         auto now = std::chrono::high_resolution_clock::now();
-        auto interval = std::chrono::duration_cast<std::chrono::nanoseconds>(now - lastUpdate);
-        if (interval.count() > updateIntervalNS) {
+        auto interval = now - lastUpdate;
+        std::chrono::duration<double> intervalS = interval;
+        if (intervalS.count() > updateIntervalNS) {
             lastUpdate = now;
             onUpdateFrame(interval);
         }
