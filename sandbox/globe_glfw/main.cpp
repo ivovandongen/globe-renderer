@@ -76,7 +76,7 @@ int main() {
 
     // Basic model matrix around the origin (rotated so the north pole is pointing straight up)
     auto model = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, 0.f));
-    model = glm::rotate(model, deg2rad(-90), {1.f, 0.f, 0.f});
+    model = glm::rotate(model, deg2rad(-90.f), {1.f, 0.f, 0.f});
 
     // Create an axis renderable
     scene::renderables::AxisRenderable axis{10};

@@ -53,28 +53,28 @@ void OrbitingCameraController::operator()(core::Event& event) {
 
         switch (event.keyCode()) {
             case KeyCode::KEY_UP:
-                rotateBy(core::deg2rad(10), 0);
+                rotateBy(core::deg2rad(10.), 0);
                 return true;
             case KeyCode::KEY_DOWN:
-                rotateBy(core::deg2rad(-10), 0);
+                rotateBy(core::deg2rad(-10.), 0);
                 return true;
             case KeyCode::KEY_LEFT:
-                rotateBy(0, core::deg2rad(-10));
+                rotateBy(0, core::deg2rad(-10.));
                 return true;
             case KeyCode::KEY_RIGHT:
-                rotateBy(0, core::deg2rad(10));
+                rotateBy(0, core::deg2rad(10.));
                 return true;
             case KeyCode::KEY_F:
-                rotation(0, core::deg2rad(360));
+                rotation(0, core::deg2rad(360.));
                 return true;
             case KeyCode::KEY_R:
                 rotation(0, 0);
                 return true;
             case KeyCode::KEY_D:
-                rotation(0, core::deg2rad(90));
+                rotation(0, core::deg2rad(90.));
                 return true;
             case KeyCode::KEY_G:
-                rotation(0, core::deg2rad(-90));
+                rotation(0, core::deg2rad(-90.));
                 return true;
             default:
                 return false;
