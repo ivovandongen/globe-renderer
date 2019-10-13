@@ -26,6 +26,8 @@ public:
 
     core::Size2D<int> size() const override { return _size; }
 
+    float pixelRatio() const override { return pixelRatio_; }
+
     void run(const RenderFN &_onRenderFrame) override;
 
     void run(const RenderFN &onRenderFrame, const UpdateFN &onUpdateFrame, double updateRate) override;
@@ -46,6 +48,7 @@ private:
     std::shared_ptr<opengl3::ContextOpenGL3> _context;
     std::vector<std::weak_ptr<core::EventHandlingFN>> _eventHandlers;
     core::Size2D<int> _size;
+    float pixelRatio_ = 1;
 };
 
 }  // namespace glfw

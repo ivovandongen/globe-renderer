@@ -27,6 +27,8 @@ public:
 
     virtual core::Size2D<int> size() const = 0;
 
+    virtual float pixelRatio() const = 0;
+
     virtual void run(const RenderFN &onRenderFrame) = 0;
 
     virtual void run(const RenderFN &onRenderFrame, const UpdateFN &onUpdateFrame, double updateRate) = 0;

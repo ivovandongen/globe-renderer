@@ -115,6 +115,13 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
     // Initialize our Context
     _context = std::make_shared<opengl3::ContextOpenGL3>(*this);
 
+    // Determine pixel ratio
+    pixelRatio_ = [&]() {
+        int fbwidth, fbheight;
+        glfwGetFramebufferSize(_window, &fbwidth, &fbheight);
+        return float(width) / float(fbwidth);
+    }();
+
     if (type != WindowType::FullScreen) {
         // Position window in the center
         const GLFWvidmode *videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());

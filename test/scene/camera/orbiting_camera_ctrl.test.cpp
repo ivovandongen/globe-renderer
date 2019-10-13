@@ -24,6 +24,7 @@ public:
     Context& context() const override { assert(false); }
 
     Size2D<int> size() const override { return {100, 100}; }
+    float pixelRatio() const override { return 1; }
     void run(const RenderFN& onRenderFrame) override {}
     void run(const RenderFN& onRenderFrame, const UpdateFN& onUpdateFrame, double updateRate) override {}
     void close() override {}
