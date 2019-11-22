@@ -1,5 +1,7 @@
 #include <glbr/imgui/imgui_layer.hpp>
 #include <glbr/input/events/key_event.hpp>
+#include <glbr/input/events/mouse_button_event.hpp>
+#include <glbr/input/events/mouse_move_event.hpp>
 #include <glbr/input/events/mouse_scroll_event.hpp>
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
@@ -45,34 +47,6 @@ int main() {
         map.resize(width, height);
     });
 
-    auto eventHandlerReg = window.registerHandler([&](Event& event) {
-        EventDispatcher d(event);
-
-        bool handled = d.dispatch<KeyEvent>([&](KeyEvent& e) {
-            if (e.state() == KeyState::PRESS) {
-                switch (e.keyCode()) {
-                    case KeyCode::KEY_Q:
-                        map.zoom(map.zoom() + 1);
-                        return true;
-                    case KeyCode::KEY_A:
-                        map.zoom(map.zoom() - 1);
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-            return false;
-        });
-
-        handled |= d.dispatch<MouseScrollEvent>([&](MouseScrollEvent& e) {
-            logging::info("Scroll event: {}x{}", e.offsetX(), e.offsetY());
-            map.zoom(map.zoom() - e.offsetY());
-            return true;
-        });
-
-        return handled;
-    });
-
     // IMGui layer
     imgui::ImGuiLayer imguiLayer{window};
     imguiLayer.addRenderable([&]() {
@@ -86,6 +60,8 @@ int main() {
                     bounds.ne().lat(),
                     bounds.sw().lng(),
                     bounds.sw().lat());
+        auto center = map.center();
+        ImGui::Text("Center: [%.3f,%.3f]", center.lng(), center.lat());
         float zoom = map.zoom();
         if (ImGui::SliderFloat("", &zoom, map.minZoom(), 22, "Zoom: %.3f")) {
             map.zoom(zoom);
@@ -93,8 +69,52 @@ int main() {
         ImGui::Text("Min Zoom: %.3f", map.minZoom());
         ImGui::End();
     });
-
     imguiLayer.init(window.context());
+
+    // Event handlers
+    auto eventHandlerReg = window.registerHandler([&](Event& event) {
+      EventDispatcher d(event);
+
+      bool handled = d.dispatch<KeyEvent>([&](KeyEvent& e) {
+        if (e.state() == KeyState::PRESS) {
+            switch (e.keyCode()) {
+                case KeyCode::KEY_Q:
+                    map.zoom(map.zoom() + 1);
+                    return true;
+                case KeyCode::KEY_A:
+                    map.zoom(map.zoom() - 1);
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        return false;
+      });
+
+      handled |= d.dispatch<MouseScrollEvent>([&](MouseScrollEvent& e) {
+        logging::info("Scroll event: {}x{}", e.offsetX(), e.offsetY());
+        map.zoom(map.zoom() - e.offsetY());
+        return true;
+      });
+
+      // Mouse drag handler
+      static Position dragStartPosition = input::Position::INVALID;
+      handled |= d.dispatch<MouseButtonEvent>([&](MouseButtonEvent& e) {
+        if (e.state() == KeyState::PRESS) {
+            // Record start position
+            dragStartPosition = window.mousePosition();
+        } else if(e.state() == KeyState::RELEASE) {
+            // Move the map
+            auto diff = window.mousePosition() - dragStartPosition;
+            logging::info("Drag event: {}x{}", diff.x, diff.y);
+            map.move(diff.x, diff.y);
+
+        }
+        return true;
+      });
+
+      return handled;
+    });
 
     // Render function
     auto renderFn = [&](renderer::Context& context) {
