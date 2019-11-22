@@ -36,6 +36,12 @@ public:
 
     double minZoom() const { return std::max(0., std::log2(height_ / tileSize_)); }
 
+    void move(float x, float y) {
+        center_.x() += x;
+        center_.y() += y;
+        constrain();
+    }
+
     void center(const geo::LngLat& center) { center_ = center; }
 
     geo::LngLat center() const { return center_; }
