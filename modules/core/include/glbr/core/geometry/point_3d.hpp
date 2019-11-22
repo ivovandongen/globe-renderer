@@ -16,6 +16,10 @@ public:
     inline T y() const { return y_; };
     inline T z() const { return z_; };
 
+    inline T& x() { return x_; };
+    inline T& y() { return y_; };
+    inline T& z() { return z_; };
+
     explicit operator Point2D<T>() { return {x_, y_}; }
 
 private:
