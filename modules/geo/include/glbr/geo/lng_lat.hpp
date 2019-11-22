@@ -11,10 +11,12 @@ public:
     LngLat(double lng, double lat) : Point3D(lng, lat, 0) {}
 
     inline double lng() const { return x(); }
-
     inline double lat() const { return y(); }
-
     inline double alt() const { return z(); }
+
+    inline double& lng() { return x(); }
+    inline double& lat() { return y(); }
+    inline double& alt() { return z(); }
 };
 
 }  // namespace geo
