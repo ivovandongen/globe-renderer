@@ -10,6 +10,8 @@ namespace input {
 struct Position {
     double x;
     double y;
+
+    static Position INVALID;
 };
 
 class Input {
@@ -22,6 +24,21 @@ public:
 
     virtual Position mousePosition() const = 0;
 };
+
+
+// Operators
+inline bool operator==(const Position& lhs, const Position& rhs) {
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+inline bool operator!=(const Position& lhs, const Position& rhs) {
+    return !(lhs == rhs);
+}
+inline Position operator-(const Position& lhs, const Position& rhs) {
+    return {lhs.x - rhs.x, lhs.y - rhs.y};
+}
+inline Position operator+(const Position& lhs, const Position& rhs) {
+    return {lhs.x + rhs.x, lhs.y + rhs.y};
+}
 
 }  // namespace input
 }  // namespace glbr
