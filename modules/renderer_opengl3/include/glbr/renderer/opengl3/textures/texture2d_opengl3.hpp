@@ -18,7 +18,10 @@ public:
 
     void bind() const override;
 
-    void upload(const void* data) const override;
+    void upload(const void *data) const override;
+
+    bool operator==(const Texture2DOpenGL3 &other) const { return _id == other._id; }
+    bool operator!=(const Texture2DOpenGL3 &other) const { return _id != other._id; }
 
 private:
     GLuint _id{};

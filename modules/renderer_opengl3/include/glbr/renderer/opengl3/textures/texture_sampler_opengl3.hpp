@@ -19,6 +19,9 @@ public:
 
     void bind(int textureUnit) const override;
 
+    bool operator==(const TextureSamplerOpenGL3 &other) const { return _id == other._id; }
+    bool operator!=(const TextureSamplerOpenGL3 &other) const { return _id != other._id; }
+
 private:
     GLuint _id{};
 };

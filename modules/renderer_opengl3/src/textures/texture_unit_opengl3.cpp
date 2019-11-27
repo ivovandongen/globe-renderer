@@ -20,9 +20,10 @@ const Texture2D& TextureUnitOpenGL3::texture() const {
 }
 
 void TextureUnitOpenGL3::texture(std::shared_ptr<Texture2D> texture) {
-    // TODO: check if the texture is actually different
+    if (!_texture || *_texture != *std::dynamic_pointer_cast<Texture2DOpenGL3>(texture)) {
+        _dirtyFlags |= DIRTY::TEXTURE;
+    }
     _texture = std::move(std::dynamic_pointer_cast<Texture2DOpenGL3>(texture));
-    _dirtyFlags |= DIRTY::TEXTURE;
 }
 
 const TextureSampler& TextureUnitOpenGL3::sampler() const {
@@ -30,14 +31,14 @@ const TextureSampler& TextureUnitOpenGL3::sampler() const {
 }
 
 void TextureUnitOpenGL3::sampler(std::shared_ptr<TextureSampler> sampler) {
-    // TODO: check if the sampler is actually different
+    if (!_sampler || *_sampler != *std::dynamic_pointer_cast<TextureSamplerOpenGL3>(sampler)) {
+        _dirtyFlags |= DIRTY::SAMPLER;
+    }
     _sampler = std::move(std::dynamic_pointer_cast<TextureSamplerOpenGL3>(sampler));
-    _dirtyFlags |= DIRTY::SAMPLER;
 }
 
 void TextureUnitOpenGL3::clean() {
     if (_dirtyFlags > 0) {
-        logging::debug("Cleaning texture unit {}", _index);
         GL_VERIFY(glActiveTexture(GL_TEXTURE0 + _index));
 
         if (_dirtyFlags & DIRTY::TEXTURE && _texture) {
