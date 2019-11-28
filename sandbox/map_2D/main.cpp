@@ -1,3 +1,4 @@
+#include <glbr/geo/tiles/tile_cover.hpp>
 #include <glbr/imgui/imgui_layer.hpp>
 #include <glbr/input/events/key_event.hpp>
 #include <glbr/input/events/mouse_button_event.hpp>
@@ -56,10 +57,10 @@ int main() {
         ImGui::Begin("Map state", nullptr, ImGuiWindowFlags_None);
         auto bounds = map.bounds();
         ImGui::Text("Bounds: [%.3f,%.3f],[%.3f,%.3f]",
-                    bounds.ne().lng(),
-                    bounds.ne().lat(),
                     bounds.sw().lng(),
-                    bounds.sw().lat());
+                    bounds.sw().lat(),
+                    bounds.ne().lng(),
+                    bounds.ne().lat());
         auto center = map.center();
         ImGui::Text("Center: [%.3f,%.3f]", center.lng(), center.lat());
         float zoom = map.zoom();
@@ -73,47 +74,46 @@ int main() {
 
     // Event handlers
     auto eventHandlerReg = window.registerHandler([&](Event& event) {
-      EventDispatcher d(event);
+        EventDispatcher d(event);
 
-      bool handled = d.dispatch<KeyEvent>([&](KeyEvent& e) {
-        if (e.state() == KeyState::PRESS) {
-            switch (e.keyCode()) {
-                case KeyCode::KEY_Q:
-                    map.zoom(map.zoom() + 1);
-                    return true;
-                case KeyCode::KEY_A:
-                    map.zoom(map.zoom() - 1);
-                    return true;
-                default:
-                    return false;
+        bool handled = d.dispatch<KeyEvent>([&](KeyEvent& e) {
+            if (e.state() == KeyState::PRESS) {
+                switch (e.keyCode()) {
+                    case KeyCode::KEY_Q:
+                        map.zoom(map.zoom() + 1);
+                        return true;
+                    case KeyCode::KEY_A:
+                        map.zoom(map.zoom() - 1);
+                        return true;
+                    default:
+                        return false;
+                }
             }
-        }
-        return false;
-      });
+            return false;
+        });
 
-      handled |= d.dispatch<MouseScrollEvent>([&](MouseScrollEvent& e) {
-        logging::info("Scroll event: {}x{}", e.offsetX(), e.offsetY());
-        map.zoom(map.zoom() - e.offsetY());
-        return true;
-      });
+        handled |= d.dispatch<MouseScrollEvent>([&](MouseScrollEvent& e) {
+            logging::info("Scroll event: {}x{}", e.offsetX(), e.offsetY());
+            map.zoom(map.zoom() - e.offsetY());
+            return true;
+        });
 
-      // Mouse drag handler
-      static Position dragStartPosition = input::Position::INVALID;
-      handled |= d.dispatch<MouseButtonEvent>([&](MouseButtonEvent& e) {
-        if (e.state() == KeyState::PRESS) {
-            // Record start position
-            dragStartPosition = window.mousePosition();
-        } else if(e.state() == KeyState::RELEASE) {
-            // Move the map
-            auto diff = window.mousePosition() - dragStartPosition;
-            logging::info("Drag event: {}x{}", diff.x, diff.y);
-            map.move(diff.x, diff.y);
+        // Mouse drag handler
+        static Position dragStartPosition = input::Position::INVALID;
+        handled |= d.dispatch<MouseButtonEvent>([&](MouseButtonEvent& e) {
+            if (e.state() == KeyState::PRESS) {
+                // Record start position
+                dragStartPosition = window.mousePosition();
+            } else if (e.state() == KeyState::RELEASE) {
+                // Move the map
+                auto diff = window.mousePosition() - dragStartPosition;
+                logging::info("Drag event: {}x{}", diff.x, diff.y);
+                map.move(diff.x, diff.y);
+            }
+            return true;
+        });
 
-        }
-        return true;
-      });
-
-      return handled;
+        return handled;
     });
 
     // Render function
@@ -126,7 +126,10 @@ int main() {
     };
 
     // Update function
-    auto updateFn = [&](auto interval) { imguiLayer.update(interval, sceneState); };
+    auto updateFn = [&](auto interval) {
+        imguiLayer.update(interval, sceneState);
+        map.update();
+    };
 
     // Runloop
     window.run(renderFn, updateFn, 60);

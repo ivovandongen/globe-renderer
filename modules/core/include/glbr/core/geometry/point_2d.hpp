@@ -22,6 +22,11 @@ inline bool operator==(const Point2D<T>& lhs, const Point2D<T>& rhs) {
     return lhs.x() == rhs.x() && lhs.y() == rhs.y();
 }
 
+template <class T>
+inline Point2D<T> operator/(const Point2D<T>& lhs, int rhs) {
+    return {lhs.x() / rhs, lhs.y() / rhs};
+}
+
 }  // namespace geometry
 }  // namespace core
 }  // namespace glbr

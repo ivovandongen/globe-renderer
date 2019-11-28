@@ -33,6 +33,11 @@ inline bool operator==(const Point3D<T>& lhs, const Point3D<T>& rhs) {
     return lhs.x() == rhs.x() && lhs.y() == rhs.y() && lhs.z() == rhs.z();
 }
 
+template <class T>
+inline bool operator!=(const Point3D<T>& lhs, const Point3D<T>& rhs) {
+    return !(lhs == rhs);
+}
+
 }  // namespace geometry
 }  // namespace core
 }  // namespace glbr

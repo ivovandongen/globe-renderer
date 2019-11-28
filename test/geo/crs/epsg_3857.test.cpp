@@ -12,14 +12,28 @@ inline void assertNear(const P1& a, const P2& b, double error = 0.001) {
     ASSERT_NEAR(a.y(), b.y(), error);
 }
 
+TEST(EPSG3857, worldSize) {
+    EPSG3857 crs(256);
+    ASSERT_NEAR(crs.worldSize(1), 256, .01);
+    ASSERT_NEAR(crs.worldSize(2), 2 * 256, .01);
+    ASSERT_NEAR(crs.worldSize(2.5), 2.5 * 256, .01);
+}
+
 TEST(EPSG3857, scale) {
     EPSG3857 crs(256);
-    ASSERT_NEAR(crs.scale(2.5), 1448.15, .01);
+    ASSERT_NEAR(crs.scale(0), 1, .01);
+    ASSERT_NEAR(crs.scale(1), 2, .01);
+    ASSERT_NEAR(crs.scale(2), 4, .01);
+    ASSERT_NEAR(crs.scale(2.5), 5.65, .01);
+    ASSERT_NEAR(crs.scale(4), 16, .01);
 }
 
 TEST(EPSG3857, zoom) {
     EPSG3857 crs(256);
-    ASSERT_NEAR(crs.zoom(1448.15), 2.5, .01);
+    ASSERT_NEAR(crs.zoom(1), 0, .01);
+    ASSERT_NEAR(crs.zoom(2), 1, .01);
+    ASSERT_NEAR(crs.zoom(4), 2, .01);
+    ASSERT_NEAR(crs.zoom(5.65), 2.5, .01);
 }
 
 TEST(EPSG3857, zoomScale) {
