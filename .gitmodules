@@ -25,3 +25,6 @@
 [submodule "deps/imgui"]
 	path = deps/imgui
 	url = git@github.com:ocornut/imgui.git
+[submodule "deps/curl"]
+	path = deps/curl
+	url = git@github.com:curl/curl.git
