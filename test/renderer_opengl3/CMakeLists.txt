@@ -1,1 +1,0 @@
-add_test_module(renderer_opengl3)

@@ -15,8 +15,8 @@ TEST(ThreadPool, DoWorkSequentially) {
 
     int result = 2;
     std::promise<bool> promise;
-    pool.submit([&] { result *= 2; });
-    pool.submit([&] { promise.set_value(true); });
+    pool.schedule([&] { result *= 2; });
+    pool.schedule([&] { promise.set_value(true); });
 
     ASSERT_TRUE(promise.get_future().get());
     ASSERT_EQ(4, result);
