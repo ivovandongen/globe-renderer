@@ -14,7 +14,7 @@ macro(ADD_MODULE MODULE_NAME)
 
     if (NOT "${SRC_FILES}" STREQUAL "")
 
-        add_library(${MODULE_NAME}
+        add_library(${MODULE_NAME} STATIC
                 ${HEADER_FILES}
 
                 ${SRC_FILES}
