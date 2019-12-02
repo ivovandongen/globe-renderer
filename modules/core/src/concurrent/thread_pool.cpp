@@ -15,16 +15,16 @@ ThreadPool::ThreadPool(int poolSize, const char* name) : name_(name) {
             logging::info("{} - Starting worker thread {}", name_, worker_id);
             while (true) {
                 std::unique_lock<std::mutex> lock(mutex_);
-                cv_.wait(lock, [this] { return !tasks_.empty() || terminated_; });
+                cv_.wait(lock, [this] { return !tasks_.empty() || !running_; });
 
-                if (terminated_) {
+                if (!running_) {
                     break;
                 }
 
-                auto task = std::move(tasks_.front());
-                tasks_.pop();
-                lock.unlock();
-                if (task) {
+                if (!tasks_.empty()) {
+                    auto task = std::move(tasks_.front());
+                    tasks_.pop();
+                    lock.unlock();
                     task();
                 }
             }
@@ -36,14 +36,14 @@ ThreadPool::ThreadPool(int poolSize, const char* name) : name_(name) {
 
 ThreadPool::~ThreadPool() {
     logging::info("Halting scheduler {}", name_);
-    terminated_ = true;
+    running_ = false;
     cv_.notify_all();
     for (auto& worker : workers_) {
         worker.join();
     }
 }
 
-void ThreadPool::submit(std::function<void()>&& task) {
+void ThreadPool::schedule(Scheduler::WorkTask&& task) {
     {
         std::unique_lock<std::mutex> lock(mutex_);
         tasks_.push(std::move(task));
