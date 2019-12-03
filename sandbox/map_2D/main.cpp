@@ -52,8 +52,6 @@ int main() {
     imgui::ImGuiLayer imguiLayer{window};
     imguiLayer.addRenderable([&]() {
         static std::array<char, 10> buf;
-        ImGui::SetNextWindowPos({0, 0});
-        ImGui::SetNextWindowSize({float(width), 100});
         ImGui::Begin("Map state", nullptr, ImGuiWindowFlags_None);
         auto bounds = map.bounds();
         ImGui::Text("Bounds: [%.3f,%.3f],[%.3f,%.3f]",
