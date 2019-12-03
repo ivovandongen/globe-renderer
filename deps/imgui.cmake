@@ -15,3 +15,7 @@ target_include_directories(imgui
 target_include_directories(imgui
         SYSTEM INTERFACE ${IMGUI_DIR}
         )
+
+if (APPLE)
+    target_link_libraries(imgui INTERFACE "-framework CoreFoundation" "-framework Cocoa")
+endif ()
