@@ -9,13 +9,13 @@ SimpleRunLoop::SimpleRunLoop() {
 };
 
 SimpleRunLoop::~SimpleRunLoop() {
-    std::unique_lock<std::recursive_mutex> lock(mutex_);
     running_ = false;
+    cv_.notify_one();
 };
 
 void SimpleRunLoop::post(RunLoop::WorkTask&& task) {
     {
-        std::unique_lock<std::recursive_mutex> lock(mutex_);
+        std::unique_lock<std::mutex> lock(mutex_);
         tasks_.push(std::move(task));
     }
     cv_.notify_one();
@@ -23,12 +23,19 @@ void SimpleRunLoop::post(RunLoop::WorkTask&& task) {
 
 void SimpleRunLoop::run() {
     while (running_) {
-        tick();
+        std::unique_lock<std::mutex> lock(mutex_);
+        cv_.wait(lock, [this] { return !running_ || !tasks_.empty(); });
+        if (running_ && !tasks_.empty()) {
+            auto task = std::move(tasks_.front());
+            tasks_.pop();
+            lock.unlock();
+            task();
+        }
     }
 }
 
 void SimpleRunLoop::tick() {
-    std::unique_lock<std::recursive_mutex> lock(mutex_);
+    std::unique_lock<std::mutex> lock(mutex_);
     if (!tasks_.empty()) {
         auto task = std::move(tasks_.front());
         tasks_.pop();

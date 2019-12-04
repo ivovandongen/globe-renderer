@@ -24,7 +24,7 @@ public:
 
 private:
     std::condition_variable cv_;
-    std::recursive_mutex mutex_;
+    std::mutex mutex_;
     std::atomic_bool running_{true};
     std::queue<Scheduler::WorkTask> tasks_;
 };

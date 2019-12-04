@@ -15,7 +15,7 @@ ThreadPool::ThreadPool(int poolSize, const char* name) : name_(name) {
             logging::info("{} - Starting worker thread {}", name_, worker_id);
             while (true) {
                 std::unique_lock<std::mutex> lock(mutex_);
-                cv_.wait(lock, [this] { return !tasks_.empty() || !running_; });
+                cv_.wait(lock, [this] { return !running_ || !tasks_.empty(); });
 
                 if (!running_) {
                     break;

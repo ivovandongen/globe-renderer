@@ -18,7 +18,7 @@ TEST(SimpleRunLoop, LifeCycle) {
 
 TEST(SimpleRunLoop, Shutdown) {
     std::promise<void> started;
-    auto  loop = std::make_unique<SimpleRunLoop>();
+    auto loop = std::make_unique<SimpleRunLoop>();
     std::thread thread([&]() {
         started.set_value();
         loop->run();
@@ -28,4 +28,36 @@ TEST(SimpleRunLoop, Shutdown) {
     loop->post([&]() {});
     loop.reset();
     thread.join();
+}
+
+TEST(SimpleRunLoop, TaskExecutedOnCorrectThread) {
+    // Create a loop on a separate thread
+    std::promise<void> started;
+    auto loop = std::make_unique<SimpleRunLoop>();
+    std::__thread_id loopThreadId;
+    std::thread thread([&]() {
+        loopThreadId = std::this_thread::get_id();
+        started.set_value();
+        loop->run();
+    });
+    started.get_future().get();
+
+    std::promise<void> taskExecuted;
+    loop->post([&]() {
+        ASSERT_EQ(loopThreadId, std::this_thread::get_id());
+        taskExecuted.set_value();
+    });
+
+    taskExecuted.get_future().get();
+    loop.reset();
+    thread.join();
+}
+
+TEST(SimpleRunLoop, Run) {
+    std::promise<void> started;
+    auto loop = std::make_unique<SimpleRunLoop>();
+    loop->post([&]() {
+        loop.reset();
+    });
+    loop->run();
 }
