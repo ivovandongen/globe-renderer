@@ -7,11 +7,14 @@ namespace core {
 
 class Image {
 public:
-    explicit Image(const std::string &path, bool flipOnLoad = true);
+    using Data = unsigned char;
+
+    explicit Image(const std::string& path, bool flipOnLoad = true);
+    Image(const Data* data, size_t len, bool flipOnLoad = true);
 
     ~Image();
 
-    const unsigned char *data() const { return _data; }
+    const Data* data() const { return _data; }
 
     int width() const { return _width; }
 
@@ -21,7 +24,7 @@ public:
 
 private:
     int _width{0}, _height{0}, _channels{0};
-    unsigned char *_data = nullptr;
+    Data* _data = nullptr;
 };
 
 }  // namespace core

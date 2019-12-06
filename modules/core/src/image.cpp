@@ -9,7 +9,7 @@
 namespace glbr {
 namespace core {
 
-Image::Image(const std::string &path, bool flipOnLoad) {
+Image::Image(const std::string& path, bool flipOnLoad) {
     logging::debug("Loading image: {} flipped: {}", path, flipOnLoad);
 
     stbi_set_flip_vertically_on_load(flipOnLoad);
@@ -21,8 +21,19 @@ Image::Image(const std::string &path, bool flipOnLoad) {
     }
 }
 
+Image::Image(const Data* data, size_t len, bool flipOnLoad) {
+    stbi_set_flip_vertically_on_load(flipOnLoad);
+    _data = stbi_load_from_memory(data, len, &_width, &_height, &_channels, 0);
+    if (!_data) {
+        logging::debug("Could not read image from memory");
+        throw std::runtime_error{std::string{"Could not read image from memory"}};
+    }
+}
+
 Image::~Image() {
-    stbi_image_free(_data);
+    if (_data) {
+        stbi_image_free(_data);
+    }
 }
 
 }  // namespace core
