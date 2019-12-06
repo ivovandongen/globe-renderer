@@ -1,5 +1,7 @@
 #include <glbr/core/concurrent/simple_run_loop.hpp>
 
+#include <algorithm>
+
 namespace glbr {
 namespace core {
 namespace concurrent {
@@ -34,13 +36,21 @@ void SimpleRunLoop::run() {
     }
 }
 
-void SimpleRunLoop::tick() {
+void SimpleRunLoop::tick(bool emptyQueue) {
     std::unique_lock<std::mutex> lock(mutex_);
-    if (!tasks_.empty()) {
+
+    // Either run 0, once or the number of tasks in the queue currently
+    size_t taskCount = emptyQueue ? tasks_.size() : std::min<size_t>(tasks_.size(), 1);
+
+    for (size_t i = 0; i < taskCount; i++) {
         auto task = std::move(tasks_.front());
         tasks_.pop();
         lock.unlock();
         task();
+
+        if (i + 1 < taskCount) {
+            lock.lock();
+        }
     }
 }
 

@@ -54,10 +54,59 @@ TEST(SimpleRunLoop, TaskExecutedOnCorrectThread) {
 }
 
 TEST(SimpleRunLoop, Run) {
-    std::promise<void> started;
     auto loop = std::make_unique<SimpleRunLoop>();
-    loop->post([&]() {
-        loop.reset();
-    });
+    loop->post([&]() { loop.reset(); });
     loop->run();
+}
+
+TEST(SimpleRunLoop, Tick) {
+    auto loop = std::make_unique<SimpleRunLoop>();
+
+    bool task1Ran = false;
+    loop->post([&]() { task1Ran = true; });
+
+    bool task2Ran = false;
+    loop->post([&]() { task2Ran = true; });
+
+    loop->tick();
+
+    ASSERT_TRUE(task1Ran);
+    ASSERT_FALSE(task2Ran);
+}
+
+TEST(SimpleRunLoop, TickTillEmpty) {
+    auto loop = std::make_unique<SimpleRunLoop>();
+
+    bool task1Ran = false;
+    loop->post([&]() { task1Ran = true; });
+
+    bool task2Ran = false;
+    loop->post([&]() { task2Ran = true; });
+
+    loop->tick(true);
+
+    ASSERT_TRUE(task1Ran);
+    ASSERT_TRUE(task2Ran);
+}
+
+TEST(SimpleRunLoop, TickTillEmptyAndNoFurther) {
+    auto loop = std::make_unique<SimpleRunLoop>();
+
+    bool task1Ran = false;
+    loop->post([&]() { task1Ran = true; });
+
+    bool task2Ran = false;
+    bool task3Ran = false;
+    loop->post([&]() {
+        task2Ran = true;
+        loop->post([&]() { task3Ran = true; });
+    });
+
+    loop->tick(true);
+
+    ASSERT_TRUE(task1Ran);
+    ASSERT_TRUE(task2Ran);
+
+    // Tasks added after loop->tick should not be executed to avoid running indefinitely
+    ASSERT_FALSE(task3Ran);
 }

@@ -20,7 +20,7 @@ public:
 
     void run();
 
-    void tick();
+    void tick(bool emptyQueue = false);
 
 private:
     std::condition_variable cv_;
