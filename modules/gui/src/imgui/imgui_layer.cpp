@@ -202,6 +202,8 @@ void ImGuiLayer::render(Context& context, SceneState& sceneState) {
 
     auto viewport = sceneState.viewport();
     io.DisplaySize = {viewport.width, viewport.height};
+    auto fbSale = 1.f / sceneState.pixelRatio();
+    io.DisplayFramebufferScale = {fbSale, fbSale};
 
     ImGui::NewFrame();
 
