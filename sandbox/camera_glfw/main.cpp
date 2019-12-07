@@ -60,7 +60,7 @@ int main() {
     auto &device = opengl3::DeviceOpenGL3::instance();
 
     // Setup the scene and place the camera
-    SceneState sceneState(width, height);
+    SceneState sceneState(width, height, window.pixelRatio());
     sceneState.camera().position({0, 0, 3});
 
     // Add a POV camera ctrl and register to listen for events

@@ -47,7 +47,7 @@ int main() {
     auto &device = opengl3::DeviceOpenGL3::instance();
 
     // Set up scene state
-    SceneState sceneState(width, height);
+    SceneState sceneState(width, height, window.pixelRatio());
     sceneState.camera().position({0, 0, 3});
 
     // Add ImGui ui

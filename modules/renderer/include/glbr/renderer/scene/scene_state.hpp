@@ -8,9 +8,9 @@ namespace renderer {
 
 class SceneState {
 public:
-    SceneState(float width, float height);
+    SceneState(float width, float height, float pixelRatio = 1);
 
-    void viewport(float width, float height);
+    void viewport(float width, float height, float pixelRatio = 1);
 
     core::Size2D<float> viewport() const { return {_width, _height}; }
 
@@ -24,10 +24,13 @@ public:
 
     glm::mat4 projectionMatrix() const;
 
+    float pixelRatio() const { return pixelRatio_; }
+
 private:
     Camera _camera;
     float _width;
     float _height;
+    float pixelRatio_;
     glm::mat4 _modelMatrix;
 };
 

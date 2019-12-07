@@ -33,13 +33,13 @@ int main() {
 
     logging::setLevel(logging::Level::DEBUG);
 
-    SceneState sceneState(width, height);
-
     Image kitty{"resources/kitty.png"};
     Image kittyRev{"resources/kitty.png", false};
 
     // Create the window
     glfw::GlfwGraphicsWindow window{width, height};
+
+    SceneState sceneState(width, height, window.pixelRatio());
 
     // Set up the graphics device
     auto &device = opengl3::DeviceOpenGL3::instance();

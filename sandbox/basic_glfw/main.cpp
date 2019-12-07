@@ -16,10 +16,10 @@ int main() {
 
     logging::setLevel(logging::Level::DEBUG);
 
-    SceneState sceneState(width, height);
-
     // Create the window
     glfw::GlfwGraphicsWindow window{width, height};
+
+    SceneState sceneState(width, height, window.pixelRatio());
 
     // Set up the graphics device
     auto &device = opengl3::DeviceOpenGL3::instance();

@@ -19,10 +19,10 @@ int main() {
 
     logging::setLevel(logging::Level::DEBUG);
 
-    SceneState sceneState(width, height);
-
     // Create the window
     glfw::GlfwGraphicsWindow window{width, height};
+
+    SceneState sceneState(width, height, window.pixelRatio());
 
     window.context().setOnResizeListener([&](float width, float height) {
         // Update scene state
