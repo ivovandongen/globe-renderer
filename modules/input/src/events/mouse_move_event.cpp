@@ -5,7 +5,7 @@
 namespace glbr {
 namespace input {
 
-std::string MouseMoveEvent::str() {
+std::string MouseMoveEvent::str() const {
     std::stringstream ss;
     ss << EventImpl::str() << "[x:" << _x << ", y:" << _y << "]";
     return ss.str();

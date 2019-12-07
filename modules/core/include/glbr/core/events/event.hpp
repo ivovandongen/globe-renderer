@@ -16,11 +16,11 @@ public:
 
     virtual ~Event() = default;
 
-    TypeId type() { return _type; }
+    TypeId type() const { return _type; }
 
-    bool handled() { return _handled; }
+    bool handled() const { return _handled; }
 
-    virtual std::string str() = 0;
+    virtual std::string str() const = 0;
 
 protected:
     explicit Event(TypeId type) : _type(type) {}
@@ -39,9 +39,9 @@ private:
 template <class E>
 class EventImpl : public Event {
 public:
-    static const constexpr TypeId Type() { return ctti::type_id<E>().hash(); }
+    static constexpr TypeId Type() { return ctti::type_id<E>().hash(); }
 
-    std::string str() override { return ctti::nameof<E>().str(); }
+    std::string str() const override { return ctti::nameof<E>().str(); }
 
 protected:
     EventImpl() : Event(Type()){};

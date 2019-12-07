@@ -9,6 +9,7 @@
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
 #include <glbr/renderer/opengl3/context/context_opengl3.hpp>
+#include <glbr/renderer/window_resized_event.hpp>
 
 #include <glad/glad.h>
 
@@ -70,8 +71,20 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
 
     // Resize gl viewport on window viewport
     glfwSetFramebufferSizeCallback(_window, [](GLFWwindow *window, int width, int height) {
-        getGlfwGraphicsWindow(window)->_size = {width, height};
-        getGlfwGraphicsWindow(window)->_context->viewport(width, height);
+        auto *graphicsWindow = getGlfwGraphicsWindow(window);
+
+        // Update the window size
+        glfwGetWindowSize(window, &graphicsWindow->_size.width, &graphicsWindow->_size.height);
+
+        // Update the pixel ratio
+        graphicsWindow->pixelRatio_ = float(graphicsWindow->_size.width) / float(width);
+
+        // Update the context viewport size
+        graphicsWindow->_context->viewport(width, height);
+
+        // Emit a window resized event
+        WindowResizedEvent e{graphicsWindow->_size};
+        emit(e, graphicsWindow->_eventHandlers);
     });
 
     // Handle some input

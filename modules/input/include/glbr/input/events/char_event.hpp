@@ -14,7 +14,7 @@ public:
 
     Char character() const { return _character; }
 
-    std::string str() override;
+    std::string str() const override;
 
 private:
     Char _character;

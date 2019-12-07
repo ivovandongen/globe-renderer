@@ -14,7 +14,7 @@ public:
     MouseButtonCode buttonCode() const { return _buttonCode; }
     KeyState state() const { return _state; }
 
-    std::string str() override;
+    std::string str() const override;
 
 private:
     MouseButtonCode _buttonCode;

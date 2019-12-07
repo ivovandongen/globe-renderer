@@ -12,7 +12,7 @@ public:
     double x() const { return _x; }
     double y() const { return _y; }
 
-    std::string str() override;
+    std::string str() const override;
 
 private:
     double _x;

@@ -14,7 +14,7 @@ public:
     KeyCode keyCode() const { return _keyCode; }
     KeyState state() const { return _state; }
 
-    std::string str() override;
+    std::string str() const override;
 
 private:
     KeyCode _keyCode;

@@ -12,7 +12,7 @@ public:
     double offsetX() const { return _offsetX; }
     double offsetY() const { return _offsetY; }
 
-    std::string str() override;
+    std::string str() const override;
 
 private:
     double _offsetX;

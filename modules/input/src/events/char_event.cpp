@@ -5,7 +5,7 @@
 namespace glbr {
 namespace input {
 
-std::string CharEvent::str() {
+std::string CharEvent::str() const {
     std::stringstream ss;
     ss << EventImpl::str() << "[" << _character << "]";
     return ss.str();

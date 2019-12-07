@@ -7,6 +7,7 @@
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
 #include <glbr/renderer/opengl3/device_opengl3.hpp>
+#include <glbr/renderer/window_resized_event.hpp>
 
 #include "map_2d.hpp"
 
@@ -27,10 +28,6 @@ int main() {
     // Create the window
     glfw::GlfwGraphicsWindow window{width, height};
 
-    window.context().setOnResizeListener([&](float width, float height) {
-        // Update scene state
-        sceneState.viewport(width, height);
-    });
 
     // Set up the graphics device
     auto& device = opengl3::DeviceOpenGL3::instance();
@@ -38,15 +35,6 @@ int main() {
     ClearState clearState{ClearBuffers::ALL, {1, 1, 1, 1}, {false}};
 
     Map2D map(width, height);
-
-    // Resize listener
-    window.context().setOnResizeListener([&](float width, float height) {
-        // Update scene state
-        sceneState.viewport(width, height);
-
-        // Update map
-        map.resize(width, height);
-    });
 
     // IMGui layer
     imgui::ImGuiLayer imguiLayer{window};
@@ -108,6 +96,17 @@ int main() {
                 logging::info("Drag event: {}x{}", diff.x, diff.y);
                 map.move(diff.x, diff.y);
             }
+            return true;
+        });
+
+        // Window resize listener
+        d.dispatch<WindowResizedEvent>([&](WindowResizedEvent& e) {
+            // Update scene state
+            sceneState.viewport(e.size().width, e.size().height, window.pixelRatio());
+
+            // Update map
+            map.resize(e.size().width, e.size().height);
+
             return true;
         });
 

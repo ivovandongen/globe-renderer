@@ -5,7 +5,7 @@
 namespace glbr {
 namespace input {
 
-std::string MouseScrollEvent::str() {
+std::string MouseScrollEvent::str() const {
     std::stringstream ss;
     ss << EventImpl::str() << "[offset x:" << _offsetX << ", offset y:" << _offsetY << "]";
     return ss.str();
