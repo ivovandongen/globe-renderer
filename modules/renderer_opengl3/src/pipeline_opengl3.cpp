@@ -74,16 +74,21 @@ void PipelineOpenGL3::bind() const {
 
 void PipelineOpenGL3::loadVertexAttributes() {
     // Get number of active attributes
-    int numberOfAttributes;
+    int numberOfAttributes = 0;
     GL_VERIFY(glGetProgramiv(_id, GL_ACTIVE_ATTRIBUTES, &numberOfAttributes));
 
+    if (numberOfAttributes == 0) {
+        logging::debug("No vertex attributes to load");
+        return;
+    }
+
     // The the max name length of those attributes
-    int nameMaxLength;
+    int nameMaxLength = 0;
     GL_VERIFY(glGetProgramiv(_id, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &nameMaxLength));
 
     // For each attribute, create a record
     std::vector<GLchar> nameBuffer;
-    nameBuffer.reserve(nameMaxLength);
+    nameBuffer.resize(nameMaxLength);
     for (int i = 0; i < numberOfAttributes; i++) {
         int nameLength;
         int length;
@@ -103,7 +108,7 @@ void PipelineOpenGL3::loadUniforms() {
 
     // For each attribute, create a record
     std::vector<GLchar> nameBuffer;
-    nameBuffer.reserve(nameMaxLength);
+    nameBuffer.resize(nameMaxLength);
 
     for (int i = 0; i < numUniforms; ++i) {
         int nameLength;
