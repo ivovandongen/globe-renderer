@@ -35,6 +35,10 @@ public:
 
     void post(WorkTask&& task) override { loop_->schedule(std::move(task)); }
 
+    void postDelayed(WorkTask&& task, std::chrono::milliseconds delay) override {
+        loop_->postDelayed(std::move(task), delay);
+    }
+
     void shutdown() {
         loop_.reset();
         thread.join();

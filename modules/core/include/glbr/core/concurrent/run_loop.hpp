@@ -2,6 +2,7 @@
 
 #include "scheduler.hpp"
 
+#include <chrono>
 #include <functional>
 
 namespace glbr {
@@ -15,6 +16,8 @@ public:
     ~RunLoop() override = default;
 
     virtual void post(WorkTask&&) = 0;
+
+    virtual void postDelayed(WorkTask&& task, std::chrono::milliseconds delay) = 0;
 
     void schedule(Scheduler::WorkTask&& wt) override { post(std::move(wt)); }
 };
