@@ -1,31 +1,22 @@
 #pragma once
 
-#include "http_data_source_worker.hpp"
+#include <glbr/io/data_source.hpp>
 
-#include <curl/curl.h>
+#include <memory>
 
 namespace glbr {
 namespace io {
 
+class HttpRequestHandle;
+
 class HttpRequest : public AsyncRequest {
 public:
-    static size_t onHeader(char *buffer, size_t size, size_t nmemb, void *userp);
-    static size_t onWrite(void *contents, size_t size, size_t nmemb, void *userp);
+    explicit HttpRequest(std::shared_ptr<HttpRequestHandle> handle);
 
-    HttpRequest(HttpDataSourceCurlWorker *worker, const Resource &resource, DataSource::Callback callback);
-
-    ~HttpRequest() override;
-
-    void onResult(CURLcode param);
+    ~HttpRequest() override = default;
 
 public:
-    std::string body;
-
-private:
-    DataSource::Callback callback_;
-    CURL *curl;
-    HttpDataSourceCurlWorker *worker_;
-    core::concurrent::Scheduler *scheduler_;
+    std::shared_ptr<HttpRequestHandle> handle_;
 };
 
 }  // namespace io

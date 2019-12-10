@@ -1,4 +1,4 @@
-#include <glbr/io/http_data_source.hpp>
+#include <glbr/io/http_data_source_curl.hpp>
 
 #include <glbr/core/concurrent/scheduler.hpp>
 #include <glbr/core/concurrent/simple_run_loop.hpp>
@@ -40,6 +40,26 @@ TEST(HttpDataSource, Load) {
 
     auto future = promise.get_future();
     future.wait_for(2s);
+    ASSERT_TRUE(loaded);
+    ASSERT_FALSE(future.get().data().empty());
+}
+
+TEST(HttpDataSource, Shutdown) {
+    DummyScheduler loop;
+
+    // TODO: start a http server
+    auto dataSource = HttpDataSource::Create();
+
+    bool loaded = false;
+    std::promise<Response> promise;
+    auto req = dataSource->load(Resource{"https://www.google.com"}, [&](Response res) {
+      loaded = true;
+      promise.set_value(std::move(res));
+    });
+
+    auto future = promise.get_future();
+    future.wait_for(2s);
+    dataSource.reset();
     ASSERT_TRUE(loaded);
     ASSERT_FALSE(future.get().data().empty());
 }

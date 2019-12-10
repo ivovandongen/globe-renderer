@@ -1,3 +1,5 @@
+#pragma once
+
 #include <glbr/io/http_data_source.hpp>
 
 #include <memory>
