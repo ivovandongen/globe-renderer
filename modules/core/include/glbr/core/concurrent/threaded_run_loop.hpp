@@ -26,6 +26,7 @@ public:
 
     ~ThreadedRunLoop() override {
         if (loop_) {
+            loop_->shutdown(true);
             loop_.reset();
         }
         if (thread.joinable()) {

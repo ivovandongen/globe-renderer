@@ -15,12 +15,19 @@ SimpleRunLoop::SimpleRunLoop() {
 };
 
 SimpleRunLoop::~SimpleRunLoop() {
-    shutdown();
+    shutdown(true);
 };
 
-void SimpleRunLoop::shutdown() {
-    running_ = false;
-    cv_.notify_one();
+void SimpleRunLoop::shutdown(bool block) {
+    if (running_) {
+        running_ = false;
+        cv_.notify_one();
+
+        if (block && !shutdown_) {
+            std::unique_lock<std::mutex> lock(mutex_);
+            cv_.wait(lock, [this]() { return bool(shutdown_); });
+        }
+    }
 }
 
 void SimpleRunLoop::post(RunLoop::WorkTask&& task) {
@@ -53,6 +60,7 @@ void SimpleRunLoop::postDelayed(RunLoop::WorkTask&& task, milliseconds delay) {
 }
 
 void SimpleRunLoop::run() {
+    running_ = true;
     while (running_) {
         std::unique_lock<std::mutex> lock(mutex_);
         auto pred = [this] {
@@ -79,6 +87,10 @@ void SimpleRunLoop::run() {
             task();
         }
     }
+
+    // Signal that shutdown is complete in case someone is waiting for it
+    shutdown_ = true;
+    cv_.notify_one();
 }
 
 void SimpleRunLoop::tick(bool emptyQueue) {

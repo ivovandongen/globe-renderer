@@ -25,7 +25,7 @@ public:
 
     void tick(bool emptyQueue = false);
 
-    void shutdown();
+    void shutdown(bool block = false);
 
 private:
     // Needs mutex to be locked beforehand!
@@ -35,7 +35,8 @@ private:
     // Basics
     std::condition_variable cv_;
     std::mutex mutex_;
-    std::atomic_bool running_{true};
+    std::atomic_bool running_{false};
+    std::atomic_bool shutdown_{false};
 
     // Tasks
     std::queue<Scheduler::WorkTask> tasks_;
