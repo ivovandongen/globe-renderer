@@ -22,7 +22,7 @@ public:
 protected:
     static void Set(Scheduler* scheduler);
 
-    static Scheduler*& current() {
+    static Scheduler*& Current() {
         static thread_local Scheduler* scheduler;
         return scheduler;
     };

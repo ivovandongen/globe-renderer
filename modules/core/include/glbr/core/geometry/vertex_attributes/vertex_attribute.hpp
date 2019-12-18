@@ -13,23 +13,23 @@ namespace geometry {
 class VertexAttribute {
 public:
     VertexAttribute(std::string name, VertexAttributeType type, unsigned int components = 1, unsigned int offset = 0)
-        : _name(std::move(name)), _type(type), _components(components), _offset(offset){};
+        : name_(std::move(name)), type_(type), components_(components), offset_(offset){};
 
-    inline const std::string& name() const { return _name; };
+    inline const std::string& name() const { return name_; };
 
-    inline unsigned int components() const { return _components; };
+    inline unsigned int components() const { return components_; };
 
-    inline VertexAttributeType type() const { return _type; };
+    inline VertexAttributeType type() const { return type_; };
 
-    inline unsigned int size() const { return sizeOf(_type) * components(); };
+    inline unsigned int size() const { return sizeOf(type_) * components(); };
 
-    inline unsigned int offset() const { return _offset; };
+    inline unsigned int offset() const { return offset_; };
 
 private:
-    std::string _name;
-    VertexAttributeType _type;
-    unsigned int _components;
-    unsigned int _offset;
+    std::string name_;
+    VertexAttributeType type_;
+    unsigned int components_;
+    unsigned int offset_;
 };
 
 }  // namespace geometry

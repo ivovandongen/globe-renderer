@@ -7,22 +7,24 @@ namespace glbr {
 namespace renderer {
 namespace opengl3 {
 
-TextureSamplerOpenGL3::TextureSamplerOpenGL3(TextureMinificationFilter min, TextureMagnificationFilter mag,
-                                             TextureWrap s, TextureWrap t) {
-    GL_VERIFY(glGenSamplers(1, &_id));
+TextureSamplerOpenGL3::TextureSamplerOpenGL3(TextureMinificationFilter min,
+                                             TextureMagnificationFilter mag,
+                                             TextureWrap s,
+                                             TextureWrap t) {
+    GL_VERIFY(glGenSamplers(1, &id_));
 
-    GL_VERIFY(glSamplerParameteri(_id, GL_TEXTURE_MIN_FILTER, toMinFilter(min)));
-    GL_VERIFY(glSamplerParameteri(_id, GL_TEXTURE_MAG_FILTER, toMagFilter(mag)));
-    GL_VERIFY(glSamplerParameteri(_id, GL_TEXTURE_WRAP_S, toWrap(s)));
-    GL_VERIFY(glSamplerParameteri(_id, GL_TEXTURE_WRAP_T, toWrap(t)));
+    GL_VERIFY(glSamplerParameteri(id_, GL_TEXTURE_MIN_FILTER, toMinFilter(min)));
+    GL_VERIFY(glSamplerParameteri(id_, GL_TEXTURE_MAG_FILTER, toMagFilter(mag)));
+    GL_VERIFY(glSamplerParameteri(id_, GL_TEXTURE_WRAP_S, toWrap(s)));
+    GL_VERIFY(glSamplerParameteri(id_, GL_TEXTURE_WRAP_T, toWrap(t)));
 }
 
 TextureSamplerOpenGL3::~TextureSamplerOpenGL3() {
-    GL_VERIFY(glDeleteSamplers(1, &_id));
+    GL_VERIFY(glDeleteSamplers(1, &id_));
 }
 
 void TextureSamplerOpenGL3::bind(int loc) const {
-    GL_VERIFY(glBindSampler(loc, _id));
+    GL_VERIFY(glBindSampler(loc, id_));
 }
 
 }  // namespace opengl3

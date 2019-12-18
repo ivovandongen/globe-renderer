@@ -14,11 +14,11 @@ inline static const constexpr size_t sizeOf(IndexBufferType type) {
 }
 
 IndexBufferOpenGL3::IndexBufferOpenGL3(IndexBufferType type, BufferHint usageHint, uint32_t count)
-    : BufferOpenGL3(BufferTarget::ElementArrayBuffer, usageHint, count * sizeOf(type)), _type(type), _count(count) {}
+    : BufferOpenGL3(BufferTarget::ElementArrayBuffer, usageHint, count * sizeOf(type)), type_(type), count_(count) {}
 
 void IndexBufferOpenGL3::upload(const void* data, uint32_t count) {
-    _count = count;
-    BufferOpenGL3::upload(data, count * sizeOf(_type));
+    count_ = count;
+    BufferOpenGL3::upload(data, count * sizeOf(type_));
 }
 
 }  // namespace opengl3

@@ -21,7 +21,7 @@ public:
     void clean(ContextOpenGL3&);
 
 private:
-    std::vector<TextureUnitOpenGL3> _units;
+    std::vector<TextureUnitOpenGL3> units_;
 };
 
 }  // namespace opengl3

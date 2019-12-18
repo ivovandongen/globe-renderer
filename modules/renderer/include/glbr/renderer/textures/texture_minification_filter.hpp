@@ -12,5 +12,5 @@ enum class TextureMinificationFilter {
     LINEAR_MIPMAP_LINEAR,
 };
 
-} // namespace renderer
-} // namespace glbr
+}  // namespace renderer
+}  // namespace glbr

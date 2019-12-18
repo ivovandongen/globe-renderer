@@ -7,7 +7,7 @@ namespace input {
 
 std::string MouseButtonEvent::str() const {
     std::stringstream ss;
-    ss << EventImpl::str() << "[" << _buttonCode << ": " << _state << "]";
+    ss << EventImpl::str() << "[" << buttonCode_ << ": " << state_ << "]";
     return ss.str();
 }
 

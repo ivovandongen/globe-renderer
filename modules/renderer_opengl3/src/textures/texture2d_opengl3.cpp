@@ -8,16 +8,16 @@ namespace renderer {
 namespace opengl3 {
 
 Texture2DOpenGL3::Texture2DOpenGL3(Texture2DDescription description, TextureTarget target)
-    : _target(toTextureTarget(target)), _description(description) {
-    GL_VERIFY(glGenTextures(1, &_id));
+    : target_(toTextureTarget(target)), description_(description) {
+    GL_VERIFY(glGenTextures(1, &id_));
 }
 
 Texture2DOpenGL3::~Texture2DOpenGL3() {
-    GL_VERIFY(glDeleteTextures(1, &_id));
+    GL_VERIFY(glDeleteTextures(1, &id_));
 }
 
 void Texture2DOpenGL3::bind() const {
-    GL_VERIFY(glBindTexture(_target, _id));
+    GL_VERIFY(glBindTexture(target_, id_));
 }
 
 void Texture2DOpenGL3::upload(const void* data) const {
@@ -25,20 +25,20 @@ void Texture2DOpenGL3::upload(const void* data) const {
         GLint boundTexture;
         GL_VERIFY(glGetIntegerv(GL_TEXTURE_BINDING_2D, &boundTexture));
         return boundTexture;
-    }() == _id);
+    }() == id_);
 
-    GL_VERIFY(glTexImage2D(_target,
+    GL_VERIFY(glTexImage2D(target_,
                            0,
-                           toPixelFormat(_description.format()),
-                           _description.width(),
-                           _description.height(),
+                           toPixelFormat(description_.format()),
+                           description_.width(),
+                           description_.height(),
                            0,
-                           toPixelFormat(_description.format()),
+                           toPixelFormat(description_.format()),
                            GL_UNSIGNED_BYTE,
                            data));
 
-    if (_description.generateMipmaps()) {
-        GL_VERIFY(glGenerateMipmap(_target));
+    if (description_.generateMipmaps()) {
+        GL_VERIFY(glGenerateMipmap(target_));
     }
 }
 

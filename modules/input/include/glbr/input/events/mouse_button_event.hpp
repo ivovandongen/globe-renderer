@@ -9,16 +9,16 @@ namespace input {
 
 class MouseButtonEvent : public core::EventImpl<MouseButtonEvent> {
 public:
-    MouseButtonEvent(MouseButtonCode buttonCode, KeyState state) : _buttonCode(buttonCode), _state(state) {}
+    MouseButtonEvent(MouseButtonCode buttonCode, KeyState state) : buttonCode_(buttonCode), state_(state) {}
 
-    MouseButtonCode buttonCode() const { return _buttonCode; }
-    KeyState state() const { return _state; }
+    MouseButtonCode buttonCode() const { return buttonCode_; }
+    KeyState state() const { return state_; }
 
     std::string str() const override;
 
 private:
-    MouseButtonCode _buttonCode;
-    KeyState _state;
+    MouseButtonCode buttonCode_;
+    KeyState state_;
 };
 
 }  // namespace input

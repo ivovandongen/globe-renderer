@@ -41,7 +41,7 @@ static GlfwGraphicsWindow *getGlfwGraphicsWindow(GLFWwindow *window) {
 }
 
 GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, bool vsync)
-    : _system(GLFWSystem::init()), _size({width, height}) {
+    : system_(GLFWSystem::Init()), size_({width, height}) {
     // TODO Move OpenGL specifics
 
     // Specify OpenGL version to use
@@ -54,59 +54,59 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
 #endif
 
     if (type == WindowType::FullScreen) {
-        _window = glfwCreateWindow(width, height, "Globe Renderer", glfwGetPrimaryMonitor(), nullptr);
+        window_ = glfwCreateWindow(width, height, "Globe Renderer", glfwGetPrimaryMonitor(), nullptr);
     } else {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        _window = glfwCreateWindow(width, height, "Globe Renderer", nullptr, nullptr);
+        window_ = glfwCreateWindow(width, height, "Globe Renderer", nullptr, nullptr);
     }
 
-    if (!_window) {
+    if (!window_) {
         // Window or OpenGL context creation failed
         logging::error("Failed to create GLFW window");
         return;
     }
 
     // Set the user pointer for use in callbacks
-    glfwSetWindowUserPointer(_window, this);
+    glfwSetWindowUserPointer(window_, this);
 
     // Resize gl viewport on window viewport
-    glfwSetFramebufferSizeCallback(_window, [](GLFWwindow *window, int width, int height) {
+    glfwSetFramebufferSizeCallback(window_, [](GLFWwindow *window, int width, int height) {
         auto *graphicsWindow = getGlfwGraphicsWindow(window);
 
         // Update the window size
-        glfwGetWindowSize(window, &graphicsWindow->_size.width, &graphicsWindow->_size.height);
+        glfwGetWindowSize(window, &graphicsWindow->size_.width, &graphicsWindow->size_.height);
 
         // Update the pixel ratio
-        graphicsWindow->pixelRatio_ = float(graphicsWindow->_size.width) / float(width);
+        graphicsWindow->pixelRatio_ = float(graphicsWindow->size_.width) / float(width);
 
         // Update the context viewport size
-        graphicsWindow->_context->viewport(width, height);
+        graphicsWindow->context_->viewport(width, height);
 
         // Emit a window resized event
-        WindowResizedEvent e{graphicsWindow->_size};
-        emit(e, graphicsWindow->_eventHandlers);
+        WindowResizedEvent e{graphicsWindow->size_};
+        emit(e, graphicsWindow->eventHandlers_);
     });
 
     // Handle some input
-    glfwSetKeyCallback(_window, [](GLFWwindow *window, int key, int, int action, int) {
+    glfwSetKeyCallback(window_, [](GLFWwindow *window, int key, int, int action, int) {
         input::KeyEvent e = convertKeyEvent(key, action);
-        emit(e, getGlfwGraphicsWindow(window)->_eventHandlers);
+        emit(e, getGlfwGraphicsWindow(window)->eventHandlers_);
     });
-    glfwSetMouseButtonCallback(_window, [](GLFWwindow *window, int button, int action, int) {
+    glfwSetMouseButtonCallback(window_, [](GLFWwindow *window, int button, int action, int) {
         input::MouseButtonEvent e = convertMouseButtonEvent(button, action);
-        emit(e, getGlfwGraphicsWindow(window)->_eventHandlers);
+        emit(e, getGlfwGraphicsWindow(window)->eventHandlers_);
     });
-    glfwSetCursorPosCallback(_window, [](GLFWwindow *window, double x, double y) {
+    glfwSetCursorPosCallback(window_, [](GLFWwindow *window, double x, double y) {
         input::MouseMoveEvent e{x, y};
-        emit(e, getGlfwGraphicsWindow(window)->_eventHandlers);
+        emit(e, getGlfwGraphicsWindow(window)->eventHandlers_);
     });
-    glfwSetScrollCallback(_window, [](GLFWwindow *window, double x, double y) {
+    glfwSetScrollCallback(window_, [](GLFWwindow *window, double x, double y) {
         input::MouseScrollEvent e{x, y};
-        emit(e, getGlfwGraphicsWindow(window)->_eventHandlers);
+        emit(e, getGlfwGraphicsWindow(window)->eventHandlers_);
     });
-    glfwSetCharCallback(_window, [](GLFWwindow *window, input::CharEvent::Char c) {
+    glfwSetCharCallback(window_, [](GLFWwindow *window, input::CharEvent::Char c) {
         input::CharEvent e{c};
-        emit(e, getGlfwGraphicsWindow(window)->_eventHandlers);
+        emit(e, getGlfwGraphicsWindow(window)->eventHandlers_);
     });
 
     // Make the context current for this thread
@@ -126,39 +126,39 @@ GlfwGraphicsWindow::GlfwGraphicsWindow(int width, int height, WindowType type, b
     logging::info("Using OpenGL version: {}", version);
 
     // Initialize our Context
-    _context = std::make_shared<opengl3::ContextOpenGL3>(*this);
+    context_ = std::make_shared<opengl3::ContextOpenGL3>(*this);
 
     // Determine pixel ratio
     pixelRatio_ = [&]() {
         int fbwidth, fbheight;
-        glfwGetFramebufferSize(_window, &fbwidth, &fbheight);
+        glfwGetFramebufferSize(window_, &fbwidth, &fbheight);
         return float(width) / float(fbwidth);
     }();
 
     if (type != WindowType::FullScreen) {
         // Position window in the center
         const GLFWvidmode *videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        glfwSetWindowPos(_window, (videoMode->width - width) / 2, (videoMode->height - height) / 2);
+        glfwSetWindowPos(window_, (videoMode->width - width) / 2, (videoMode->height - height) / 2);
     }
 };
 
 GlfwGraphicsWindow::~GlfwGraphicsWindow() {
     logging::debug("Closing GLFW window");
-    glfwDestroyWindow(_window);
+    glfwDestroyWindow(window_);
 };
 
 void GlfwGraphicsWindow::makeContextCurrent() const {
-    glfwMakeContextCurrent(_window);
+    glfwMakeContextCurrent(window_);
 }
 
-void GlfwGraphicsWindow::run(const std::function<void(Context &)> &_onRenderFrame) {
+void GlfwGraphicsWindow::run(const std::function<void(Context &)> &onRenderFrame_) {
     // Keep running
-    while (!glfwWindowShouldClose(_window)) {
+    while (!glfwWindowShouldClose(window_)) {
         glfwPollEvents();
 
-        _onRenderFrame(*_context);
+        onRenderFrame_(*context_);
 
-        glfwSwapBuffers(_window);
+        glfwSwapBuffers(window_);
     }
 }
 
@@ -167,7 +167,7 @@ void GlfwGraphicsWindow::run(const RenderFN &onRenderFrame, const UpdateFN &onUp
     auto lastUpdate = std::chrono::high_resolution_clock::now();
 
     // Keep running
-    while (!glfwWindowShouldClose(_window)) {
+    while (!glfwWindowShouldClose(window_)) {
         glfwPollEvents();
 
         auto now = std::chrono::high_resolution_clock::now();
@@ -178,49 +178,49 @@ void GlfwGraphicsWindow::run(const RenderFN &onRenderFrame, const UpdateFN &onUp
             onUpdateFrame(interval);
         }
 
-        onRenderFrame(*_context);
+        onRenderFrame(*context_);
 
-        glfwSwapBuffers(_window);
+        glfwSwapBuffers(window_);
     }
 }
 
 Context &GlfwGraphicsWindow::context() const {
-    return *_context;
+    return *context_;
 }
 
 void GlfwGraphicsWindow::close() {
-    glfwSetWindowShouldClose(_window, GLFW_TRUE);
+    glfwSetWindowShouldClose(window_, GLFW_TRUE);
 }
 
 input::KeyState GlfwGraphicsWindow::keyState(input::KeyCode code) const {
-    return convertKeyState(glfwGetKey(_window, convertKeyCode(code)));
+    return convertKeyState(glfwGetKey(window_, convertKeyCode(code)));
 }
 
 input::KeyState GlfwGraphicsWindow::mouseButtonState(input::MouseButtonCode code) const {
-    return convertKeyState(glfwGetMouseButton(_window, convertMouseButtonCode(code)));
+    return convertKeyState(glfwGetMouseButton(window_, convertMouseButtonCode(code)));
 }
 
 input::Position GlfwGraphicsWindow::mousePosition() const {
     input::Position pos{};
-    glfwGetCursorPos(_window, &pos.x, &pos.y);
+    glfwGetCursorPos(window_, &pos.x, &pos.y);
     return pos;
 }
 
 class EventHandlerRegistrationImpl : public core::EventHandlerRegistration {
 public:
     explicit EventHandlerRegistrationImpl(std::shared_ptr<core::EventHandlingFN> handler)
-        : _handler(std::move(handler)) {}
+        : handler_(std::move(handler)) {}
 
     ~EventHandlerRegistrationImpl() override { logging::debug("Abandoning event handler registration"); }
 
 private:
-    std::shared_ptr<core::EventHandlingFN> _handler;
+    std::shared_ptr<core::EventHandlingFN> handler_;
 };
 
 std::unique_ptr<core::EventHandlerRegistration> GlfwGraphicsWindow::registerHandler(
     const core::EventHandlingFN &handler) {
     auto sHandler = std::make_shared<core::EventHandlingFN>(handler);
-    _eventHandlers.push_back(sHandler);
+    eventHandlers_.push_back(sHandler);
     return std::make_unique<EventHandlerRegistrationImpl>(std::move(sHandler));
 }
 

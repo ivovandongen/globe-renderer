@@ -18,19 +18,19 @@ public:
 
     VertexBufferAttributeBindingsOpenGL3(
         std::initializer_list<VertexBufferAttributeBindings::AttributesCollection::value_type> vals)
-        : VertexBufferAttributeBindings(vals), _dirty{true} {}
+        : VertexBufferAttributeBindings(vals), dirty_{true} {}
 
     VertexBufferAttribute& operator[](const std::string& key) override {
-        _dirty = true;
+        dirty_ = true;
         return VertexBufferAttributeBindings::operator[](key);
     }
 
-    bool dirty() { return _dirty; }
+    bool dirty() { return dirty_; }
 
     void clean(const std::vector<ShaderVertexAttribute>&);
 
 private:
-    bool _dirty{false};
+    bool dirty_{false};
 };
 
 }  // namespace opengl3

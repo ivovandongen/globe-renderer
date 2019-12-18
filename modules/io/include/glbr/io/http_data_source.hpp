@@ -12,6 +12,5 @@ public:
     static std::unique_ptr<HttpDataSource> Create();
 };
 
-
 }  // namespace io
 }  // namespace glbr

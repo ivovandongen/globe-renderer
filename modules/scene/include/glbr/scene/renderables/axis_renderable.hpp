@@ -36,11 +36,11 @@ public:
     void render(renderer::Context& context, renderer::SceneState& sceneState) override;
 
 private:
-    glm::mat4 _model;
-    std::unique_ptr<core::geometry::Mesh> _mesh;
+    glm::mat4 model_;
+    std::unique_ptr<core::geometry::Mesh> mesh_;
 
-    std::shared_ptr<renderer::Pipeline> _pipeline;
-    std::shared_ptr<renderer::VertexArray> _vao;
+    std::shared_ptr<renderer::Pipeline> pipeline_;
+    std::shared_ptr<renderer::VertexArray> vao_;
 };
 
 }  // namespace renderables

@@ -33,9 +33,9 @@ public:
 
     void add(const std::string &key, VertexBufferAttribute attribute) override;
 
-    uint32_t id() const { return _id; }
+    uint32_t id() const { return id_; }
 
-    bool operator==(const VertexArrayOpenGL3 &other) { return _id == other._id; }
+    bool operator==(const VertexArrayOpenGL3 &other) { return id_ == other.id_; }
     bool operator!=(const VertexArrayOpenGL3 &other) { return !(*this == other); }
 
     void bind() override;
@@ -43,10 +43,10 @@ public:
     void unbind() override;
 
 private:
-    uint32_t _id{0};
-    std::shared_ptr<ContextOpenGL3> _context;
-    std::shared_ptr<IndexBufferOpenGL3> _indexBuffer;
-    VertexBufferAttributeBindingsOpenGL3 _attributes;
+    uint32_t id_{0};
+    std::shared_ptr<ContextOpenGL3> context_;
+    std::shared_ptr<IndexBufferOpenGL3> indexBuffer_;
+    VertexBufferAttributeBindingsOpenGL3 attributes_;
 };
 
 }  // namespace opengl3

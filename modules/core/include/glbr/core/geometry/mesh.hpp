@@ -23,11 +23,11 @@ public:
     using VertexAttributes = std::vector<VertexAttribute>;
 
     Mesh(PrimitiveType primitiveType, WindingOrder windingOrder)
-        : _primitiveType(primitiveType), _windingOrder(windingOrder) {}
+        : primitiveType_(primitiveType), windingOrder_(windingOrder) {}
     virtual ~Mesh() = default;
 
-    inline const PrimitiveType& primitiveType() const { return _primitiveType; }
-    inline const WindingOrder& windingOrder() const { return _windingOrder; }
+    inline const PrimitiveType& primitiveType() const { return primitiveType_; }
+    inline const WindingOrder& windingOrder() const { return windingOrder_; }
 
     virtual const VertexAttributes& vertexAttributes() const = 0;
 
@@ -40,45 +40,46 @@ public:
 
     template <class Vertex, class Index>
     static std::unique_ptr<MeshImpl<Vertex, Index>> Create(
-        std::initializer_list<VertexAttribute> attributes, PrimitiveType primitiveType = PrimitiveType::TRIANGLES,
+        std::initializer_list<VertexAttribute> attributes,
+        PrimitiveType primitiveType = PrimitiveType::TRIANGLES,
         WindingOrder windingOrder = WindingOrder::COUNTER_CLOCK_WISE) {
         return std::make_unique<MeshImpl<Vertex, Index>>(attributes, primitiveType, windingOrder);
     }
 
 private:
-    PrimitiveType _primitiveType;
-    WindingOrder _windingOrder;
+    PrimitiveType primitiveType_;
+    WindingOrder windingOrder_;
 };
 
 template <class Vertex, class Index>
 class MeshImpl : public Mesh {
 public:
     MeshImpl(std::initializer_list<VertexAttribute> attributes, PrimitiveType primitiveType, WindingOrder windingOrder)
-        : Mesh(primitiveType, windingOrder), _vertexAttributes(attributes) {
+        : Mesh(primitiveType, windingOrder), vertexAttributes_(attributes) {
         // Check that the defined attribute bindings size does not exceed  the vertex size
         assert(sizeof(Vertex) >= std::prev(attributes.end())->offset() + std::prev(attributes.end())->size());
     }
 
     ~MeshImpl() override = default;
 
-    const VertexAttributes& vertexAttributes() const override { return _vertexAttributes; }
+    const VertexAttributes& vertexAttributes() const override { return vertexAttributes_; }
 
-    void data(std::vector<Vertex>&& data) { _data = std::move(data); }
-    void indices(std::vector<Index>&& indices) { _indices = std::move(indices); };
+    void data(std::vector<Vertex>&& data) { data_ = std::move(data); }
+    void indices(std::vector<Index>&& indices) { indices_ = std::move(indices); };
 
     // MeshBase implementation
 
-    inline const void* vertexData() const override { return _data.data(); }
-    inline const size_t vertexCount() const override { return _data.size(); }
+    inline const void* vertexData() const override { return data_.data(); }
+    inline const size_t vertexCount() const override { return data_.size(); }
     inline const unsigned int vertexSize() const override { return sizeof(Vertex); }
 
-    inline const void* indexData() const override { return _indices.data(); }
-    inline const size_t indexCount() const override { return _indices.size() * sizeof(Index) / sizeof(uint32_t); }
+    inline const void* indexData() const override { return indices_.data(); }
+    inline const size_t indexCount() const override { return indices_.size() * sizeof(Index) / sizeof(uint32_t); }
 
 private:
-    VertexAttributes _vertexAttributes;
-    std::vector<Vertex> _data;
-    std::vector<Index> _indices;
+    VertexAttributes vertexAttributes_;
+    std::vector<Vertex> data_;
+    std::vector<Index> indices_;
 };
 
 }  // namespace geometry

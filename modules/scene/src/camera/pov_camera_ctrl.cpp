@@ -11,7 +11,7 @@ namespace glbr {
 namespace scene {
 
 POVCameraController::POVCameraController(renderer::Camera &camera, input::Input &input, float yaw, float pitch)
-    : _camera(camera), _input(input), _yaw(yaw), _pitch(pitch) {
+    : camera_(camera), input_(input), yaw_(yaw), pitch_(pitch) {
     updateCameraVectors();
 }
 
@@ -19,8 +19,8 @@ POVCameraController::POVCameraController(renderer::Camera &camera, input::Input 
  * Set euler angles and update camera vectors accordingly
  */
 void POVCameraController::orientation(float pitch, float yaw, bool constrainPitch) {
-    _yaw += yaw;
-    _pitch += pitch;
+    yaw_ += yaw;
+    pitch_ += pitch;
 
     if (constrainPitch) {
         std::max(-89.f, std::min(pitch, 89.f));
@@ -35,10 +35,10 @@ void POVCameraController::orientation(float pitch, float yaw, bool constrainPitc
 void POVCameraController::updateCameraVectors() {
     // Calculate the new Front vector
     glm::vec3 front;
-    front.x = cos(glm::radians(_yaw)) * cos(glm::radians(_pitch));
-    front.y = sin(glm::radians(_pitch));
-    front.z = sin(glm::radians(_yaw)) * cos(glm::radians(_pitch));
-    _camera.front(glm::normalize(front));
+    front.x = cos(glm::radians(yaw_)) * cos(glm::radians(pitch_));
+    front.y = sin(glm::radians(pitch_));
+    front.z = sin(glm::radians(yaw_)) * cos(glm::radians(pitch_));
+    camera_.front(glm::normalize(front));
 }
 
 /**
@@ -60,19 +60,19 @@ void POVCameraController::operator()(core::Event &event) {
         switch (event.keyCode()) {
             case KeyCode::KEY_LEFT:
             case KeyCode ::KEY_A:
-                _camera.move(CameraMovement::LEFT, delta);
+                camera_.move(CameraMovement::LEFT, delta);
                 return true;
             case KeyCode::KEY_RIGHT:
             case KeyCode ::KEY_D:
-                _camera.move(CameraMovement::RIGHT, delta);
+                camera_.move(CameraMovement::RIGHT, delta);
                 return true;
             case KeyCode::KEY_UP:
             case KeyCode ::KEY_W:
-                _camera.move(CameraMovement::FORWARD, delta);
+                camera_.move(CameraMovement::FORWARD, delta);
                 return true;
             case KeyCode::KEY_DOWN:
             case KeyCode ::KEY_S:
-                _camera.move(CameraMovement::BACKWARD, delta);
+                camera_.move(CameraMovement::BACKWARD, delta);
                 return true;
             default:
                 return false;
@@ -82,7 +82,7 @@ void POVCameraController::operator()(core::Event &event) {
     // Zoom on scroll
     d.dispatch<MouseScrollEvent>([&](MouseScrollEvent &event) {
         if (event.offsetY() != 0) {
-            _camera.zoomBy(event.offsetY());
+            camera_.zoomBy(event.offsetY());
             return true;
         }
         return false;
@@ -90,22 +90,22 @@ void POVCameraController::operator()(core::Event &event) {
 
     // Orient the camera with the mouse when alt is held
     d.dispatch<MouseMoveEvent>([&](MouseMoveEvent &event) {
-        if (_input.keyState(KeyCode::KEY_LEFT_ALT) != KeyState::PRESS) {
-            firstMove = true;
+        if (input_.keyState(KeyCode::KEY_LEFT_ALT) != KeyState::PRESS) {
+            firstMove_ = true;
             return false;
         }
 
-        if (firstMove) {
-            lastX = event.x();
-            lastY = event.y();
-            firstMove = false;
+        if (firstMove_) {
+            lastX_ = event.x();
+            lastY_ = event.y();
+            firstMove_ = false;
             return true;
         }
 
-        double xoffset = event.x() - lastX;
-        double yoffset = lastY - event.y();
-        lastX = event.x();
-        lastY = event.y();
+        double xoffset = event.x() - lastX_;
+        double yoffset = lastY_ - event.y();
+        lastX_ = event.x();
+        lastY_ = event.y();
 
         const float sensitivity = .1;
         orientation(yoffset * sensitivity, xoffset * sensitivity);

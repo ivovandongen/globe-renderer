@@ -9,16 +9,16 @@ namespace input {
 
 class KeyEvent : public core::EventImpl<KeyEvent> {
 public:
-    KeyEvent(KeyCode keyCode, KeyState state) : _keyCode(keyCode), _state(state) {}
+    KeyEvent(KeyCode keyCode, KeyState state) : keyCode_(keyCode), state_(state) {}
 
-    KeyCode keyCode() const { return _keyCode; }
-    KeyState state() const { return _state; }
+    KeyCode keyCode() const { return keyCode_; }
+    KeyState state() const { return state_; }
 
     std::string str() const override;
 
 private:
-    KeyCode _keyCode;
-    KeyState _state;
+    KeyCode keyCode_;
+    KeyState state_;
 };
 
 }  // namespace input

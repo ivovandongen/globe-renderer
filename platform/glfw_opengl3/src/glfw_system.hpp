@@ -13,7 +13,7 @@ namespace glfw {
 
 class GLFWSystem {
 public:
-    static std::shared_ptr<GLFWSystem> init() {
+    static std::shared_ptr<GLFWSystem> Init() {
         // TODO: thread safe initialization
         static std::weak_ptr<GLFWSystem> weak;
         auto pool = weak.lock();

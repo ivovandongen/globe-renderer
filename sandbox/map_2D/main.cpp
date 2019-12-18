@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
     SceneState sceneState(width, height, window.pixelRatio());
 
     // Set up the graphics device
-    auto& device = opengl3::DeviceOpenGL3::instance();
+    auto& device = opengl3::DeviceOpenGL3::Instance();
 
     ClearState clearState{ClearBuffers::ALL, {1, 1, 1, 1}, {false}};
 

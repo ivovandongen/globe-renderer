@@ -5,5 +5,5 @@ namespace renderer {
 
 enum class TextureWrap { CLAMP, REPEAT, MIRRORED_REPEAT };
 
-} // namespace renderer
-} // namespace glbr
+}  // namespace renderer
+}  // namespace glbr

@@ -36,7 +36,7 @@ public:
         draw(primitive, drawState, sceneState, 0);
     };
 
-    void setOnResizeListener(const ResizeFN &onResize) { _onResizeListener = onResize; };
+    void setOnResizeListener(const ResizeFN &onResize) { onResizeListener_ = onResize; };
 
     // Needs to be called from sub-classes
     virtual void viewport(int width, int height);
@@ -49,20 +49,23 @@ public:
 
     virtual std::shared_ptr<VertexArray> createVertexArray() = 0;
 
-    virtual std::unique_ptr<IndexBuffer> createIndexBuffer(IndexBufferType type, BufferHint usageHint,
+    virtual std::unique_ptr<IndexBuffer> createIndexBuffer(IndexBufferType type,
+                                                           BufferHint usageHint,
                                                            uint32_t count) const = 0;
 
     virtual std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint, int sizeInBytes) const = 0;
 
     virtual void clear(const ClearState &) = 0;
 
-    virtual void draw(core::geometry::PrimitiveType primitive, const DrawState &, const SceneState &,
+    virtual void draw(core::geometry::PrimitiveType primitive,
+                      const DrawState &,
+                      const SceneState &,
                       uint32_t offset) = 0;
 
     virtual TextureUnits &textureUnits() = 0;
 
 protected:
-    core::optional<ResizeFN> _onResizeListener;
+    core::optional<ResizeFN> onResizeListener_;
 };
 
 }  // namespace renderer

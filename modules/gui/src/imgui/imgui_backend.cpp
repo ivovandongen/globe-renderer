@@ -12,7 +12,7 @@
 namespace glbr {
 namespace imgui {
 
-std::shared_ptr<ImGuiBackend> ImGuiBackend::instance(core::EventProducer& eventProducer) {
+std::shared_ptr<ImGuiBackend> ImGuiBackend::Instance(core::EventProducer& eventProducer) {
     // TODO: thread safe initialization?
     static std::weak_ptr<ImGuiBackend> weak;
     auto pool = weak.lock();
@@ -27,7 +27,7 @@ ImGuiBackend::ImGuiBackend(core::EventProducer& eventProducer) {
     using namespace input;
 
     logging::info("Setting up ImGui backend");
-    _handlerRegistration = eventProducer.registerHandler(*this);
+    handlerRegistration_ = eventProducer.registerHandler(*this);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();

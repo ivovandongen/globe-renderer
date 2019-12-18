@@ -1,7 +1,7 @@
 #include <glbr/renderer/opengl3/context/clear_state_opengl3.hpp>
 
 #include <glbr/renderer/opengl3/errors.hpp>
-#include <glbr/renderer/opengl3/type_conversions_opengl3.hpp>
+
 #include "shared_state_updates.hpp"
 
 #include <glad/glad.h>
@@ -12,21 +12,21 @@ namespace opengl3 {
 
 ClearStateOpenGL3& ClearStateOpenGL3::operator=(const ClearState& update) {
     // Clear color
-    if (update.color != _clearState.color) {
+    if (update.color != clearState_.color) {
         GL_VERIFY(glClearColor(update.color[0], update.color[1], update.color[2], update.color[3]));
     }
 
-    apply(_clearState.scissorTest, update.scissorTest);
-    apply(_clearState.blending, update.blending);
+    apply(clearState_.scissorTest, update.scissorTest);
+    apply(clearState_.blending, update.blending);
 
-    _clearState = update;
+    clearState_ = update;
 
     return *this;
 }
 
 ClearStateOpenGL3& ClearStateOpenGL3::operator=(const RenderState& update) {
-    _clearState.scissorTest = update.scissorTest;
-    _clearState.blending = update.blending;
+    clearState_.scissorTest = update.scissorTest;
+    clearState_.blending = update.blending;
 
     return *this;
 }

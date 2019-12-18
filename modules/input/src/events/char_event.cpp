@@ -7,7 +7,7 @@ namespace input {
 
 std::string CharEvent::str() const {
     std::stringstream ss;
-    ss << EventImpl::str() << "[" << _character << "]";
+    ss << EventImpl::str() << "[" << character_ << "]";
     return ss.str();
 }
 

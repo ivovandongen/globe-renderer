@@ -14,30 +14,31 @@
 namespace glbr {
 namespace scene {
 
-OrbitingCameraController::OrbitingCameraController(renderer::Camera& camera, renderer::GraphicsWindow& window,
+OrbitingCameraController::OrbitingCameraController(renderer::Camera& camera,
+                                                   renderer::GraphicsWindow& window,
                                                    glm::vec3 target)
-    : _camera(camera), _window(window), _target(target) {
+    : camera_(camera), window_(window), target_(target) {
     // Point the camera to the target
-    _camera.front(_target - _camera.position());
+    camera_.front(target - camera.position());
 
     // Save the "home" state
-    _home = camera;
+    home_ = camera_;
 }
 
 void OrbitingCameraController::rotateBy(float x, float y) {
     // Find rotation axis
-    auto yAxis = glm::normalize(_camera.up());
-    auto xAxis = glm::normalize(_camera.right());
+    auto yAxis = glm::normalize(camera_.up());
+    auto xAxis = glm::normalize(camera_.right());
 
     // Rotate
-    _camera.position(glm::angleAxis(y, yAxis) * glm::angleAxis(x, xAxis) * _camera.position());
-    _camera.front(-_camera.position() - _target);
-    logging::info("Camera : {}", _camera.str());
+    camera_.position(glm::angleAxis(y, yAxis) * glm::angleAxis(x, xAxis) * camera_.position());
+    camera_.front(-camera_.position() - target_);
+    logging::info("Camera : {}", camera_.str());
 }
 
 void OrbitingCameraController::rotation(float x, float y) {
-    _camera.position(_home.position());
-    _camera.front(_home.front());
+    camera_.position(home_.position());
+    camera_.front(home_.front());
     rotateBy(x, y);
 }
 
@@ -83,32 +84,32 @@ void OrbitingCameraController::operator()(core::Event& event) {
 
     // Camera pan controls
     d.dispatch<MouseMoveEvent>([&](MouseMoveEvent& event) {
-        if (_window.mouseButtonState(MouseButtonCode::MOUSE_BUTTON_1) != KeyState::PRESS) {
-            firstMove = true;
+        if (window_.mouseButtonState(MouseButtonCode::MOUSE_BUTTON_1) != KeyState::PRESS) {
+            firstMove_ = true;
             return false;
         }
 
-        if (firstMove) {
-            lastX = event.x();
-            lastY = event.y();
-            firstMove = false;
+        if (firstMove_) {
+            lastX_ = event.x();
+            lastY_ = event.y();
+            firstMove_ = false;
             return true;
         }
 
-        double xoffset = event.x() - lastX;
-        double yoffset = event.y() - lastY;
-        lastX = event.x();
-        lastY = event.y();
+        double xoffset = event.x() - lastX_;
+        double yoffset = event.y() - lastY_;
+        lastX_ = event.x();
+        lastY_ = event.y();
 
-        rotateBy(-core::deg2rad(yoffset / _window.size().height * 100),
-                 -core::deg2rad(xoffset / _window.size().width * 100));
+        rotateBy(-core::deg2rad(yoffset / window_.size().height * 100),
+                 -core::deg2rad(xoffset / window_.size().width * 100));
 
         return true;
     });
 
     d.dispatch<MouseScrollEvent>([&](MouseScrollEvent& event) {
         if (event.offsetY() != 0) {
-            _camera.zoomBy(event.offsetY());
+            camera_.zoomBy(event.offsetY());
             return true;
         }
         return false;

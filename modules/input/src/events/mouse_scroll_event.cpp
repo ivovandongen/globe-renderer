@@ -7,7 +7,7 @@ namespace input {
 
 std::string MouseScrollEvent::str() const {
     std::stringstream ss;
-    ss << EventImpl::str() << "[offset x:" << _offsetX << ", offset y:" << _offsetY << "]";
+    ss << EventImpl::str() << "[offset x:" << offsetX_ << ", offset y:" << offsetY_ << "]";
     return ss.str();
 }
 

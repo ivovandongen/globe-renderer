@@ -48,26 +48,26 @@ public:
 
     void draw(core::geometry::PrimitiveType, const DrawState &, const SceneState &, uint32_t offset) override;
 
-    TextureUnits &textureUnits() override { return _textureUnits; };
+    TextureUnits &textureUnits() override { return textureUnits_; };
 
     void activeTextureUnit(const TextureUnitOpenGL3 &unit);
 
-    void set(const std::shared_ptr<VertexArrayOpenGL3> &array) { _vertexArray = array; }
+    void set(const std::shared_ptr<VertexArrayOpenGL3> &array) { vertexArray_ = array; }
 
 private:
-    const GraphicsWindow &_window;
+    const GraphicsWindow &window_;
 
     // Clear state
-    ClearStateOpenGL3 _clearState;
+    ClearStateOpenGL3 clearState_;
 
     // Per context state
     BindingState<ActiveTextureUnitOpenGL3> activeTextureUnit_;
-    TextureUnitsOpenGL3 _textureUnits;
+    TextureUnitsOpenGL3 textureUnits_;
 
     // Draw state
-    RenderStateOpenGL3 _renderState;
-    BindingState<PipelineOpenGL3> _pipeline;
-    BindingState<VertexArrayOpenGL3> _vertexArray;
+    RenderStateOpenGL3 renderState_;
+    BindingState<PipelineOpenGL3> pipeline_;
+    BindingState<VertexArrayOpenGL3> vertexArray_;
 };
 
 }  // namespace opengl3

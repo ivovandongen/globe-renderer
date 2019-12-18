@@ -19,7 +19,7 @@ public:
 
     Uniform& operator[](const std::string& key) {
         try {
-            return *_uniforms.at(key);
+            return *uniforms_.at(key);
         } catch (...) {
             logging::error("No uniform for key: {} ", key);
             throw std::runtime_error("No uniform for key: " + key);
@@ -28,7 +28,7 @@ public:
 
     Uniform& at(const std::string& key) {
         try {
-            return *_uniforms.at(key);
+            return *uniforms_.at(key);
         } catch (...) {
             logging::error("No uniform for key: {} ", key);
             throw std::runtime_error("No uniform for key: " + key);
@@ -37,23 +37,23 @@ public:
 
     const Uniform& at(const std::string& key) const {
         try {
-            return *_uniforms.at(key);
+            return *uniforms_.at(key);
         } catch (...) {
             logging::error("No uniform for key: {} ", key);
             throw std::runtime_error("No uniform for key: " + key);
         }
     }
 
-    void add(const std::string& key, std::unique_ptr<Uniform> uniform) { _uniforms[key] = std::move(uniform); }
+    void add(const std::string& key, std::unique_ptr<Uniform> uniform) { uniforms_[key] = std::move(uniform); }
 
     void apply() {
-        for (auto& entry : _uniforms) {
+        for (auto& entry : uniforms_) {
             entry.second->apply();
         }
     }
 
 private:
-    KeyedUniformCollection _uniforms;
+    KeyedUniformCollection uniforms_;
 };
 
 }  // namespace renderer

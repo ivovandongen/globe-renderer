@@ -73,29 +73,29 @@ static std::unique_ptr<Mesh> createMesh() {
 
     return mesh;
 }
-AxisRenderable::AxisRenderable(float scale, glm::vec3 position) : _model(glm::mat4(1.0f)) {
+AxisRenderable::AxisRenderable(float scale, glm::vec3 position) : model_(glm::mat4(1.0f)) {
     // Create model matrix
-    _model = glm::translate(_model, position);
-    _model = glm::scale(_model, glm::vec3(scale, scale, scale));
+    model_ = glm::translate(model_, position);
+    model_ = glm::scale(model_, glm::vec3(scale, scale, scale));
 
     // Create mesh
-    _mesh = createMesh();
+    mesh_ = createMesh();
 }
 
 void AxisRenderable::init(renderer::Context& context) {
     // Create the pipeline
-    _pipeline = context.device().createPipeline(VERTEX_SRC, FRAGMENT_SRC);
+    pipeline_ = context.device().createPipeline(VERTEX_SRC, FRAGMENT_SRC);
 
     // Create the VAO
-    _vao = context.createVertexArray(*_mesh);
+    vao_ = context.createVertexArray(*mesh_);
 }
 
 void AxisRenderable::render(renderer::Context& context, renderer::SceneState& sceneState) {
     // Set the model matrix
-    sceneState.modelMatrix(_model);
+    sceneState.modelMatrix(model_);
 
     // Draw
-    context.draw(_mesh->primitiveType(), {{}, _pipeline, _vao}, sceneState);
+    context.draw(mesh_->primitiveType(), {{}, pipeline_, vao_}, sceneState);
 }
 
 }  // namespace renderables

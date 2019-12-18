@@ -30,10 +30,9 @@ int main() {
     });
 
     // Set up the graphics device
-    auto& device = opengl3::DeviceOpenGL3::instance();
+    auto& device = opengl3::DeviceOpenGL3::Instance();
 
     ClearState clearState{ClearBuffers::ALL, {1, 1, 1, 1}, {false}};
-
 
     imgui::ImGuiLayer imguiLayer{window};
 
@@ -56,24 +55,23 @@ int main() {
     });
 
     // Add render rate window
-    imguiLayer.addRenderable(
-        [&]() {
-            static std::array<char, 10> buf;
-            ImGui::SetNextWindowPos({0, 100});
-            ImGui::SetNextWindowSize({float(width), 100});
-            auto& io = ImGui::GetIO();
-            ImGui::Begin("Render rate", nullptr, ImGuiWindowFlags_None);
-            ImGui::Text("Application render rate %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-            ImGui::InputText("string", buf.data(), buf.size());
-            ImGui::End();
-        });
+    imguiLayer.addRenderable([&]() {
+        static std::array<char, 10> buf;
+        ImGui::SetNextWindowPos({0, 100});
+        ImGui::SetNextWindowSize({float(width), 100});
+        auto& io = ImGui::GetIO();
+        ImGui::Begin("Render rate", nullptr, ImGuiWindowFlags_None);
+        ImGui::Text("Application render rate %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+        ImGui::InputText("string", buf.data(), buf.size());
+        ImGui::End();
+    });
 
     imguiLayer.init(window.context());
 
     // Add a debug event handler to see if event capturing works correctly
-    auto handlerReg = window.registerHandler([](auto &event) {
-       logging::debug("Event: {} (handled: {})", event.str(), event.handled());
-       return false;
+    auto handlerReg = window.registerHandler([](auto& event) {
+        logging::debug("Event: {} (handled: {})", event.str(), event.handled());
+        return false;
     });
 
     // Render function

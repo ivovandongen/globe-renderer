@@ -18,19 +18,19 @@ public:
 
     VertexBufferAttributeBindings() = default;
 
-    VertexBufferAttributeBindings(std::initializer_list<AttributesCollection::value_type> vals) : _attributes(vals) {}
+    VertexBufferAttributeBindings(std::initializer_list<AttributesCollection::value_type> vals) : attributes_(vals) {}
 
     virtual ~VertexBufferAttributeBindings() = default;
 
-    const_iterator begin() const { return _attributes.begin(); }
-    const_iterator end() const { return _attributes.end(); }
-    const VertexBufferAttribute& operator[](const std::string& key) const { return _attributes.at(key); }
-    const VertexBufferAttribute& at(const std::string& key) const { return _attributes.at(key); }
+    const_iterator begin() const { return attributes_.begin(); }
+    const_iterator end() const { return attributes_.end(); }
+    const VertexBufferAttribute& operator[](const std::string& key) const { return attributes_.at(key); }
+    const VertexBufferAttribute& at(const std::string& key) const { return attributes_.at(key); }
 
-    virtual AttributesCollection::mapped_type& operator[](const std::string& key) { return _attributes[key]; }
+    virtual AttributesCollection::mapped_type& operator[](const std::string& key) { return attributes_[key]; }
 
 protected:
-    AttributesCollection _attributes;
+    AttributesCollection attributes_;
 };
 
 }  // namespace renderer

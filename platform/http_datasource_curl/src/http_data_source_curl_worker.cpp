@@ -41,9 +41,9 @@ HttpDataSourceCurlWorker::HttpDataSourceCurlWorker() {
     share_ = curl_share_init();
     multi_ = curl_multi_init();
 
-    thread = std::thread([&] {
+    thread_ = std::thread([&] {
         int transfers_running;
-        while (running) {
+        while (running_) {
             activatePendingRequests();
 
             do {
@@ -62,8 +62,8 @@ HttpDataSourceCurlWorker::HttpDataSourceCurlWorker() {
                 request->onResult(message->data.result);
             };
 
-            std::unique_lock<std::mutex> lock(loopMutex);
-            if (running) {
+            std::unique_lock<std::mutex> lock(loopMutex_);
+            if (running_) {
                 // Idle while we're waiting for new jobs
                 cv_.wait(lock);
             }
@@ -74,11 +74,11 @@ HttpDataSourceCurlWorker::HttpDataSourceCurlWorker() {
 
 HttpDataSourceCurlWorker::~HttpDataSourceCurlWorker() {
     {
-        std::unique_lock<std::mutex> lock(loopMutex);
-        running = false;
+        std::unique_lock<std::mutex> lock(loopMutex_);
+        running_ = false;
     }
     cv_.notify_one();
-    thread.join();
+    thread_.join();
 
     cleanupStaleHandles();
 
@@ -204,7 +204,7 @@ void HttpRequestHandle::onResult(CURLcode curlCode) {
             };
         }
     });
-}
+};
 
 }  // namespace io
 }  // namespace glbr

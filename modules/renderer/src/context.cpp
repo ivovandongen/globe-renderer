@@ -49,8 +49,8 @@ std::shared_ptr<VertexArray> Context::createVertexArray(const core::geometry::Me
     return vertexArray;
 }
 void Context::viewport(int width, int height) {
-    if (_onResizeListener) {
-        (*_onResizeListener)(width, height);
+    if (onResizeListener_) {
+        (*onResizeListener_)(width, height);
     }
 }
 

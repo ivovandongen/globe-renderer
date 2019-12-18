@@ -13,7 +13,7 @@ public:
 
     ~IndexBufferOpenGL3() override = default;
 
-    IndexBufferType type() override { return _type; }
+    IndexBufferType type() override { return type_; }
 
     void bind() override { BufferOpenGL3::bind(); }
 
@@ -21,11 +21,11 @@ public:
 
     void upload(const void* data, uint32_t count) override;
 
-    uint32_t count() const override { return _count; }
+    uint32_t count() const override { return count_; }
 
 private:
-    uint32_t _count;
-    IndexBufferType _type;
+    uint32_t count_;
+    IndexBufferType type_;
 };
 
 }  // namespace opengl3

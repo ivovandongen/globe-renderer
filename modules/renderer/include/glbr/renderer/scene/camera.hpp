@@ -17,14 +17,14 @@ public:
 
     void move(CameraMovement, float delta);
 
-    inline void zoom(float zoom) { _zoom = std::max(zoom, 0.f); }
+    inline void zoom(float zoom) { zoom_ = std::max(zoom, 0.f); }
 
-    inline void zoomBy(float offset) { zoom(_zoom + offset); }
+    inline void zoomBy(float offset) { zoom(zoom_ + offset); }
 
-    inline void position(const glm::vec3& position) { _position = position; }
+    inline void position(const glm::vec3& position) { position_ = position; }
 
     inline void front(const glm::vec3& front) {
-        _front = glm::normalize(front);
+        front_ = glm::normalize(front);
         updateDerivedVectors();
     }
 
@@ -32,23 +32,23 @@ public:
 
     glm::mat4 viewMatrix() const;
 
-    inline float zoom() const { return _zoom; }
+    inline float zoom() const { return zoom_; }
 
-    inline const glm::vec3& position() const { return _position; }
+    inline const glm::vec3& position() const { return position_; }
 
-    inline const glm::vec3& front() const { return _front; }
+    inline const glm::vec3& front() const { return front_; }
 
-    inline const glm::vec3& right() const { return _right; }
+    inline const glm::vec3& right() const { return right_; }
 
-    inline const glm::vec3& up() const { return _up; }
+    inline const glm::vec3& up() const { return up_; }
 
     inline std::string str() const {
         std::stringstream ss;
         ss << "camera[";
-        ss << "position: (" << _position.x << ", " << _position.y << ", " << _position.z << ")";
-        ss << " front: (" << _front.x << ", " << _front.y << ", " << _front.z << ")";
-        ss << " up: (" << _up.x << ", " << _up.y << ", " << _up.z << ")";
-        ss << " right: (" << _right.x << ", " << _right.y << ", " << _right.z << ")";
+        ss << "position: (" << position_.x << ", " << position_.y << ", " << position_.z << ")";
+        ss << " front: (" << front_.x << ", " << front_.y << ", " << front_.z << ")";
+        ss << " up: (" << up_.x << ", " << up_.y << ", " << up_.z << ")";
+        ss << " right: (" << right_.x << ", " << right_.y << ", " << right_.z << ")";
         ss << "]";
         return ss.str();
     }
@@ -58,16 +58,16 @@ private:
 
 private:
     // Camera Attributes
-    glm::vec3 _position;
-    glm::vec3 _front;
-    glm::vec3 _up;
-    glm::vec3 _right;
+    glm::vec3 position_;
+    glm::vec3 front_;
+    glm::vec3 up_;
+    glm::vec3 right_;
 
     // Reference for cross product calculation
-    glm::vec3 _worldUp;
+    glm::vec3 worldUp_;
 
     // Camera options
-    float _zoom{45.0f};
+    float zoom_{45.0f};
 };
 
 }  // namespace renderer

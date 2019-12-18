@@ -7,16 +7,16 @@ namespace input {
 
 class MouseMoveEvent : public core::EventImpl<MouseMoveEvent> {
 public:
-    MouseMoveEvent(double x, double y) : _x(x), _y(y) {}
+    MouseMoveEvent(double x, double y) : x_(x), y_(y) {}
 
-    double x() const { return _x; }
-    double y() const { return _y; }
+    double x() const { return x_; }
+    double y() const { return y_; }
 
     std::string str() const override;
 
 private:
-    double _x;
-    double _y;
+    double x_;
+    double y_;
 };
 
 }  // namespace input

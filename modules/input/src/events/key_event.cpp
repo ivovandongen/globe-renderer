@@ -7,7 +7,7 @@ namespace input {
 
 std::string KeyEvent::str() const {
     std::stringstream ss;
-    ss << EventImpl::str() << "[" << _keyCode << ": " << _state << "]";
+    ss << EventImpl::str() << "[" << keyCode_ << ": " << state_ << "]";
     return ss.str();
 }
 

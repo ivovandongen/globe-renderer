@@ -44,7 +44,7 @@ int main() {
     glfw::GlfwGraphicsWindow window{width, height};
 
     // Set up the graphics device
-    auto &device = opengl3::DeviceOpenGL3::instance();
+    auto &device = opengl3::DeviceOpenGL3::Instance();
 
     // Set up scene state
     SceneState sceneState(width, height, window.pixelRatio());

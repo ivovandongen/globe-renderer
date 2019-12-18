@@ -8,21 +8,21 @@ namespace renderer {
 class Texture2DDescription {
 public:
     Texture2DDescription(int width, int height, TextureFormat format, bool generateMipmaps)
-        : _width(width), _height(height), _format(format), _generateMipmaps(generateMipmaps) {}
+        : width_(width), height_(height), format_(format), generateMipmaps_(generateMipmaps) {}
 
-    int width() const { return _width; }
+    int width() const { return width_; }
 
-    int height() const { return _height; }
+    int height() const { return height_; }
 
-    TextureFormat format() const { return _format; }
+    TextureFormat format() const { return format_; }
 
-    bool generateMipmaps() const { return _generateMipmaps; }
+    bool generateMipmaps() const { return generateMipmaps_; }
 
 private:
-    int _width;
-    int _height;
-    TextureFormat _format;
-    bool _generateMipmaps;
+    int width_;
+    int height_;
+    TextureFormat format_;
+    bool generateMipmaps_;
 };
 
 }  // namespace renderer

@@ -16,19 +16,19 @@ public:
 
     ~Image() = default;
 
-    operator bool() const { return bool(_data); }
+    operator bool() const { return bool(data_); }
 
-    const Data* data() const { return _data.get(); }
+    const Data* data() const { return data_.get(); }
 
-    int width() const { return _width; }
+    int width() const { return width_; }
 
-    int height() const { return _height; }
+    int height() const { return height_; }
 
-    int channels() const { return _channels; }
+    int channels() const { return channels_; }
 
 private:
-    int _width{0}, _height{0}, _channels{0};
-    std::shared_ptr<Data> _data;
+    int width_{0}, height_{0}, channels_{0};
+    std::shared_ptr<Data> data_;
 };
 
 }  // namespace core

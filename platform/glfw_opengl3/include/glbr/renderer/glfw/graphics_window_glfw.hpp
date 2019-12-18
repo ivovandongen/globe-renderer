@@ -24,11 +24,11 @@ public:
 
     void makeContextCurrent() const override;
 
-    core::Size2D<int> size() const override { return _size; }
+    core::Size2D<int> size() const override { return size_; }
 
     float pixelRatio() const override { return pixelRatio_; }
 
-    void run(const RenderFN &_onRenderFrame) override;
+    void run(const RenderFN &onRenderFrame) override;
 
     void run(const RenderFN &onRenderFrame, const UpdateFN &onUpdateFrame, double updateRate) override;
 
@@ -43,11 +43,11 @@ public:
     void close() override;
 
 private:
-    std::shared_ptr<GLFWSystem> _system;
-    GLFWwindow *_window;
-    std::shared_ptr<opengl3::ContextOpenGL3> _context;
-    std::vector<std::weak_ptr<core::EventHandlingFN>> _eventHandlers;
-    core::Size2D<int> _size;
+    std::shared_ptr<GLFWSystem> system_;
+    GLFWwindow *window_;
+    std::shared_ptr<opengl3::ContextOpenGL3> context_;
+    std::vector<std::weak_ptr<core::EventHandlingFN>> eventHandlers_;
+    core::Size2D<int> size_;
     float pixelRatio_ = 1;
 };
 

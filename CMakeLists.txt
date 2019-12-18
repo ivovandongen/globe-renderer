@@ -16,6 +16,9 @@ option(GIT_SUBMODULE "Check submodules during build" ON)
 # CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
+# Better IDE integration
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Load modules
 include(${CMAKE_MODULE_PATH}/git.cmake)
 include(${CMAKE_MODULE_PATH}/include_vendor_pkg.cmake)
@@ -51,9 +54,11 @@ endif()
 
 # Clang format
 
-file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.hpp)
-file(GLOB_RECURSE TEST_FILES src/*.cpp src/*.hpp)
-set(ALL_SOURCES ${SRC_FILES} ${TEST_FILES})
+file(GLOB_RECURSE MODULES_FILES modules/*.cpp modules/*.hpp)
+file(GLOB_RECURSE PLATFORM_FILES platform/*.cpp platform/*.hpp)
+file(GLOB_RECURSE SANDBOX_FILES sandbox/*.cpp sandbox/*.hpp)
+file(GLOB_RECURSE TEST_FILES test/*.cpp test/*.hpp)
+set(ALL_SOURCES ${MODULES_FILES} ${PLATFORM_FILES} ${SANDBOX_FILES} ${TEST_FILES})
 
 find_program(CLANG_FORMAT NAMES "clang-format" DOC "Path to clang-format executable")
 if (NOT CLANG_FORMAT)
@@ -77,6 +82,11 @@ if (NOT CLANG_TIDY)
 else ()
     message(STATUS "clang-tidy found: ${CLANG_TIDY}")
     set(DO_CLANG_TIDY "${CLANG_TIDY}" "-fix;-fix-errors")
+    add_custom_target(
+            clang-tidy
+            COMMAND ${CLANG_TIDY} --fix --fix-errors
+            ${ALL_SOURCES}
+    )
 endif ()
 
 # Modules

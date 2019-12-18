@@ -16,36 +16,36 @@ namespace renderer {
 
 class Uniform {
 public:
-    struct NOT_SET {
-        bool operator==(const NOT_SET&) const { return true; }
-        bool operator!=(const NOT_SET&) const { return false; }
+    struct NotSet {
+        bool operator==(const NotSet&) const { return true; }
+        bool operator!=(const NotSet&) const { return false; }
     };
-    using Value = core::variant<NOT_SET, bool, unsigned int, int, float, glm::vec2, glm::vec3, glm::vec4, glm::mat4>;
+    using Value = core::variant<NotSet, bool, unsigned int, int, float, glm::vec2, glm::vec3, glm::vec4, glm::mat4>;
 
 public:
-    explicit Uniform(std::string name) : _name(std::move(name)) {}
+    explicit Uniform(std::string name) : name_(std::move(name)) {}
 
     virtual ~Uniform() = default;
 
-    const Value& value() const { return _value; }
+    const Value& value() const { return value_; }
 
     Uniform& operator=(const Value& value) {
-        if (value != _value) {
-            _dirty = true;
-            _value = value;
+        if (value != value_) {
+            dirty_ = true;
+            value_ = value;
         }
 
         return *this;
     }
 
     void apply() {
-        if (_dirty) {
-            if (!_value.is<NOT_SET>()) {
-                logging::debug("Setting uniform {}", _name);
-                doApply(_value);
-                _dirty = false;
+        if (dirty_) {
+            if (!value_.is<NotSet>()) {
+                logging::debug("Setting uniform {}", name_);
+                doApply(value_);
+                dirty_ = false;
             } else {
-                logging::error("Uniform {} has no value", _name);
+                logging::error("Uniform {} has no value", name_);
             }
         }
     }
@@ -54,9 +54,9 @@ protected:
     virtual void doApply(const Value& value) = 0;
 
 private:
-    std::string _name;
-    Value _value;
-    bool _dirty{true};
+    std::string name_;
+    Value value_;
+    bool dirty_{true};
 };
 
 }  // namespace renderer

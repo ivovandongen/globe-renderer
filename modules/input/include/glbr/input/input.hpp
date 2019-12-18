@@ -25,7 +25,6 @@ public:
     virtual Position mousePosition() const = 0;
 };
 
-
 // Operators
 inline bool operator==(const Position& lhs, const Position& rhs) {
     return lhs.x == rhs.x && lhs.y == rhs.y;

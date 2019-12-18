@@ -10,14 +10,14 @@ namespace input {
 class CharEvent : public core::EventImpl<CharEvent> {
 public:
     using Char = unsigned int;
-    explicit CharEvent(Char character) : _character(character) {}
+    explicit CharEvent(Char character) : character_(character) {}
 
-    Char character() const { return _character; }
+    Char character() const { return character_; }
 
     std::string str() const override;
 
 private:
-    Char _character;
+    Char character_;
 };
 
 }  // namespace input

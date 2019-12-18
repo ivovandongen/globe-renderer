@@ -8,7 +8,7 @@ namespace opengl3 {
 
 class UniformOpenGL3 : public Uniform {
 public:
-    UniformOpenGL3(int location, std::string name /**TODO: type**/) : Uniform(std::move(name)), _location(location) {}
+    UniformOpenGL3(int location, std::string name /**TODO: type**/) : Uniform(std::move(name)), location_(location) {}
 
     ~UniformOpenGL3() override = default;
 
@@ -16,7 +16,7 @@ protected:
     void doApply(const Value& value) override;
 
 private:
-    int _location;
+    int location_;
 };
 
 }  // namespace opengl3

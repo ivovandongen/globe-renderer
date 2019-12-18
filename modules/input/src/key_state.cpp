@@ -19,4 +19,4 @@ std::ostream& operator<<(std::ostream& os, const KeyState& action) {
 }
 
 }  // namespace input
-} // namespace glbr
+}  // namespace glbr

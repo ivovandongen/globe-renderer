@@ -35,7 +35,7 @@ private:
     std::mutex staleHandlesMutex_;
     std::queue<HttpRequestHandle *> staleHandlesPool_;
 
-    std::mutex loopMutex;
+    std::mutex loopMutex_;
     std::condition_variable cv_;
 
 private:
@@ -46,8 +46,8 @@ private:
     CURLSH *share_;
     CURLM *multi_;
 
-    std::atomic_bool running{true};
-    std::thread thread;
+    std::atomic_bool running_{true};
+    std::thread thread_;
 };
 
 class HttpRequestHandle : public std::enable_shared_from_this<HttpRequestHandle> {

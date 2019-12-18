@@ -7,16 +7,16 @@ namespace input {
 
 class MouseScrollEvent : public core::EventImpl<MouseScrollEvent> {
 public:
-    MouseScrollEvent(double offsetX, double offsetY) : _offsetX(offsetX), _offsetY(offsetY) {}
+    MouseScrollEvent(double offsetX, double offsetY) : offsetX_(offsetX), offsetY_(offsetY) {}
 
-    double offsetX() const { return _offsetX; }
-    double offsetY() const { return _offsetY; }
+    double offsetX() const { return offsetX_; }
+    double offsetY() const { return offsetY_; }
 
     std::string str() const override;
 
 private:
-    double _offsetX;
-    double _offsetY;
+    double offsetX_;
+    double offsetY_;
 };
 
 }  // namespace input

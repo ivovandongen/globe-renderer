@@ -26,12 +26,13 @@ namespace renderer {
 namespace opengl3 {
 
 void VertexBufferAttributeBindingsOpenGL3::clean(const std::vector<ShaderVertexAttribute>& shaderAttributes) {
-    if (_dirty) {
-        for (auto& binding : _attributes) {
+    if (dirty_) {
+        for (auto& binding : attributes_) {
             auto& attrib = binding.second;
             auto type = convert(attrib.type());
-            auto location = std::find_if(std::cbegin(shaderAttributes), std::cend(shaderAttributes),
-                                         [&](auto& val) { return val.name() == binding.first; });
+            auto location = std::find_if(std::cbegin(shaderAttributes), std::cend(shaderAttributes), [&](auto& val) {
+                return val.name() == binding.first;
+            });
 
             if (location == std::end(shaderAttributes)) {
                 logging::error("No shader vertex attribute found for key: {}", binding.first);
@@ -44,14 +45,23 @@ void VertexBufferAttributeBindingsOpenGL3::clean(const std::vector<ShaderVertexA
             logging::debug(
                 "Binding vertex attribute {} at position {} (components: {}, type: {}, normalize: {}, stride: {}, "
                 "offset: {})",
-                binding.first, location->location(), attrib.components(), type, attrib.normalize(), attrib.stride(),
+                binding.first,
+                location->location(),
+                attrib.components(),
+                type,
+                attrib.normalize(),
+                attrib.stride(),
                 attrib.offset());
 
-            GL_VERIFY(glVertexAttribPointer(location->location(), attrib.components(), type, attrib.normalize(),
-                                            attrib.stride(), reinterpret_cast<void*>(attrib.offset())));
+            GL_VERIFY(glVertexAttribPointer(location->location(),
+                                            attrib.components(),
+                                            type,
+                                            attrib.normalize(),
+                                            attrib.stride(),
+                                            reinterpret_cast<void*>(attrib.offset())));
             GL_VERIFY(glEnableVertexAttribArray(location->location()));
         }
-        _dirty = false;
+        dirty_ = false;
     }
 }
 }  // namespace opengl3

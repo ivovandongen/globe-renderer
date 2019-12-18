@@ -9,7 +9,7 @@ namespace {
 struct ValueApplyVisitor {
     int location;
 
-    void operator()(const glbr::renderer::Uniform::NOT_SET& value) {
+    void operator()(const glbr::renderer::Uniform::NotSet& value) {
         // NOOP, no value set
     }
 
@@ -34,7 +34,7 @@ namespace renderer {
 namespace opengl3 {
 
 void UniformOpenGL3::doApply(const Value& value) {
-    core::apply_visitor(ValueApplyVisitor{_location}, value);
+    core::apply_visitor(ValueApplyVisitor{location_}, value);
 }
 
 }  // namespace opengl3

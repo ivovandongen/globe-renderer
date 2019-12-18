@@ -14,21 +14,21 @@ TextureUnitsOpenGL3::TextureUnitsOpenGL3() {
     GL_VERIFY(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texture_units));
     logging::debug("Preparing {} texture units", texture_units);
 
-    _units.reserve(texture_units);
+    units_.reserve(texture_units);
     for (int i = 0; i < texture_units; i++) {
-        _units.emplace_back(i);
+        units_.emplace_back(i);
     }
 };
 
 TextureUnitsOpenGL3::~TextureUnitsOpenGL3() = default;
 
 TextureUnit& TextureUnitsOpenGL3::operator[](int i) {
-    assert(i < _units.size());
-    return _units[i];
+    assert(i < units_.size());
+    return units_[i];
 }
 
 void TextureUnitsOpenGL3::clean(ContextOpenGL3& context) {
-    for (auto& unit : _units) {
+    for (auto& unit : units_) {
         unit.clean(context);
     }
 }

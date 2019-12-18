@@ -7,5 +7,14 @@ AllowShortFunctionsOnASingleLine: Inline
 ColumnLimit: 120
 BinPackArguments: false
 BinPackParameters: false
+IncludeBlocks: Preserve
+SortIncludes: true
+IncludeCategories:
+  - Regex:           '^<.*\.h>'
+    Priority:        1
+  - Regex:           '^<.*'
+    Priority:        3
+  - Regex:           '.*'
+    Priority:        2
 ...
 

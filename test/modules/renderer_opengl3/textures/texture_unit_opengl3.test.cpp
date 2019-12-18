@@ -36,7 +36,7 @@ static void mockGL() {
     glDeleteTextures = [](GLsizei count, const GLuint *textures) {};
     glSamplerParameteri = [](GLuint sampler, GLenum pname, GLint param) {};
     glDeleteSamplers = [](GLsizei count, const GLuint *samplers) {};
-    glGetIntegerv= [](GLenum pname, GLint* data) {
+    glGetIntegerv = [](GLenum pname, GLint *data) {
         switch (pname) {
             case GL_MAX_TEXTURE_IMAGE_UNITS:
                 *data = 16u;

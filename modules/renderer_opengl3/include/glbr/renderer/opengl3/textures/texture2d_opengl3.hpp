@@ -20,13 +20,13 @@ public:
 
     void upload(const void *data) const override;
 
-    bool operator==(const Texture2DOpenGL3 &other) const { return _id == other._id; }
-    bool operator!=(const Texture2DOpenGL3 &other) const { return _id != other._id; }
+    bool operator==(const Texture2DOpenGL3 &other) const { return id_ == other.id_; }
+    bool operator!=(const Texture2DOpenGL3 &other) const { return id_ != other.id_; }
 
 private:
-    GLuint _id{};
-    GLenum _target;
-    Texture2DDescription _description;
+    GLuint id_{};
+    GLenum target_;
+    Texture2DDescription description_;
     std::shared_ptr<const core::Image> image_;
 };
 

@@ -22,17 +22,17 @@ public:
 
     void bind() const override;
 
-    void clean(const Context&, const DrawState&, const SceneState&);
+    void clean(const Context &, const DrawState &, const SceneState &);
 
-    const VertexAttributeBindings &vertexAttributeBindings() const override { return _vertexAttributeBindings; }
+    const VertexAttributeBindings &vertexAttributeBindings() const override { return vertexAttributeBindings_; }
 
-    const Uniforms &uniforms() const override { return _uniforms; }
+    const Uniforms &uniforms() const override { return uniforms_; }
 
-    Uniforms &uniforms() override { return _uniforms; }
+    Uniforms &uniforms() override { return uniforms_; }
 
-    GLuint id() const { return _id; }
+    GLuint id() const { return id_; }
 
-    bool operator==(const PipelineOpenGL3 &other) { return _id == other._id; }
+    bool operator==(const PipelineOpenGL3 &other) { return id_ == other.id_; }
     bool operator!=(const PipelineOpenGL3 &other) { return !(*this == other); }
 
 private:
@@ -40,10 +40,10 @@ private:
     void loadUniforms();
 
 private:
-    GLuint _id;
-    VertexAttributeBindings _vertexAttributeBindings;
-    Uniforms _uniforms;
-    std::vector<DrawAutoUniform> _drawAutoUniforms;
+    GLuint id_;
+    VertexAttributeBindings vertexAttributeBindings_;
+    Uniforms uniforms_;
+    std::vector<DrawAutoUniform> drawAutoUniforms_;
 };
 
 }  // namespace opengl3

@@ -64,30 +64,30 @@ void ImGuiLayer::renderDrawData(Context& context, const SceneState& sceneState, 
         {(R + L) / (L - R), (T + B) / (B - T), 0.0f, 1.0f},
     };
 
-    _pipeline->uniforms()["ProjMtx"] = orthoProjection;
+    pipeline_->uniforms()["ProjMtx"] = orthoProjection;
 
     // Setup texture unit
-    context.textureUnits()[0].sampler(_fontsTextureSampler);
-    context.textureUnits()[0].texture(_fontsTexture);
-    _pipeline->uniforms()["Texture"] = 0;
+    context.textureUnits()[0].sampler(fontsTextureSampler_);
+    context.textureUnits()[0].texture(fontsTexture_);
+    pipeline_->uniforms()["Texture"] = 0;
 
     // Will project scissor/clipping rectangles into framebuffer space
     ImVec2 clipOff = drawData->DisplayPos;          // (0,0) unless using multi-viewports
     ImVec2 clipScale = drawData->FramebufferScale;  // (1,1) unless using retina display which are often (2,2)
 
     // Bind the vertex array
-    _vertexArray->bind();
+    vertexArray_->bind();
 
     // TODO: this should not be necessary, if we did not postpone attribute binding
-    _vertexBuffer->bind();
+    vertexBuffer_->bind();
 
     // Render command lists
     for (int n = 0; n < drawData->CmdListsCount; n++) {
         const ImDrawList* cmdList = drawData->CmdLists[n];
 
         // Upload vertex/index buffers
-        _vertexBuffer->upload(cmdList->VtxBuffer.Data, cmdList->VtxBuffer.Size * sizeof(ImDrawVert));
-        _vertexArray->indexBuffer()->upload(cmdList->IdxBuffer.Data, cmdList->IdxBuffer.Size);
+        vertexBuffer_->upload(cmdList->VtxBuffer.Data, cmdList->VtxBuffer.Size * sizeof(ImDrawVert));
+        vertexArray_->indexBuffer()->upload(cmdList->IdxBuffer.Data, cmdList->IdxBuffer.Size);
 
         for (int cmd_i = 0; cmd_i < cmdList->CmdBuffer.Size; cmd_i++) {
             const ImDrawCmd* pcmd = &cmdList->CmdBuffer[cmd_i];
@@ -112,11 +112,13 @@ void ImGuiLayer::renderDrawData(Context& context, const SceneState& sceneState, 
                 if (clipRect.x < fbWidth && clipRect.y < fbHeight && clipRect.width >= 0.0f &&
                     clipRect.height >= 0.0f) {
                     // Apply scissor/clipping rectangle
-                    _renderState.scissorTest.rectangle = clipRect;
+                    renderState_.scissorTest.rectangle = clipRect;
 
-                    DrawState drawState{_renderState, _pipeline, _vertexArray};
+                    DrawState drawState{renderState_, pipeline_, vertexArray_};
 
-                    context.draw(core::geometry::PrimitiveType::TRIANGLES, drawState, sceneState,
+                    context.draw(core::geometry::PrimitiveType::TRIANGLES,
+                                 drawState,
+                                 sceneState,
                                  pcmd->IdxOffset * sizeof(ImDrawIdx));
                 }
             }
@@ -144,48 +146,54 @@ static std::shared_ptr<Texture2D> createFontsTexture(const Context& context) {
 }
 
 ImGuiLayer::ImGuiLayer(core::EventProducer& producer)
-    : _backend(ImGuiBackend::instance(producer)){
+    : backend_(ImGuiBackend::Instance(producer)){
 
       };
 
 void ImGuiLayer::init(Context& context) {
-    _pipeline = context.device().createPipeline(VERTEX_SRC, FRAGMENT_SRC);
+    pipeline_ = context.device().createPipeline(VERTEX_SRC, FRAGMENT_SRC);
 
-    _fontsTexture = createFontsTexture(context);
-    _fontsTextureSampler = context.device().createTextureSampler(
+    fontsTexture_ = createFontsTexture(context);
+    fontsTextureSampler_ = context.device().createTextureSampler(
         TextureMinificationFilter::LINEAR, TextureMagnificationFilter::LINEAR, TextureWrap::CLAMP, TextureWrap::CLAMP);
-    _fontsTextureSampler->bind(0);
+    fontsTextureSampler_->bind(0);
 
-    _vertexArray = context.createVertexArray();
-    _vertexArray->bind();
-    _vertexArray->indexBuffer(context.createIndexBuffer(IndexBufferType::U_SHORT, BufferHint::StreamDraw));
-    _vertexArray->indexBuffer()->bind();
-    _vertexBuffer = context.createVertexBuffer(BufferHint::StreamDraw);
-    _vertexBuffer->bind();
+    vertexArray_ = context.createVertexArray();
+    vertexArray_->bind();
+    vertexArray_->indexBuffer(context.createIndexBuffer(IndexBufferType::U_SHORT, BufferHint::StreamDraw));
+    vertexArray_->indexBuffer()->bind();
+    vertexBuffer_ = context.createVertexBuffer(BufferHint::StreamDraw);
+    vertexBuffer_->bind();
 
     // Bind vertex/index buffers and setup attributes for ImDrawVert
-    _vertexArray->add("Position", {_vertexBuffer, VertexBufferAttribute::Type::Float, 2, false, sizeof(ImDrawVert), 0});
-    _vertexArray->add("UV", {_vertexBuffer, VertexBufferAttribute::Type::Float, 2, false, sizeof(ImDrawVert),
-                             offsetof(ImDrawVert, uv)});
-    _vertexArray->add("Color", {_vertexBuffer, VertexBufferAttribute::Type::UnsignedByte, 4, true, sizeof(ImDrawVert),
-                                offsetof(ImDrawVert, col)});
-    _vertexArray->unbind();
+    vertexArray_->add("Position", {vertexBuffer_, VertexBufferAttribute::Type::Float, 2, false, sizeof(ImDrawVert), 0});
+    vertexArray_->add(
+        "UV",
+        {vertexBuffer_, VertexBufferAttribute::Type::Float, 2, false, sizeof(ImDrawVert), offsetof(ImDrawVert, uv)});
+    vertexArray_->add("Color",
+                      {vertexBuffer_,
+                       VertexBufferAttribute::Type::UnsignedByte,
+                       4,
+                       true,
+                       sizeof(ImDrawVert),
+                       offsetof(ImDrawVert, col)});
+    vertexArray_->unbind();
 
-    _renderState.blending.enabled = true;
-    _renderState.blending.equation(BlendEquation::ADD);
-    _renderState.blending.factor(SourceBlendingFactor::SOURCE_ALPHA);
-    _renderState.blending.factor(DestinationBlendingFactor::ONE_MINUS_SOURCE_ALPHA);
-    _renderState.faceCulling.enabled = false;
-    _renderState.depthTest.enabled = false;
-    _renderState.scissorTest.enabled = true;
-    _renderState.rasterizationMode = RasterizationMode::FILL;
+    renderState_.blending.enabled = true;
+    renderState_.blending.equation(BlendEquation::ADD);
+    renderState_.blending.factor(SourceBlendingFactor::SOURCE_ALPHA);
+    renderState_.blending.factor(DestinationBlendingFactor::ONE_MINUS_SOURCE_ALPHA);
+    renderState_.faceCulling.enabled = false;
+    renderState_.depthTest.enabled = false;
+    renderState_.scissorTest.enabled = true;
+    renderState_.rasterizationMode = RasterizationMode::FILL;
 }
 
 // Keep track of frame rate
 static std::chrono::steady_clock::time_point lastRender;
 
 void ImGuiLayer::render(Context& context, SceneState& sceneState) {
-    assert(_pipeline);
+    assert(pipeline_);
 
     auto now = std::chrono::high_resolution_clock::now();
     if (!lastRender.time_since_epoch().count()) {
@@ -207,7 +215,7 @@ void ImGuiLayer::render(Context& context, SceneState& sceneState) {
 
     ImGui::NewFrame();
 
-    for (auto& renderable : _renderables) {
+    for (auto& renderable : renderables_) {
         renderable();
     }
 

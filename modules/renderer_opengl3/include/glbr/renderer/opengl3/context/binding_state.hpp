@@ -16,19 +16,19 @@ template <class T>
 class BindingState {
 public:
     BindingState& operator=(const std::shared_ptr<T>& val) {
-        if ((!current && !val) || (!current || !val || *current != *val)) {
+        if ((!current_ && !val) || (!current_ || !val || *current_ != *val)) {
             BindingOp<T>::Apply(val);
-            current = val;
+            current_ = val;
         }
 
         return *this;
     }
 
-    T& operator*() { return *current; }
-    T* operator->() { return current.get(); }
+    T& operator*() { return *current_; }
+    T* operator->() { return current_.get(); }
 
 private:
-    std::shared_ptr<T> current;
+    std::shared_ptr<T> current_;
 };
 
 }  // namespace opengl3

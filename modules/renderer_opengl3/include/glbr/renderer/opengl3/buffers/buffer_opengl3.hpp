@@ -19,25 +19,25 @@ public:
 
     virtual ~BufferOpenGL3();
 
-    inline void bind() const { GL_VERIFY(glBindBuffer(_target, _id)); }
+    inline void bind() const { GL_VERIFY(glBindBuffer(target_, id_)); }
 
     inline void upload(const void* data) {
-        assert(_size > 0);
-        GL_VERIFY(glBufferData(_target, _size, data, _usage));
+        assert(size_ > 0);
+        GL_VERIFY(glBufferData(target_, size_, data, usage_));
     }
 
     inline void upload(const void* data, uint32_t size) {
-        _size = size;
+        size_ = size;
         upload(data);
     }
 
-    inline unsigned int size() { return _size; }
+    inline unsigned int size() { return size_; }
 
 private:
-    GLuint _id{0};
-    GLenum _target;
-    GLenum _usage;
-    unsigned int _size;
+    GLuint id_{0};
+    GLenum target_;
+    GLenum usage_;
+    unsigned int size_;
 };
 
 }  // namespace opengl3

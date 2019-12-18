@@ -16,7 +16,7 @@ public:
     ClearStateOpenGL3& operator=(const RenderState& update);
 
 private:
-    ClearState _clearState;
+    ClearState clearState_;
 };
 
 }  // namespace opengl3

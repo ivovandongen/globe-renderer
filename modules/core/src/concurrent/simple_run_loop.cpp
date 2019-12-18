@@ -51,8 +51,8 @@ void SimpleRunLoop::postDelayed(RunLoop::WorkTask&& task, milliseconds delay) {
         std::unique_lock<std::mutex> lock(mutex_);
         scheduledTasks_.insert({alarmTime, std::move(task)});
 
-        if (nextAlarm > alarmTime) {
-            nextAlarm = alarmTime;
+        if (nextAlarm_ > alarmTime) {
+            nextAlarm_ = alarmTime;
         }
     }
 
@@ -64,12 +64,12 @@ void SimpleRunLoop::run() {
     while (running_) {
         std::unique_lock<std::mutex> lock(mutex_);
         auto pred = [this] {
-            return !running_ || !tasks_.empty() || (!scheduledTasks_.empty() && nextAlarm <= steady_clock::now());
+            return !running_ || !tasks_.empty() || (!scheduledTasks_.empty() && nextAlarm_ <= steady_clock::now());
         };
         if (scheduledTasks_.empty()) {
             cv_.wait(lock, pred);
         } else {
-            cv_.wait_until(lock, nextAlarm, pred);
+            cv_.wait_until(lock, nextAlarm_, pred);
         }
 
         if (!running_) {
@@ -127,7 +127,7 @@ void SimpleRunLoop::processScheduledTasks(std::unique_lock<std::mutex>& lock) {
         }
 
         // Make sure to update the next alarm time
-        nextAlarm = scheduledTasks_.empty() ? steady_clock::time_point::max() : std::begin(scheduledTasks_)->timePoint;
+        nextAlarm_ = scheduledTasks_.empty() ? steady_clock::time_point::max() : std::begin(scheduledTasks_)->timePoint;
     }
 }
 

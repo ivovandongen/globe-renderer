@@ -14,35 +14,38 @@ namespace renderer {
 namespace opengl3 {
 
 ContextOpenGL3::ContextOpenGL3(const GraphicsWindow &window)
-    : _window(window),
-      _clearState(),
-      _renderState(){
+    : window_(window),
+      clearState_(),
+      renderState_(){
 
       };
 
 void ContextOpenGL3::makeCurrent() const {
-    _window.makeContextCurrent();
+    window_.makeContextCurrent();
 }
 
-void ContextOpenGL3::draw(core::geometry::PrimitiveType primitiveType, const DrawState &drawState,
-                          const SceneState &sceneState, uint32_t offset) {
+void ContextOpenGL3::draw(core::geometry::PrimitiveType primitiveType,
+                          const DrawState &drawState,
+                          const SceneState &sceneState,
+                          uint32_t offset) {
     // Apply render state
-    _renderState = drawState.renderState;
+    renderState_ = drawState.renderState;
     // Update clear state
-    _clearState = drawState.renderState;
+    clearState_ = drawState.renderState;
 
     // Apply programmable state
-    _pipeline = std::dynamic_pointer_cast<PipelineOpenGL3>(drawState.pipeline);
-    _vertexArray = std::dynamic_pointer_cast<VertexArrayOpenGL3>(drawState.vertexArray);
+    pipeline_ = std::dynamic_pointer_cast<PipelineOpenGL3>(drawState.pipeline);
+    vertexArray_ = std::dynamic_pointer_cast<VertexArrayOpenGL3>(drawState.vertexArray);
 
-    _vertexArray->clean(*_pipeline);
-    _pipeline->clean(*this, drawState, sceneState);
+    vertexArray_->clean(*pipeline_);
+    pipeline_->clean(*this, drawState, sceneState);
 
     // Update the texture units
-    _textureUnits.clean(*this);
+    textureUnits_.clean(*this);
 
     if (drawState.vertexArray->indexBuffer()) {
-        GL_VERIFY(glDrawElements(toPrimitiveType(primitiveType), drawState.vertexArray->indexBuffer()->count(),
+        GL_VERIFY(glDrawElements(toPrimitiveType(primitiveType),
+                                 drawState.vertexArray->indexBuffer()->count(),
                                  toIndexBufferType(drawState.vertexArray->indexBuffer()->type()),
                                  (const void *)intptr_t(offset)));
     } else {
@@ -53,10 +56,10 @@ void ContextOpenGL3::draw(core::geometry::PrimitiveType primitiveType, const Dra
 
 void ContextOpenGL3::clear(const ClearState &state) {
     // Update clear state
-    _clearState = state;
+    clearState_ = state;
 
     // Update render state
-    _renderState = state;
+    renderState_ = state;
 
     // Clear
     GL_VERIFY(glClear(toClearBitfield(state.buffers)));
@@ -77,17 +80,18 @@ std::unique_ptr<VertexBuffer> ContextOpenGL3::createVertexBuffer(BufferHint usag
     return std::make_unique<VertexBufferOpenGL3>(usageHint, sizeInBytes);
 }
 
-std::unique_ptr<IndexBuffer> ContextOpenGL3::createIndexBuffer(IndexBufferType type, BufferHint usageHint,
+std::unique_ptr<IndexBuffer> ContextOpenGL3::createIndexBuffer(IndexBufferType type,
+                                                               BufferHint usageHint,
                                                                uint32_t count) const {
     return std::make_unique<IndexBufferOpenGL3>(type, usageHint, count);
 }
 
 Device &ContextOpenGL3::device() {
-    return DeviceOpenGL3::instance();
+    return DeviceOpenGL3::Instance();
 }
 
 const Device &ContextOpenGL3::device() const {
-    return DeviceOpenGL3::instance();
+    return DeviceOpenGL3::Instance();
 }
 
 void ContextOpenGL3::activeTextureUnit(const TextureUnitOpenGL3 &unit) {

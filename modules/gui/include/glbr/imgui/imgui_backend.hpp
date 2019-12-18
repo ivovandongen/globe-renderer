@@ -10,7 +10,7 @@ namespace imgui {
 
 class ImGuiBackend : public core::EventHandler {
 public:
-    static std::shared_ptr<ImGuiBackend> instance(core::EventProducer&);
+    static std::shared_ptr<ImGuiBackend> Instance(core::EventProducer&);
 
     void operator()(core::Event& event) override;
 
@@ -20,7 +20,7 @@ private:
     explicit ImGuiBackend(core::EventProducer& eventProducer);
 
 private:
-    std::unique_ptr<core::EventHandlerRegistration> _handlerRegistration;
+    std::unique_ptr<core::EventHandlerRegistration> handlerRegistration_;
 };
 
 }  // namespace imgui

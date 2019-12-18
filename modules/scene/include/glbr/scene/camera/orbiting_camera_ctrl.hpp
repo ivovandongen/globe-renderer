@@ -17,21 +17,21 @@ public:
 
     void operator()(core::Event &event) override;
 
-    const glm::vec3 target() const { return _target; }
+    const glm::vec3 target() const { return target_; }
 
 private:
-    renderer::Camera &_camera;
-    renderer::GraphicsWindow &_window;
+    renderer::Camera &camera_;
+    renderer::GraphicsWindow &window_;
 
     // The constant target vector
-    glm::vec3 _target;
+    glm::vec3 target_;
 
     // In order to calculate absolute rotations
-    renderer::Camera _home;
+    renderer::Camera home_;
 
     // Mouse move state
-    bool firstMove = true;
-    float lastX = 0, lastY = 0;
+    bool firstMove_ = true;
+    float lastX_ = 0, lastY_ = 0;
 };
 
 }  // namespace scene

@@ -50,7 +50,7 @@ private:
         bool operator<(const ScheduledWorkTask& rhs) const { return timePoint < rhs.timePoint; }
     };
 
-    std::chrono::steady_clock::time_point nextAlarm{std::chrono::steady_clock::time_point::max()};
+    std::chrono::steady_clock::time_point nextAlarm_{std::chrono::steady_clock::time_point::max()};
     std::set<ScheduledWorkTask> scheduledTasks_;
 };
 

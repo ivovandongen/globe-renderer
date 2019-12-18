@@ -33,7 +33,7 @@ TEST(TileId, Wrapping) {
     ASSERT_EQ(tile.y(), 0);
     ASSERT_EQ(tile.wrapsX(), 1);
     ASSERT_EQ(tile.wrapsY(), 1);
-    
+
     // Negative wrap
     tile = TileId::UnWrap(-1, -1, 1);
     ASSERT_EQ(tile.x(), 1);
@@ -47,5 +47,4 @@ TEST(TileId, Wrapping) {
     ASSERT_EQ(tile.y(), 1);
     ASSERT_EQ(tile.wrapsX(), 0);
     ASSERT_EQ(tile.wrapsY(), 0);
-
 }

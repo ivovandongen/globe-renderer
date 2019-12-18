@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glbr/renderer/textures/texture_unit.hpp>
+
 #include "texture2d_opengl3.hpp"
 #include "texture_sampler_opengl3.hpp"
 
@@ -24,15 +25,15 @@ public:
 
     void clean(ContextOpenGL3& context);
 
-    explicit operator bool() const { return _texture && _sampler; }
+    explicit operator bool() const { return texture_ && sampler_; }
 
-    uint8_t index() const { return _index; }
+    uint8_t index() const { return index_; }
 
 private:
-    uint8_t _index;
-    uint8_t _dirtyFlags;
-    std::shared_ptr<Texture2DOpenGL3> _texture;
-    std::shared_ptr<TextureSamplerOpenGL3> _sampler;
+    uint8_t index_;
+    uint8_t dirtyFlags_;
+    std::shared_ptr<Texture2DOpenGL3> texture_;
+    std::shared_ptr<TextureSamplerOpenGL3> sampler_;
 };
 
 }  // namespace opengl3

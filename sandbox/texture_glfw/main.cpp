@@ -39,7 +39,7 @@ int main() {
     SceneState sceneState(width, height, window.pixelRatio());
 
     // Set up the graphics device
-    auto &device = opengl3::DeviceOpenGL3::instance();
+    auto &device = opengl3::DeviceOpenGL3::Instance();
 
     // Create the pipeline
     std::shared_ptr<Pipeline> pipeline =

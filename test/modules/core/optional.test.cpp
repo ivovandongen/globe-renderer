@@ -1,5 +1,6 @@
-#include <test.hpp>
 #include <glbr/core/optional.hpp>
+
+#include <test.hpp>
 
 TEST(Optional, Basic) {
     using namespace glbr::core;

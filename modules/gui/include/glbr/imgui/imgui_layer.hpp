@@ -19,7 +19,7 @@ class ImGuiLayer : public scene::Renderable {
 public:
     explicit ImGuiLayer(core::EventProducer&);
 
-    void addRenderable(const ImGuiRenderable& renderable) { _renderables.push_back(renderable); }
+    void addRenderable(const ImGuiRenderable& renderable) { renderables_.push_back(renderable); }
 
     void init(renderer::Context& context) override;
 
@@ -29,19 +29,19 @@ private:
     void renderDrawData(renderer::Context& context, const renderer::SceneState& sceneState, ImDrawData* drawData);
 
 private:
-    std::shared_ptr<ImGuiBackend> _backend;
+    std::shared_ptr<ImGuiBackend> backend_;
 
     // Renderer objects
-    renderer::RenderState _renderState;
-    std::shared_ptr<renderer::Pipeline> _pipeline;
-    std::shared_ptr<renderer::Texture2D> _fontsTexture;
-    std::shared_ptr<renderer::TextureSampler> _fontsTextureSampler;
-    std::shared_ptr<renderer::VertexArray> _vertexArray;
+    renderer::RenderState renderState_;
+    std::shared_ptr<renderer::Pipeline> pipeline_;
+    std::shared_ptr<renderer::Texture2D> fontsTexture_;
+    std::shared_ptr<renderer::TextureSampler> fontsTextureSampler_;
+    std::shared_ptr<renderer::VertexArray> vertexArray_;
 
     // TMP; copy into vao
-    std::shared_ptr<renderer::VertexBuffer> _vertexBuffer;
+    std::shared_ptr<renderer::VertexBuffer> vertexBuffer_;
 
-    std::vector<ImGuiRenderable> _renderables;
+    std::vector<ImGuiRenderable> renderables_;
 };
 
 }  // namespace imgui

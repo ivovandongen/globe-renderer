@@ -7,42 +7,42 @@ namespace glbr {
 namespace renderer {
 namespace opengl3 {
 
-VertexArrayOpenGL3::VertexArrayOpenGL3(std::shared_ptr<ContextOpenGL3> context) : _context(std::move(context)) {
-    GL_VERIFY(glGenVertexArrays(1, &_id));
+VertexArrayOpenGL3::VertexArrayOpenGL3(std::shared_ptr<ContextOpenGL3> context) : context_(std::move(context)) {
+    GL_VERIFY(glGenVertexArrays(1, &id_));
 }
 
 VertexArrayOpenGL3::VertexArrayOpenGL3(std::shared_ptr<ContextOpenGL3> context,
                                        std::unique_ptr<IndexBufferOpenGL3> buffer)
-    : _context(std::move(context)), _indexBuffer(std::move(buffer)) {
-    GL_VERIFY(glGenVertexArrays(1, &_id));
+    : context_(std::move(context)), indexBuffer_(std::move(buffer)) {
+    GL_VERIFY(glGenVertexArrays(1, &id_));
 }
 
 VertexArrayOpenGL3::~VertexArrayOpenGL3() {
-    GL_VERIFY(glDeleteVertexArrays(1, &_id));
+    GL_VERIFY(glDeleteVertexArrays(1, &id_));
 }
 
 void VertexArrayOpenGL3::clean(const Pipeline &pipeline) {
-    _attributes.clean(pipeline.vertexAttributeBindings());
+    attributes_.clean(pipeline.vertexAttributeBindings());
 }
 
 IndexBufferOpenGL3 *VertexArrayOpenGL3::indexBuffer() {
-    return _indexBuffer.get();
+    return indexBuffer_.get();
 }
 
 void VertexArrayOpenGL3::indexBuffer(std::shared_ptr<IndexBuffer> buffer) {
-    _indexBuffer = std::dynamic_pointer_cast<IndexBufferOpenGL3>(buffer);
+    indexBuffer_ = std::dynamic_pointer_cast<IndexBufferOpenGL3>(buffer);
 }
 
 void VertexArrayOpenGL3::add(const std::string &key, VertexBufferAttribute attribute) {
-    _attributes[key] = attribute;
+    attributes_[key] = attribute;
 }
 
 void VertexArrayOpenGL3::bind() {
-    _context->set(shared_from_this());
+    context_->set(shared_from_this());
 }
 
 void VertexArrayOpenGL3::unbind() {
-    _context->set(nullptr);
+    context_->set(nullptr);
 }
 
 }  // namespace opengl3

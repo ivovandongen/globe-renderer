@@ -22,7 +22,7 @@ int main() {
     SceneState sceneState(width, height, window.pixelRatio());
 
     // Set up the graphics device
-    auto &device = opengl3::DeviceOpenGL3::instance();
+    auto &device = opengl3::DeviceOpenGL3::Instance();
 
     // Create the pipeline
     std::shared_ptr<Pipeline> pipeline = device.createPipeline(io::readFile("resources/triangle.vertex.glsl"),
@@ -41,8 +41,12 @@ int main() {
     };
     std::array<uint32_t, 6> indices{
         // note that we start from 0!
-        0, 1, 3,  // first triangle
-        1, 2, 3   // second triangle
+        0,
+        1,
+        3,  // first triangle
+        1,
+        2,
+        3  // second triangle
     };
 
     // Add the vertices to the VertexBuffer

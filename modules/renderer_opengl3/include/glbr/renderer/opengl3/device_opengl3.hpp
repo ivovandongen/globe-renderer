@@ -13,7 +13,7 @@ class DeviceOpenGL3 : public Device {
 public:
     using DrawAutoFactories = std::unordered_map<std::string, std::unique_ptr<DrawAutoUniformFactory>>;
 
-    static DeviceOpenGL3 &instance();
+    static DeviceOpenGL3 &Instance();
 
     ~DeviceOpenGL3() override = default;
 
@@ -27,16 +27,17 @@ public:
     std::unique_ptr<Texture2D> createTexture2D(core::Image &&image, bool generateMipmaps) const override;
 
     std::unique_ptr<TextureSampler> createTextureSampler(TextureMinificationFilter filter,
-                                                         TextureMagnificationFilter magnificationFilter, TextureWrap s,
+                                                         TextureMagnificationFilter magnificationFilter,
+                                                         TextureWrap s,
                                                          TextureWrap t) const override;
 
-    const DrawAutoFactories& drawAutoUniformFactories() const { return _drawAutoUniformFactories; }
+    const DrawAutoFactories &drawAutoUniformFactories() const { return drawAutoUniformFactories_; }
 
 private:
     DeviceOpenGL3();
 
 private:
-    DrawAutoFactories _drawAutoUniformFactories;
+    DrawAutoFactories drawAutoUniformFactories_;
 };
 
 }  // namespace opengl3

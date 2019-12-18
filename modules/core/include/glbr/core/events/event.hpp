@@ -16,18 +16,18 @@ public:
 
     virtual ~Event() = default;
 
-    TypeId type() const { return _type; }
+    inline TypeId type() const { return type_; }
 
-    bool handled() const { return _handled; }
+    inline bool handled() const { return handled_; }
 
     virtual std::string str() const = 0;
 
 protected:
-    explicit Event(TypeId type) : _type(type) {}
+    explicit Event(TypeId type) : type_(type) {}
 
 private:
-    TypeId _type;
-    bool _handled{false};
+    TypeId type_;
+    bool handled_{false};
     friend class EventDispatcher;
 };
 
@@ -44,8 +44,11 @@ public:
     std::string str() const override { return ctti::nameof<E>().str(); }
 
 protected:
-    EventImpl() : Event(Type()){};
+    EventImpl();
 };
+
+template <class E>
+EventImpl<E>::EventImpl() : Event(Type()) {}
 
 /**
  * Event dispatcher. Can be used instead of switch statement if convenient.
@@ -53,19 +56,19 @@ protected:
  */
 class EventDispatcher {
 public:
-    explicit EventDispatcher(Event& event) : _event(event) {}
+    explicit EventDispatcher(Event& event) : event_(event) {}
 
     template <typename T, typename Fn>
     bool dispatch(Fn&& fn) {
-        if (_event.type() == T::Type()) {
-            _event._handled = fn(static_cast<T&>(_event));
+        if (event_.type() == T::Type()) {
+            event_.handled_ = fn(static_cast<T&>(event_));
             return true;
         }
         return false;
     }
 
 private:
-    Event& _event;
+    Event& event_;
 };
 
 }  // namespace core

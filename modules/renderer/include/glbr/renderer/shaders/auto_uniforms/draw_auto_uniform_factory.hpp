@@ -3,6 +3,7 @@
 #include <glbr/renderer/context.hpp>
 #include <glbr/renderer/draw_state.hpp>
 #include <glbr/renderer/scene/scene_state.hpp>
+
 #include "draw_auto_uniform.hpp"
 
 #include <memory>

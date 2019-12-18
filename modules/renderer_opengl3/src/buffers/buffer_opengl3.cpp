@@ -51,17 +51,17 @@ namespace renderer {
 namespace opengl3 {
 
 BufferOpenGL3::BufferOpenGL3(BufferTarget type, BufferHint usageHint)
-    : _target(convert(type)), _usage(convert(usageHint)), _size(0) {
-    GL_VERIFY(glGenBuffers(1, &_id));
+    : target_(convert(type)), usage_(convert(usageHint)), size_(0) {
+    GL_VERIFY(glGenBuffers(1, &id_));
 }
 
 BufferOpenGL3::BufferOpenGL3(BufferTarget type, BufferHint usageHint, unsigned int sizeInBytes)
-    : _target(convert(type)), _usage(convert(usageHint)), _size(sizeInBytes) {
-    GL_VERIFY(glGenBuffers(1, &_id));
+    : target_(convert(type)), usage_(convert(usageHint)), size_(sizeInBytes) {
+    GL_VERIFY(glGenBuffers(1, &id_));
 }
 
 BufferOpenGL3::~BufferOpenGL3() {
-    GL_VERIFY(glDeleteBuffers(1, &_id));
+    GL_VERIFY(glDeleteBuffers(1, &id_));
 }
 
 }  // namespace opengl3

@@ -5,11 +5,11 @@ namespace core {
 namespace concurrent {
 
 Scheduler* Scheduler::Get() {
-    return current();
+    return Current();
 }
 
 void Scheduler::Set(Scheduler* scheduler) {
-    current() = scheduler;
+    Current() = scheduler;
 }
 
 }  // namespace concurrent

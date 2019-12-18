@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glbr/core/size.hpp>
+
 #include "camera.hpp"
 
 namespace glbr {
@@ -12,26 +13,26 @@ public:
 
     void viewport(float width, float height, float pixelRatio = 1);
 
-    core::Size2D<float> viewport() const { return {_width, _height}; }
+    core::Size2D<float> viewport() const { return {width_, height_}; }
 
-    Camera& camera() { return _camera; };
+    Camera& camera() { return camera_; };
 
-    const Camera& camera() const { return _camera; };
+    const Camera& camera() const { return camera_; };
 
-    void modelMatrix(const glm::mat4& modelMatrix) { _modelMatrix = modelMatrix; }
+    void modelMatrix(const glm::mat4& modelMatrix) { modelMatrix_ = modelMatrix; }
 
-    const glm::mat4& modelMatrix() const { return _modelMatrix; }
+    const glm::mat4& modelMatrix() const { return modelMatrix_; }
 
     glm::mat4 projectionMatrix() const;
 
     float pixelRatio() const { return pixelRatio_; }
 
 private:
-    Camera _camera;
-    float _width;
-    float _height;
+    Camera camera_;
+    float width_;
+    float height_;
     float pixelRatio_;
-    glm::mat4 _modelMatrix;
+    glm::mat4 modelMatrix_;
 };
 
 }  // namespace renderer

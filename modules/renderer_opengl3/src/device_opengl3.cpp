@@ -8,7 +8,7 @@ namespace glbr {
 namespace renderer {
 namespace opengl3 {
 
-DeviceOpenGL3 &DeviceOpenGL3::instance() {
+DeviceOpenGL3 &DeviceOpenGL3::Instance() {
     static DeviceOpenGL3 INSTANCE{};
     return INSTANCE;
 }
@@ -20,10 +20,11 @@ std::unique_ptr<Pipeline> DeviceOpenGL3::createPipeline(const std::string &verte
 
 DeviceOpenGL3::DeviceOpenGL3() {
     // Register draw auto factories
-    _drawAutoUniformFactories["bltin_model"] = std::make_unique<ModelMatrixDrawAutoFactory>();
-    _drawAutoUniformFactories["bltin_view"] = std::make_unique<ViewMatrixDrawAutoFactory>();
-    _drawAutoUniformFactories["bltin_projection"] = std::make_unique<ProjectionMatrixDrawAutoFactory>();
-    _drawAutoUniformFactories["bltin_modelViewProjection"] = std::make_unique<ModelViewProjectionMatrixDrawAutoFactory>();
+    drawAutoUniformFactories_["bltin_model"] = std::make_unique<ModelMatrixDrawAutoFactory>();
+    drawAutoUniformFactories_["bltin_view"] = std::make_unique<ViewMatrixDrawAutoFactory>();
+    drawAutoUniformFactories_["bltin_projection"] = std::make_unique<ProjectionMatrixDrawAutoFactory>();
+    drawAutoUniformFactories_["bltin_modelViewProjection"] =
+        std::make_unique<ModelViewProjectionMatrixDrawAutoFactory>();
 }
 
 std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(Texture2DDescription description,
@@ -42,7 +43,8 @@ std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(core::Image &&image, b
 }
 
 std::unique_ptr<TextureSampler> DeviceOpenGL3::createTextureSampler(TextureMinificationFilter min,
-                                                                    TextureMagnificationFilter mag, TextureWrap s,
+                                                                    TextureMagnificationFilter mag,
+                                                                    TextureWrap s,
                                                                     TextureWrap t) const {
     return std::make_unique<TextureSamplerOpenGL3>(min, mag, s, t);
 }

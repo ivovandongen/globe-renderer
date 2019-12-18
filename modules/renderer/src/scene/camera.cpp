@@ -9,27 +9,27 @@ namespace glbr {
 namespace renderer {
 
 Camera::Camera(glm::vec3 position, glm::vec3 up)
-    : _front(glm::vec3(0.0f, 0.0f, -1.0f)),  _position(position), _up(up), _worldUp(up) {
+    : front_(glm::vec3(0.0f, 0.0f, -1.0f)), position_(position), up_(up), worldUp_(up) {
     updateDerivedVectors();
 }
 
 glm::mat4 Camera::viewMatrix() const {
-    return glm::lookAt(_position, _position + _front, _up);
+    return glm::lookAt(position_, position_ + front_, up_);
 }
 
 void Camera::move(CameraMovement direction, float delta) {
     switch (direction) {
         case CameraMovement::FORWARD:
-            _position += _front * delta;
+            position_ += front_ * delta;
             break;
         case CameraMovement::BACKWARD:
-            _position -= _front * delta;
+            position_ -= front_ * delta;
             break;
         case CameraMovement::LEFT:
-            _position -= _right * delta;
+            position_ -= right_ * delta;
             break;
         case CameraMovement::RIGHT:
-            _position += _right * delta;
+            position_ += right_ * delta;
             break;
     }
 }
@@ -38,8 +38,8 @@ void Camera::updateDerivedVectors() {
     // Re-calculate the Right and Up vector
     // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in
     // slower movement.
-    _right = glm::normalize(glm::cross(_front, _worldUp));
-    _up = glm::normalize(glm::cross(_right, _front));
+    right_ = glm::normalize(glm::cross(front_, worldUp_));
+    up_ = glm::normalize(glm::cross(right_, front_));
 }
 
 }  // namespace renderer

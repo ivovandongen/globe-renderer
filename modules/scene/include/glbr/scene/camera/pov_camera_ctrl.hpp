@@ -21,16 +21,16 @@ private:
     void updateCameraVectors();
 
 private:
-    input::Input &_input;
-    renderer::Camera &_camera;
+    input::Input &input_;
+    renderer::Camera &camera_;
 
     // Euler angles used as input to calculate vectors
-    float _yaw;
-    float _pitch;
+    float yaw_;
+    float pitch_;
 
     // Mouse move state
-    bool firstMove = true;
-    float lastX = 0, lastY = 0;
+    bool firstMove_ = true;
+    float lastX_ = 0, lastY_ = 0;
 };
 
 }  // namespace scene

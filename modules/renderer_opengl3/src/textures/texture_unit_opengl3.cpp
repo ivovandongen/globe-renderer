@@ -12,45 +12,45 @@ namespace glbr {
 namespace renderer {
 namespace opengl3 {
 
-TextureUnitOpenGL3::TextureUnitOpenGL3(uint8_t index) : _index(index), _dirtyFlags(DIRTY::NONE) {}
+TextureUnitOpenGL3::TextureUnitOpenGL3(uint8_t index) : index_(index), dirtyFlags_(DIRTY::NONE) {}
 
 TextureUnitOpenGL3::~TextureUnitOpenGL3() = default;
 
 const Texture2D& TextureUnitOpenGL3::texture() const {
-    return *_texture;
+    return *texture_;
 }
 
 void TextureUnitOpenGL3::texture(std::shared_ptr<Texture2D> texture) {
-    if (!_texture || *_texture != *std::dynamic_pointer_cast<Texture2DOpenGL3>(texture)) {
-        _dirtyFlags |= DIRTY::TEXTURE;
+    if (!texture_ || *texture_ != *std::dynamic_pointer_cast<Texture2DOpenGL3>(texture)) {
+        dirtyFlags_ |= DIRTY::TEXTURE;
     }
-    _texture = std::move(std::dynamic_pointer_cast<Texture2DOpenGL3>(texture));
+    texture_ = std::move(std::dynamic_pointer_cast<Texture2DOpenGL3>(texture));
 }
 
 const TextureSampler& TextureUnitOpenGL3::sampler() const {
-    return *_sampler;
+    return *sampler_;
 }
 
 void TextureUnitOpenGL3::sampler(std::shared_ptr<TextureSampler> sampler) {
-    if (!_sampler || *_sampler != *std::dynamic_pointer_cast<TextureSamplerOpenGL3>(sampler)) {
-        _dirtyFlags |= DIRTY::SAMPLER;
+    if (!sampler_ || *sampler_ != *std::dynamic_pointer_cast<TextureSamplerOpenGL3>(sampler)) {
+        dirtyFlags_ |= DIRTY::SAMPLER;
     }
-    _sampler = std::move(std::dynamic_pointer_cast<TextureSamplerOpenGL3>(sampler));
+    sampler_ = std::move(std::dynamic_pointer_cast<TextureSamplerOpenGL3>(sampler));
 }
 
 void TextureUnitOpenGL3::clean(ContextOpenGL3& context) {
-    if (_dirtyFlags > 0) {
+    if (dirtyFlags_ > 0) {
         context.activeTextureUnit(*this);
 
-        if (_dirtyFlags & DIRTY::TEXTURE && _texture) {
-            _texture->bind();
+        if (dirtyFlags_ & DIRTY::TEXTURE && texture_) {
+            texture_->bind();
         }
 
-        if (_dirtyFlags & DIRTY::SAMPLER && _sampler) {
-            _sampler->bind(_index);
+        if (dirtyFlags_ & DIRTY::SAMPLER && sampler_) {
+            sampler_->bind(index_);
         }
 
-        _dirtyFlags = DIRTY::NONE;
+        dirtyFlags_ = DIRTY::NONE;
     }
 }
 

@@ -5,5 +5,5 @@ namespace renderer {
 
 enum class TextureMagnificationFilter { NEAREST, LINEAR };
 
-} // namespace renderer
-} // namespace glbr
+}  // namespace renderer
+}  // namespace glbr

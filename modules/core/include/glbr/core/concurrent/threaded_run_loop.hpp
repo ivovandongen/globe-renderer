@@ -15,7 +15,7 @@ class ThreadedRunLoop : public RunLoop {
 public:
     ThreadedRunLoop() {
         std::promise<void> started;
-        thread = std::thread([&]() {
+        thread_ = std::thread([&]() {
             loop_ = std::make_unique<SimpleRunLoop>();
             loop_->schedule([&]() { started.set_value(); });
             loop_->run();
@@ -29,8 +29,8 @@ public:
             loop_->shutdown(true);
             loop_.reset();
         }
-        if (thread.joinable()) {
-            thread.join();
+        if (thread_.joinable()) {
+            thread_.join();
         }
     }
 
@@ -42,14 +42,14 @@ public:
 
     void shutdown() {
         loop_.reset();
-        thread.join();
+        thread_.join();
     }
 
 private:
-    std::thread thread;
+    std::thread thread_;
     std::unique_ptr<SimpleRunLoop> loop_;
 };
 
 }  // namespace concurrent
 }  // namespace core
-}
+}  // namespace glbr
