@@ -23,7 +23,7 @@ function(ADD_TEST_MODULE MODULE_ON_TEST)
             ${SRC_FILES}
             )
     target_include_directories(${MODULE_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${COMMON_TEST_DIR})
-    target_link_libraries(${MODULE_NAME} PUBLIC gtest ${MODULE_ON_TEST})
+    target_link_libraries(${MODULE_NAME} PUBLIC gtest gmock ${MODULE_ON_TEST})
 
     # Add a CTest entry
     add_test(NAME ${MODULE_NAME} COMMAND ${MODULE_NAME})

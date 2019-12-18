@@ -28,3 +28,26 @@ target_include_directories(gtest
         )
 
 target_link_libraries(gtest PUBLIC Threads::Threads)
+
+
+set(GMOCK_DIR ${CMAKE_SOURCE_DIR}/deps/googletest/googlemock)
+
+add_library(gmock STATIC
+        ${GMOCK_DIR}/src/gmock.cc
+        ${GMOCK_DIR}/src/gmock-all.cc
+        ${GMOCK_DIR}/src/gmock-cardinalities.cc
+        ${GMOCK_DIR}/src/gmock-internal-utils.cc
+        ${GMOCK_DIR}/src/gmock-matchers.cc
+        ${GMOCK_DIR}/src/gmock-spec-builders.cc
+        )
+
+target_include_directories(gmock
+        PRIVATE ${GMOCK_DIR}/include
+        PRIVATE ${GMOCK_DIR}
+        )
+
+target_include_directories(gmock
+        SYSTEM INTERFACE ${GMOCK_DIR}/include
+        )
+
+target_link_libraries(gmock PUBLIC gtest)
