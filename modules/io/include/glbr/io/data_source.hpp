@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glbr/core/expected.hpp>
+
 #include <functional>
 #include <memory>
 #include <string>
@@ -34,9 +36,24 @@ private:
     std::string data_;
 };
 
+class Error {
+public:
+    enum class Type { NOT_FOUND, BAD_REQUEST, SERVER_ERROR, OTHER };
+
+    Error(Type type, std::string message) : type_(type), message_(std::move(message)) {}
+
+    Type code() const { return type_; }
+    const std::string& message() const { return message_; };
+
+private:
+    std::string message_;
+    Type type_;
+};
+
 class DataSource {
 public:
-    using Callback = std::function<void(Response)>;
+    using ResponseHolder = core::expected<Response, Error>;
+    using Callback = std::function<void(ResponseHolder)>;
     virtual ~DataSource() = default;
     virtual std::unique_ptr<AsyncRequest> load(const Resource&, Callback cb) = 0;
 };

@@ -163,9 +163,32 @@ void HttpRequestHandle::onResult(CURLcode curlCode) {
     }
 
     if (curlCode == CURLE_OK) {
-        long httpResponseCode = 0;
         curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, &httpResponseCode);
         logging::info("Response code: {}", httpResponseCode);
+
+        switch (httpResponseCode) {
+            case 200:
+                break;
+            case 204:
+                break;
+            case 400:
+                break;
+            case 404:
+                break;
+            default:
+                auto msg = std::string{"Http response code: "} + std::to_string(httpResponseCode);
+                if (!body.empty()) {
+                    msg += ". Message: " + std::move(body);
+                }
+
+                if (httpResponseCode >= 500 && httpResponseCode < 600) {
+                    error = Error{Error::Type::SERVER_ERROR, std::move(msg)};
+                } else {
+                    error = Error{Error::Type::OTHER, std::move(msg)};
+                }
+        }
+    } else {
+        error = Error{Error::Type::OTHER, std::string{curl_easy_strerror(curlCode)}};
     }
 
     // Schedule the callback on the caller's thread scheduler
@@ -174,10 +197,14 @@ void HttpRequestHandle::onResult(CURLcode curlCode) {
         // Make sure to move the response as we don't want copies of the response data all over the place
         auto handle = handleRef.lock();
         if (handle) {
-            handle->callback_(Response{std::move(handle->body)});
+            if (handle->error) {
+                handle->callback_(tl::unexpected<Error>(std::move(*handle->error)));
+            } else {
+                handle->callback_(Response{std::move(handle->body)});
+            };
         }
     });
-};
+}
 
 }  // namespace io
 }  // namespace glbr

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glbr/core/concurrent/scheduler.hpp>
+#include <glbr/core/optional.hpp>
 
 #include "http_request.hpp"
 
@@ -54,6 +55,8 @@ public:
     HttpRequestHandle(Resource resource, DataSource::Callback callback);
 
     std::string body{};
+    int httpResponseCode = -1;
+    core::optional<Error> error;
 
 private:
     friend class HttpDataSourceCurlWorker;

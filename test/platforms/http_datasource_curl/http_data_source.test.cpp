@@ -32,8 +32,8 @@ TEST(HttpDataSource, Load) {
     auto dataSource = HttpDataSource::Create();
 
     bool loaded = false;
-    std::promise<Response> promise;
-    auto req = dataSource->load(Resource{"https://www.google.com"}, [&](Response res) {
+    std::promise<DataSource::ResponseHolder> promise;
+    auto req = dataSource->load(Resource{"https://www.google.com"}, [&](DataSource::ResponseHolder res) {
         loaded = true;
         promise.set_value(std::move(res));
     });
@@ -41,7 +41,7 @@ TEST(HttpDataSource, Load) {
     auto future = promise.get_future();
     future.wait_for(2s);
     ASSERT_TRUE(loaded);
-    ASSERT_FALSE(future.get().data().empty());
+    ASSERT_FALSE(future.get()->data().empty());
 }
 
 TEST(HttpDataSource, Shutdown) {
@@ -51,17 +51,17 @@ TEST(HttpDataSource, Shutdown) {
     auto dataSource = HttpDataSource::Create();
 
     bool loaded = false;
-    std::promise<Response> promise;
-    auto req = dataSource->load(Resource{"https://www.google.com"}, [&](Response res) {
-      loaded = true;
-      promise.set_value(std::move(res));
+    std::promise<DataSource::ResponseHolder> promise;
+    auto req = dataSource->load(Resource{"https://www.google.com"}, [&](DataSource::ResponseHolder res) {
+        loaded = true;
+        promise.set_value(std::move(res));
     });
 
     auto future = promise.get_future();
     future.wait_for(2s);
     dataSource.reset();
     ASSERT_TRUE(loaded);
-    ASSERT_FALSE(future.get().data().empty());
+    ASSERT_FALSE(future.get()->data().empty());
 }
 
 TEST(HttpDataSource, CorrectResponseThread) {
@@ -72,8 +72,8 @@ TEST(HttpDataSource, CorrectResponseThread) {
 
     auto threadId = std::this_thread::get_id();
     bool loaded = false;
-    std::promise<Response> promise;
-    auto req = dataSource->load(Resource{"https://www.google.com"}, [&](const Response&) {
+    std::promise<DataSource::ResponseHolder> promise;
+    auto req = dataSource->load(Resource{"https://www.google.com"}, [&](const DataSource::ResponseHolder&) {
         loaded = true;
         ASSERT_EQ(threadId, std::this_thread::get_id());
     });
@@ -91,5 +91,5 @@ TEST(HttpDataSource, CorrectResponseThread) {
 TEST(HttpDataSource, DiscardRequest) {
     DummyScheduler loop;
     auto dataSource = HttpDataSource::Create();
-    dataSource->load(Resource{"https://www.google.com"}, [&](const Response&) {});
+    dataSource->load(Resource{"https://www.google.com"}, [&](const DataSource::ResponseHolder&) {});
 }
