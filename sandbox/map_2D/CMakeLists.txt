@@ -13,6 +13,7 @@ target_link_libraries(${EXECUTABLE} PRIVATE
         renderer
         renderer_opengl3
         renderer_glfw
+        http_datasource_curl
         gui
         )
 

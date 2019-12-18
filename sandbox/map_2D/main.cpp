@@ -1,19 +1,25 @@
+
+#include <glbr/core/concurrent/simple_run_loop.hpp>
 #include <glbr/geo/tiles/tile_cover.hpp>
 #include <glbr/imgui/imgui_layer.hpp>
 #include <glbr/input/events/key_event.hpp>
 #include <glbr/input/events/mouse_button_event.hpp>
 #include <glbr/input/events/mouse_move_event.hpp>
 #include <glbr/input/events/mouse_scroll_event.hpp>
+#include <glbr/io/http_data_source_curl.hpp>
 #include <glbr/logging/logging.hpp>
 #include <glbr/renderer/glfw/graphics_window_glfw.hpp>
 #include <glbr/renderer/opengl3/device_opengl3.hpp>
 #include <glbr/renderer/window_resized_event.hpp>
 
-#include "map_2d.hpp"
-
 #include <imgui.h>
 
-int main() {
+#include "map_2d.hpp"
+
+int main(int argc, char* argv[]) {
+    assert(argc > 1);
+    std::string accessToken{argv[1]};
+
     int width = 512, height = 512;
 
     using namespace glbr;
@@ -22,6 +28,9 @@ int main() {
     using namespace glbr::renderer;
 
     logging::setLevel(logging::Level::DEBUG);
+
+    // Setup a looper for the main thread (to receive replies)
+    concurrent::SimpleRunLoop loop;
 
     // Create the window
     glfw::GlfwGraphicsWindow window{width, height};
@@ -33,7 +42,8 @@ int main() {
 
     ClearState clearState{ClearBuffers::ALL, {1, 1, 1, 1}, {false}};
 
-    Map2D map(width, height);
+    std::shared_ptr<io::HttpDataSource> httpDataSource = io::HttpDataSource::Create();
+    Map2D map(width, height, httpDataSource, accessToken);
 
     // IMGui layer
     imgui::ImGuiLayer imguiLayer{window};
@@ -117,8 +127,14 @@ int main() {
         // Clear the scene
         context.clear(clearState);
 
+        // Render the map
+        map.render(context, sceneState);
+
         // Render gui
         imguiLayer.render(context, sceneState);
+
+        // Pop some work from the loop
+        loop.tick(true);
     };
 
     // Update function
