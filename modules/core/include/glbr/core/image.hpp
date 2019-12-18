@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+#include <memory>
 #include <string>
 
 namespace glbr {
@@ -10,11 +12,13 @@ public:
     using Data = unsigned char;
 
     explicit Image(const std::string& path, bool flipOnLoad = true);
-    Image(const Data* data, size_t len, bool flipOnLoad = true);
+    Image(const Data* imageData, size_t len, bool flipOnLoad = true);
 
-    ~Image();
+    ~Image() = default;
 
-    const Data* data() const { return _data; }
+    operator bool() const { return bool(_data); }
+
+    const Data* data() const { return _data.get(); }
 
     int width() const { return _width; }
 
@@ -24,7 +28,7 @@ public:
 
 private:
     int _width{0}, _height{0}, _channels{0};
-    Data* _data = nullptr;
+    std::shared_ptr<Data> _data;
 };
 
 }  // namespace core
