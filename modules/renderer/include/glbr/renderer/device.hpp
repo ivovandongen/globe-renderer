@@ -28,11 +28,12 @@ public:
 
     virtual std::unique_ptr<Texture2D> createTexture2D(const core::Image &, bool generateMipmaps) const = 0;
 
-    virtual std::unique_ptr<Texture2D> createTexture2D(const core::Image &, TextureFormat format,
-                                                       bool generateMipmaps) const = 0;
+    virtual std::unique_ptr<Texture2D> createTexture2D(core::Image &&, bool generateMipmaps) const = 0;
 
-    virtual std::unique_ptr<TextureSampler> createTextureSampler(TextureMinificationFilter, TextureMagnificationFilter,
-                                                                 TextureWrap s, TextureWrap t) const = 0;
+    virtual std::unique_ptr<TextureSampler> createTextureSampler(TextureMinificationFilter,
+                                                                 TextureMagnificationFilter,
+                                                                 TextureWrap s,
+                                                                 TextureWrap t) const = 0;
 
 protected:
     Device() = default;

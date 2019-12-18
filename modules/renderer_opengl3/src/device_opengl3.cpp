@@ -32,34 +32,13 @@ std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(Texture2DDescription d
 }
 
 std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(const core::Image &image, bool generateMipmaps) const {
-    // TODO: move to abstract Context
-    TextureFormat format = [&]() {
-        switch (image.channels()) {
-            case 1:
-                return TextureFormat::R8;
-            case 2:
-                return TextureFormat::RG8;
-            case 4:
-                return TextureFormat::RGBA8;
-            case 3:
-            default:
-                return TextureFormat::RGB8;
-        }
-    }();
-
-    auto texture = std::make_unique<Texture2DOpenGL3>(
-        Texture2DDescription{image.width(), image.height(), format, generateMipmaps}, TextureTarget::Texture2D);
-    texture->upload(image.data());
-    return texture;
+    return std::make_unique<Texture2DOpenGL3>(
+        Texture2DDescription{image.width(), image.height(), TextureFormatFromImage(image), generateMipmaps},
+        TextureTarget::Texture2D);
 }
 
-std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(const core::Image &image, TextureFormat format,
-                                                          bool generateMipmaps) const {
-    // TODO: move to abstract Context
-    auto texture = std::make_unique<Texture2DOpenGL3>(
-        Texture2DDescription{image.width(), image.height(), format, generateMipmaps}, TextureTarget::Texture2D);
-    texture->upload(image.data());
-    return texture;
+std::unique_ptr<Texture2D> DeviceOpenGL3::createTexture2D(core::Image &&image, bool generateMipmaps) const {
+    return std::make_unique<Texture2DOpenGL3WithImageData>(std::move(image), TextureTarget::Texture2D, generateMipmaps);
 }
 
 std::unique_ptr<TextureSampler> DeviceOpenGL3::createTextureSampler(TextureMinificationFilter min,

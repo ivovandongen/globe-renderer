@@ -24,8 +24,7 @@ public:
 
     std::unique_ptr<Texture2D> createTexture2D(const core::Image &image, bool generateMipmaps) const override;
 
-    std::unique_ptr<Texture2D> createTexture2D(const core::Image &image, TextureFormat format,
-                                               bool generateMipmaps) const override;
+    std::unique_ptr<Texture2D> createTexture2D(core::Image &&image, bool generateMipmaps) const override;
 
     std::unique_ptr<TextureSampler> createTextureSampler(TextureMinificationFilter filter,
                                                          TextureMagnificationFilter magnificationFilter, TextureWrap s,

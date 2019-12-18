@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glbr/core/image.hpp>
+
 namespace glbr {
 namespace renderer {
 
@@ -55,6 +57,20 @@ enum class TextureFormat {
     RGBA8i,
     RGB8i
 };
+
+inline TextureFormat TextureFormatFromImage(const core::Image& image) {
+    switch (image.channels()) {
+        case 1:
+            return TextureFormat::R8;
+        case 2:
+            return TextureFormat::RG8;
+        case 4:
+            return TextureFormat::RGBA8;
+        case 3:
+        default:
+            return TextureFormat::RGB8;
+    }
+}
 
 }  // namespace renderer
 }  // namespace glbr

@@ -33,9 +33,6 @@ int main() {
 
     logging::setLevel(logging::Level::DEBUG);
 
-    Image kitty{"resources/kitty.png"};
-    Image kittyRev{"resources/kitty.png", false};
-
     // Create the window
     glfw::GlfwGraphicsWindow window{width, height};
 
@@ -60,8 +57,12 @@ int main() {
     };
     std::array<unsigned int, 6> indices{
         // note that we start from 0!
-        0, 1, 3,  // first triangle
-        1, 2, 3   // second triangle
+        0,
+        1,
+        3,  // first triangle
+        1,
+        2,
+        3  // second triangle
     };
 
     // Add the vertices to the VertexBuffer
@@ -83,18 +84,27 @@ int main() {
     vertexArray->indexBuffer(std::move(indexBuffer));
 
     // Create a Texture
-    window.context().textureUnits()[0].texture(device.createTexture2D(kitty, true));
-    window.context().textureUnits()[0].sampler(
-        device.createTextureSampler(TextureMinificationFilter::NEAREST, TextureMagnificationFilter::NEAREST,
-                                    TextureWrap::MIRRORED_REPEAT, TextureWrap::MIRRORED_REPEAT));
+    window.context().textureUnits()[0].texture(device.createTexture2D(Image{"resources/kitty.png"}, true));
+    window.context().textureUnits()[0].sampler(device.createTextureSampler(TextureMinificationFilter::NEAREST,
+                                                                           TextureMagnificationFilter::NEAREST,
+                                                                           TextureWrap::MIRRORED_REPEAT,
+                                                                           TextureWrap::MIRRORED_REPEAT));
     pipeline->uniforms()["texture1"] = 0;
 
     // Create another texture in the next texture unit
-    window.context().textureUnits()[1].texture(device.createTexture2D(kittyRev, true));
-    window.context().textureUnits()[1].sampler(
-        device.createTextureSampler(TextureMinificationFilter::NEAREST, TextureMagnificationFilter::NEAREST,
-                                    TextureWrap::MIRRORED_REPEAT, TextureWrap::MIRRORED_REPEAT));
+    // This time using an Image reference and controling the moment of upload to the gpu
+    auto kittyReversed = Image{"resources/kitty.png", false};
+    std::shared_ptr<Texture2D> textureKittyRev = device.createTexture2D(kittyReversed, true);
+    window.context().textureUnits()[1].texture(textureKittyRev);
+    window.context().textureUnits()[1].sampler(device.createTextureSampler(TextureMinificationFilter::NEAREST,
+                                                                           TextureMagnificationFilter::NEAREST,
+                                                                           TextureWrap::MIRRORED_REPEAT,
+                                                                           TextureWrap::MIRRORED_REPEAT));
     pipeline->uniforms()["texture2"] = 1;
+
+    // Upload it now
+    textureKittyRev->bind();
+    textureKittyRev->upload(kittyReversed);
 
     renderer::ClearState clearState{ClearBuffers::COLOR, {0, 1, 1, 1}};
 

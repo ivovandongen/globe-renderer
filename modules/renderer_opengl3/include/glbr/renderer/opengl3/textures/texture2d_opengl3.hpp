@@ -27,6 +27,18 @@ private:
     GLuint _id{};
     GLenum _target;
     Texture2DDescription _description;
+    std::shared_ptr<const core::Image> image_;
+};
+
+class Texture2DOpenGL3WithImageData : public Texture2DOpenGL3 {
+public:
+    Texture2DOpenGL3WithImageData(const core::Image &image, TextureTarget target, bool generateMipMaps);
+
+    void bind() const override;
+
+private:
+    core::Image image_;
+    mutable bool uploaded_{false};
 };
 
 }  // namespace opengl3
