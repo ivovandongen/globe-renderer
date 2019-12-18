@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glbr/renderer/opengl3/textures/active_texture_opengl3.hpp>
+
 #include <memory>
 #include <type_traits>
 

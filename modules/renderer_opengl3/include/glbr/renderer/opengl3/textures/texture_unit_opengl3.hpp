@@ -8,9 +8,11 @@ namespace glbr {
 namespace renderer {
 namespace opengl3 {
 
+class ContextOpenGL3;
+
 class TextureUnitOpenGL3 : public TextureUnit {
 public:
-    explicit TextureUnitOpenGL3(int index);
+    explicit TextureUnitOpenGL3(uint8_t index);
 
     ~TextureUnitOpenGL3() override;
 
@@ -20,14 +22,14 @@ public:
     const TextureSampler& sampler() const override;
     void sampler(std::shared_ptr<TextureSampler> ptr) override;
 
-    void clean();
+    void clean(ContextOpenGL3& context);
 
     explicit operator bool() const { return _texture && _sampler; }
 
-    int index() const { return _index; }
+    uint8_t index() const { return _index; }
 
 private:
-    int _index;
+    uint8_t _index;
     uint8_t _dirtyFlags;
     std::shared_ptr<Texture2DOpenGL3> _texture;
     std::shared_ptr<TextureSamplerOpenGL3> _sampler;

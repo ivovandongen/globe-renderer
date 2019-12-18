@@ -11,6 +11,8 @@
 #include <glbr/renderer/opengl3/context/clear_state_opengl3.hpp>
 #include <glbr/renderer/opengl3/context/render_state_opengl3.hpp>
 #include <glbr/renderer/opengl3/pipeline_opengl3.hpp>
+#include <glbr/renderer/opengl3/textures/active_texture_opengl3.hpp>
+#include <glbr/renderer/opengl3/textures/texture_unit_opengl3.hpp>
 #include <glbr/renderer/opengl3/textures/texture_units_opengl3.hpp>
 #include <glbr/renderer/opengl3/vertex_array/vertex_array_opengl3.hpp>
 
@@ -38,7 +40,8 @@ public:
 
     std::unique_ptr<VertexBuffer> createVertexBuffer(BufferHint usageHint, int sizeInBytes) const override;
 
-    std::unique_ptr<IndexBuffer> createIndexBuffer(IndexBufferType type, BufferHint usageHint,
+    std::unique_ptr<IndexBuffer> createIndexBuffer(IndexBufferType type,
+                                                   BufferHint usageHint,
                                                    uint32_t count) const override;
 
     void clear(const ClearState &) override;
@@ -46,6 +49,8 @@ public:
     void draw(core::geometry::PrimitiveType, const DrawState &, const SceneState &, uint32_t offset) override;
 
     TextureUnits &textureUnits() override { return _textureUnits; };
+
+    void activeTextureUnit(const TextureUnitOpenGL3 &unit);
 
     void set(const std::shared_ptr<VertexArrayOpenGL3> &array) { _vertexArray = array; }
 
@@ -56,6 +61,7 @@ private:
     ClearStateOpenGL3 _clearState;
 
     // Per context state
+    BindingState<ActiveTextureUnitOpenGL3> activeTextureUnit_;
     TextureUnitsOpenGL3 _textureUnits;
 
     // Draw state

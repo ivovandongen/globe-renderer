@@ -39,7 +39,7 @@ void ContextOpenGL3::draw(core::geometry::PrimitiveType primitiveType, const Dra
     _pipeline->clean(*this, drawState, sceneState);
 
     // Update the texture units
-    _textureUnits.clean();
+    _textureUnits.clean(*this);
 
     if (drawState.vertexArray->indexBuffer()) {
         GL_VERIFY(glDrawElements(toPrimitiveType(primitiveType), drawState.vertexArray->indexBuffer()->count(),
@@ -88,6 +88,10 @@ Device &ContextOpenGL3::device() {
 
 const Device &ContextOpenGL3::device() const {
     return DeviceOpenGL3::instance();
+}
+
+void ContextOpenGL3::activeTextureUnit(const TextureUnitOpenGL3 &unit) {
+    activeTextureUnit_ = std::make_shared<ActiveTextureUnitOpenGL3>(unit.index());
 }
 
 }  // namespace opengl3

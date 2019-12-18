@@ -18,6 +18,14 @@ void BindingOp<VertexArrayOpenGL3>::Apply(const std::shared_ptr<VertexArrayOpenG
     }
 }
 
+void BindingOp<ActiveTextureUnitOpenGL3>::Apply(const std::shared_ptr<ActiveTextureUnitOpenGL3>& val) {
+    if (!val) {
+        GL_VERIFY(glActiveTexture(GL_TEXTURE0));
+    } else {
+        GL_VERIFY(glActiveTexture(GL_TEXTURE0 + val->index()));
+    }
+}
+
 }  // namespace opengl3
 }  // namespace renderer
 }  // namespace glbr

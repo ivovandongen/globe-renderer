@@ -1,6 +1,7 @@
 #include <glbr/renderer/opengl3/textures/texture_unit_opengl3.hpp>
 
 #include <glbr/logging/logging.hpp>
+#include <glbr/renderer/opengl3/context/context_opengl3.hpp>
 #include <glbr/renderer/opengl3/errors.hpp>
 
 namespace {
@@ -11,7 +12,7 @@ namespace glbr {
 namespace renderer {
 namespace opengl3 {
 
-TextureUnitOpenGL3::TextureUnitOpenGL3(int index) : _index(index), _dirtyFlags(DIRTY::NONE) {}
+TextureUnitOpenGL3::TextureUnitOpenGL3(uint8_t index) : _index(index), _dirtyFlags(DIRTY::NONE) {}
 
 TextureUnitOpenGL3::~TextureUnitOpenGL3() = default;
 
@@ -37,9 +38,9 @@ void TextureUnitOpenGL3::sampler(std::shared_ptr<TextureSampler> sampler) {
     _sampler = std::move(std::dynamic_pointer_cast<TextureSamplerOpenGL3>(sampler));
 }
 
-void TextureUnitOpenGL3::clean() {
+void TextureUnitOpenGL3::clean(ContextOpenGL3& context) {
     if (_dirtyFlags > 0) {
-        GL_VERIFY(glActiveTexture(GL_TEXTURE0 + _index));
+        context.activeTextureUnit(*this);
 
         if (_dirtyFlags & DIRTY::TEXTURE && _texture) {
             _texture->bind();

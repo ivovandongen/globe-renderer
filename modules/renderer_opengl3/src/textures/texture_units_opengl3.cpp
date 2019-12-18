@@ -1,7 +1,9 @@
 #include <glbr/renderer/opengl3/textures/texture_units_opengl3.hpp>
 
 #include <glbr/logging/logging.hpp>
+#include <glbr/renderer/opengl3/context/context_opengl3.hpp>
 #include <glbr/renderer/opengl3/errors.hpp>
+#include <glbr/renderer/opengl3/textures/texture_unit_opengl3.hpp>
 
 namespace glbr {
 namespace renderer {
@@ -24,9 +26,10 @@ TextureUnit& TextureUnitsOpenGL3::operator[](int i) {
     assert(i < _units.size());
     return _units[i];
 }
-void TextureUnitsOpenGL3::clean() {
+
+void TextureUnitsOpenGL3::clean(ContextOpenGL3& context) {
     for (auto& unit : _units) {
-        unit.clean();
+        unit.clean(context);
     }
 }
 
