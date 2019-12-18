@@ -14,7 +14,7 @@ std::unique_ptr<HttpDataSource> HttpDataSource::Create() {
     return std::make_unique<HttpDataSourceCurlImpl>();
 }
 
-HttpDataSourceCurlImpl::HttpDataSourceCurlImpl() : worker(std::make_unique<HttpDataSourceCurlWorker>()) {
+HttpDataSourceCurlImpl::HttpDataSourceCurlImpl() : worker(std::make_shared<HttpDataSourceCurlWorker>()) {
     logging::info("Creating a new CURL HttpDataSource");
 }
 
@@ -23,14 +23,16 @@ HttpDataSourceCurlImpl::~HttpDataSourceCurlImpl() {
 }
 
 std::unique_ptr<AsyncRequest> HttpDataSourceCurlImpl::load(const Resource& resource, DataSource::Callback cb) {
-    std::shared_ptr<HttpRequestHandle> handle(new HttpRequestHandle(resource, std::move(cb)),
-                                              [worker = this->worker.get()](HttpRequestHandle* handle) {
-                                                  if (worker) {
-                                                      worker->cleanup(handle);
-                                                  } else {
-                                                      delete handle;
-                                                  }
-                                              });
+    std::shared_ptr<HttpRequestHandle> handle(
+        new HttpRequestHandle(resource, std::move(cb)),
+        [workerHandle = std::weak_ptr<HttpDataSourceCurlWorker>(this->worker)](HttpRequestHandle* handle) {
+            auto wrkr = workerHandle.lock();
+            if (wrkr) {
+                wrkr->cleanup(handle);
+            } else {
+                delete handle;
+            }
+        });
     worker->schedule(handle);
     return std::make_unique<HttpRequest>(std::move(handle));
 }

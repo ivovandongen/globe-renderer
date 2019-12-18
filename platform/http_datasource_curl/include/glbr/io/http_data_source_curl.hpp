@@ -17,7 +17,7 @@ public:
     std::unique_ptr<AsyncRequest> load(const Resource& resource, Callback cb) override;
 
 private:
-    std::unique_ptr<HttpDataSourceCurlWorker> worker;
+    std::shared_ptr<HttpDataSourceCurlWorker> worker;
 };
 
 }  // namespace io
